@@ -379,6 +379,10 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-U', run: v => transformCase(v, 'upper') },
           { key: 'Mod-Shift-L', run: v => transformCase(v, 'lower') },
           { key: 'Mod-Alt-T', run: v => transformCase(v, 'title') },
+          { key: 'F5', run: sortSelectedLines },
+          { key: 'F6', run: reverseSelectedLines },
+          { key: 'F7', run: uniqueSelectedLines },
+          { key: 'F8', run: numberSelectedLines },
           { key: 'Mod-1', run: v => foldToLevel(v, 1) },
           { key: 'Mod-2', run: v => foldToLevel(v, 2) },
           { key: 'Mod-3', run: v => foldToLevel(v, 3) },
@@ -1118,5 +1122,53 @@ function transformCase(view: EditorView, mode: 'upper' | 'lower' | 'title'): boo
   else transformed = text.replace(/\b\w/g, c => c.toUpperCase())
   if (transformed === text) return false
   view.dispatch({ changes: { from, to, insert: transformed }, selection: { anchor: from, head: from + transformed.length } })
+  return true
+}
+
+// ============ 选区行排序 ============
+
+function sortSelectedLines(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const text = view.state.sliceDoc(from, to)
+  const lines = text.split('\n')
+  if (lines.length <= 1) return false
+  const sorted = [...lines].sort((a, b) => a.localeCompare(b, 'zh-CN'))
+  if (sorted.join('\n') === text) return false
+  view.dispatch({ changes: { from, to, insert: sorted.join('\n') }, selection: { anchor: from, head: from + sorted.join('\n').length } })
+  return true
+}
+
+function reverseSelectedLines(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const text = view.state.sliceDoc(from, to)
+  const lines = text.split('\n')
+  if (lines.length <= 1) return false
+  const reversed = [...lines].reverse()
+  view.dispatch({ changes: { from, to, insert: reversed.join('\n') }, selection: { anchor: from, head: from + reversed.join('\n').length } })
+  return true
+}
+
+function uniqueSelectedLines(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const text = view.state.sliceDoc(from, to)
+  const lines = text.split('\n')
+  if (lines.length <= 1) return false
+  const unique = [...new Set(lines)]
+  if (unique.length === lines.length) return false
+  view.dispatch({ changes: { from, to, insert: unique.join('\n') }, selection: { anchor: from, head: from + unique.join('\n').length } })
+  return true
+}
+
+function numberSelectedLines(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const text = view.state.sliceDoc(from, to)
+  const lines = text.split('\n')
+  if (lines.length <= 1) return false
+  const numbered = lines.map((l, i) => `${i + 1}. ${l.replace(/^\d+\.\s/, '')}`)
+  view.dispatch({ changes: { from, to, insert: numbered.join('\n') }, selection: { anchor: from, head: from + numbered.join('\n').length } })
   return true
 }
