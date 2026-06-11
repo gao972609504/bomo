@@ -376,6 +376,9 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
           { key: 'Mod-Shift-BracketLeft', run: promoteHeading },
           { key: 'Mod-Shift-BracketRight', run: demoteHeading },
+          { key: 'Mod-Shift-U', run: v => transformCase(v, 'upper') },
+          { key: 'Mod-Shift-L', run: v => transformCase(v, 'lower') },
+          { key: 'Mod-Alt-T', run: v => transformCase(v, 'title') },
           { key: 'Mod-1', run: v => foldToLevel(v, 1) },
           { key: 'Mod-2', run: v => foldToLevel(v, 2) },
           { key: 'Mod-3', run: v => foldToLevel(v, 3) },
@@ -1100,5 +1103,20 @@ function dedentListItem(view: EditorView): boolean {
     changes: { from: line.from, to: line.from + removeCount, insert: '' },
     selection: { anchor: head - removeCount }
   })
+  return true
+}
+
+// ============ 选区大小写转换 ============
+
+function transformCase(view: EditorView, mode: 'upper' | 'lower' | 'title'): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const text = view.state.sliceDoc(from, to)
+  let transformed: string
+  if (mode === 'upper') transformed = text.toUpperCase()
+  else if (mode === 'lower') transformed = text.toLowerCase()
+  else transformed = text.replace(/\b\w/g, c => c.toUpperCase())
+  if (transformed === text) return false
+  view.dispatch({ changes: { from, to, insert: transformed }, selection: { anchor: from, head: from + transformed.length } })
   return true
 }
