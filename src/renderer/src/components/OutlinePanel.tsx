@@ -16,6 +16,7 @@ export function OutlinePanel() {
   const { tabs, activeTabId, outlineVisible } = useEditorStore()
 
   const activeTab = tabs.find((t) => t.id === activeTabId)
+  const cursorLine = activeTab?.cursorLine ?? 1
 
   const headings = useMemo<HeadingItem[]>(() => {
     if (!activeTab) return []
@@ -36,6 +37,16 @@ export function OutlinePanel() {
     }
     return result
   }, [activeTab?.content])
+
+  // 根据光标位置计算当前活跃标题
+  const activeHeadingIdx = useMemo(() => {
+    let idx = -1
+    for (let i = 0; i < headings.length; i++) {
+      if (headings[i].line + 1 <= cursorLine) idx = i
+      else break
+    }
+    return idx
+  }, [headings, cursorLine])
 
   if (!outlineVisible) return null
 
@@ -72,10 +83,11 @@ export function OutlinePanel() {
         {headings.length === 0 ? (
           <div className="outline-empty">无标题</div>
         ) : (
-          headings.map((h) => (
+          headings.map((h, idx) => (
             <div
               key={h.id}
-              className={`outline-item outline-level-${h.level}`}
+              ref={idx === activeHeadingIdx ? (el) => el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }) : undefined}
+              className={`outline-item outline-level-${h.level}${idx === activeHeadingIdx ? ' outline-active' : ''}`}
               onClick={() => scrollToLine(h.line)}
               title={h.text}
             >

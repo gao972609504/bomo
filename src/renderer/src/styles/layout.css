@@ -423,6 +423,13 @@
   color: var(--text-primary);
 }
 
+.outline-active {
+  background: var(--active-bg) !important;
+  color: var(--accent-color) !important;
+  font-weight: 500;
+  border-left: 2px solid var(--accent-color);
+}
+
 .outline-level-1 { padding-left: 12px; font-weight: 600; font-size: 13px; color: var(--text-primary); }
 .outline-level-2 { padding-left: 24px; }
 .outline-level-3 { padding-left: 36px; }
