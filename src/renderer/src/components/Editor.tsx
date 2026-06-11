@@ -541,6 +541,7 @@ export function Editor({ tab }: EditorProps) {
         createSelectionHighlightPlugin(),
         createIndentGuidesPlugin(),
         createParagraphGapPlugin(),
+        createSpellCheckPlugin(),
         createLineDiffPlugin(tab.originalContent),
         createWysiwygPlugin(),
         createTypewriterPlugin(),
@@ -1239,4 +1240,51 @@ function insertToc(view: EditorView): boolean {
   const pos = view.state.selection.main.head
   view.dispatch({ changes: { from: pos, insert: tocText }, selection: { anchor: pos + tocText.length } })
   return true
+}
+
+// ============ 常见拼写错误检查 ============
+
+const commonTypos: [RegExp, string][] = [
+  [/\bteh\b/g, 'the'],
+  [/\brecieve\b/g, 'receive'],
+  [/\boccured\b/g, 'occurred'],
+  [/\bseperate\b/g, 'separate'],
+  [/\bdefinately\b/g, 'definitely'],
+  [/\boccassion\b/g, 'occasion'],
+  [/\buntill\b/g, 'until'],
+  [/\bwich\b/g, 'which'],
+  [/\baccommodate\b/gi, 'accommodate'],
+]
+
+const typoMark = Decoration.mark({ class: 'cm-typo-mark' })
+
+function createSpellCheckPlugin() {
+  return ViewPlugin.fromClass(
+    class {
+      deco
+      constructor(view: EditorView) { this.deco = this.build(view) }
+      update(u: ViewUpdate) {
+        if (u.docChanged || u.viewportChanged) this.deco = this.build(u.view)
+      }
+      build(view: EditorView) {
+        const deco: { from: number; to: number; value: Decoration }[] = []
+        const doc = view.state.doc
+        for (let i = 1; i <= doc.lines; i++) {
+          const line = doc.line(i)
+          const text = line.text
+          for (const [re] of commonTypos) {
+            re.lastIndex = 0
+            let m
+            while ((m = re.exec(text))) {
+              const f = line.from + m.index
+              const t = f + m[0].length
+              deco.push({ from: f, to: t, value: typoMark })
+            }
+          }
+        }
+        return deco.length ? Decoration.set(deco.map(d => d.value.range(d.from, d.to)), true) : Decoration.none
+      }
+    },
+    { decorations: v => v.deco }
+  )
 }
