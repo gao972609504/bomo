@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.jpg" alt="MarkFlow" width="100" height="100" />
+<img src="logo.jpg" alt="MarkFlow" width="180" height="180" />
 
 # ✨ MarkFlow
 
@@ -388,7 +388,7 @@ git push origin feature/amazing-feature
 
 <div align="center">
 
-<img src="logo.jpg" alt="MarkFlow" width="100" height="100" />
+<img src="logo.jpg" alt="MarkFlow" width="180" height="180" />
 
 # ✨ MarkFlow
 
