@@ -419,5 +419,15 @@ export function FileTree() {
 function getFileIcon(name: string): string {
   if (/\.(md|markdown)$/i.test(name)) return '📝'
   if (/\.txt$/i.test(name)) return '📄'
+  if (/\.json$/i.test(name)) return '📋'
+  if (/\.(ya?ml)$/i.test(name)) return '⚙️'
+  if (/\.(tsx?|jsx?)$/i.test(name)) return '💻'
+  if (/\.(css|scss|less)$/i.test(name)) return '🎨'
+  if (/\.(png|jpg|jpeg|gif|svg|webp)$/i.test(name)) return '🖼️'
+  if (/\.(pdf)$/i.test(name)) return '📕'
+  if (/\.(zip|tar|gz|rar)$/i.test(name)) return '📦'
+  if (/\.(sh|bash|zsh)$/i.test(name)) return '🖥️'
+  if (/\.py$/i.test(name)) return '🐍'
+  if (/\.rs$/i.test(name)) return '🦀'
   return '📄'
 }
