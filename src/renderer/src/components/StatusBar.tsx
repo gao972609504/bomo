@@ -7,7 +7,7 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
-  const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers, wordGoal, setWordGoal, fontFamily, setFontFamily, tabSize, setTabSize } = useEditorStore()
+  const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, autoSaveDelay, setAutoSaveDelay, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers, wordGoal, setWordGoal, fontFamily, setFontFamily, tabSize, setTabSize } = useEditorStore()
 
   // ── 番茄钟计时器 ──
   const [pomoRunning, setPomoRunning] = useState(false)
@@ -101,6 +101,16 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
           title={`自动保存: ${autoSave ? '已开启' : '已关闭'}`}
         >
           💾 自动保存
+        </button>
+        <button
+          className="status-btn"
+          title={`自动保存延迟: ${autoSaveDelay / 1000}秒（点击修改）`}
+          onClick={() => {
+            const input = prompt('自动保存延迟（秒）:', String(autoSaveDelay / 1000))
+            if (input) setAutoSaveDelay(Math.max(0.5, parseFloat(input) || 2) * 1000)
+          }}
+        >
+          ⏱️ {autoSaveDelay / 1000}s
         </button>
         <button
           className={`status-btn ${headingNumbering ? 'status-btn-active' : ''}`}

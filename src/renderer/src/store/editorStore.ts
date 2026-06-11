@@ -34,6 +34,7 @@ interface EditorState {
   outlineVisible: boolean
   autoSave: boolean
   autoSaveDelay: number
+  setAutoSaveDelay: (delay: number) => void
   scrollProgress: number
   showQuickOpen: boolean
   showCommandPalette: boolean
@@ -257,6 +258,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   toggleTypewriterMode: () => set(state => ({ typewriterMode: !state.typewriterMode })),
   toggleOutline: () => set(state => ({ outlineVisible: !state.outlineVisible })),
   toggleAutoSave: () => set(state => ({ autoSave: !state.autoSave })),
+  setAutoSaveDelay: (delay: number) => set({ autoSaveDelay: delay }),
   setScrollProgress: (progress: number) => set({ scrollProgress: progress }),
   setShowQuickOpen: (show: boolean) => set({ showQuickOpen: show }),
   setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
