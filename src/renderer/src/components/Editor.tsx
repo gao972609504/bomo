@@ -353,6 +353,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-3', run: v => foldToLevel(v, 3) },
           { key: 'Mod-4', run: v => foldToLevel(v, 4) },
           { key: 'Mod-Shift-1', run: unfoldAll },
+          { key: 'Mod-Shift-T', run: insertTable },
           { key: 'Tab', run: expandSnippet },
           { key: 'Enter', run: v => autoContinueList(v) },
           { key: 'Backspace', run: renumberLists },
@@ -751,6 +752,8 @@ const snippets: Record<string, string> = {
   'link': '[text](url)',
   'code': '```\n\n```',
   'table': '| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |',
+  'table4': '| 列1 | 列2 | 列3 | 列4 |\n| --- | --- | --- | --- |\n| 内容 | 内容 | 内容 | 内容 |',
+  'table5': '| 列1 | 列2 | 列3 | 列4 | 列5 |\n| --- | --- | --- | --- | --- |\n| 内容 | 内容 | 内容 | 内容 | 内容 |',
   'task': '- [ ] 任务项',
   'h1': '# ',
   'h2': '## ',
@@ -960,5 +963,23 @@ function unfoldAll(view: EditorView): boolean {
     effects.push(unfoldEffect.of({ from, to }))
   })
   if (effects.length > 0) view.dispatch({ effects })
+  return true
+}
+
+// ============ 快速插入表格 ============
+
+function insertTable(view: EditorView): boolean {
+  const input = prompt('插入表格 (行数x列数，如 3x4):', '3x3')
+  if (!input) return false
+  const m = input.match(/(\d+)\s*[x×X]\s*(\d+)/)
+  if (!m) return false
+  const rows = Math.min(20, Math.max(1, parseInt(m[1])))
+  const cols = Math.min(10, Math.max(1, parseInt(m[2])))
+  const header = '| ' + Array.from({ length: cols }, (_, i) => `列${i + 1}`).join(' | ') + ' |'
+  const sep = '| ' + Array.from({ length: cols }, () => '---').join(' | ') + ' |'
+  const rows_str = Array.from({ length: rows - 1 }, () => '| ' + Array.from({ length: cols }, () => '内容').join(' | ') + ' |')
+  const table = '\n' + [header, sep, ...rows_str].join('\n') + '\n'
+  const pos = view.state.selection.main.head
+  view.dispatch({ changes: { from: pos, insert: table }, selection: { anchor: pos + table.length } })
   return true
 }
