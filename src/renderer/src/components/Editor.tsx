@@ -8,7 +8,7 @@ import { EditorState } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput } from '@codemirror/language'
+import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter } from '@codemirror/language'
 import { searchKeymap } from '@codemirror/search'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
@@ -16,6 +16,27 @@ import { buildDecorations } from '../plugins/decorations'
 import { createEditorTheme } from '../plugins/theme'
 
 interface EditorProps { tab: Tab }
+
+// ============ Markdown 标题折叠服务 ============
+
+const markdownHeadingFold = foldService.of((state, lineStart, lineEnd) => {
+  const line = state.doc.lineAt(lineStart)
+  const match = line.text.match(/^(#{1,6})\s/)
+  if (!match) return null
+  const level = match[1].length
+  // 查找下一个同级或更高级标题
+  let endLine = line.number
+  for (let i = line.number + 1; i <= state.doc.lines; i++) {
+    const nextText = state.doc.line(i).text
+    const nextMatch = nextText.match(/^(#{1,6})\s/)
+    if (nextMatch && nextMatch[1].length <= level) break
+    endLine = i
+  }
+  if (endLine <= line.number) return null
+  // 折叠范围：从标题行末到最后一行的末尾
+  const endLineInfo = state.doc.line(endLine)
+  return { from: line.to, to: endLineInfo.to }
+})
 
 // ============ Wiki 链接导航 ============
 
@@ -302,6 +323,8 @@ export function Editor({ tab }: EditorProps) {
         history(),
         indentOnInput(),
         bracketMatching(),
+        foldGutter(),
+        markdownHeadingFold,
         ...(wordWrap ? [EditorView.lineWrapping] : []),
         createEditorTheme(isDark, fontSize, fontFamily),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
