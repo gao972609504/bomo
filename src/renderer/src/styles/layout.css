@@ -978,3 +978,7 @@
   font-family: monospace;
   color: var(--text-secondary);
 }
+
+.tab-dragging { opacity: 0.4; }
+.tab-drop-target { border-left: 2px solid var(--accent-color, #0969da); }
+
