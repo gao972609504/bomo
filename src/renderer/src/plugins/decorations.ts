@@ -255,4 +255,21 @@ function inlineDeco(text: string, lf: number, on: boolean, deco: { from: number;
       deco.push({ from: line.from, to: line.from + fnDef[0].indexOf(':') + 2, value: hideMark })
     }
   }
+
+  // Wiki 双链 [[...]]
+  const wikiRe = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+  while ((m = wikiRe.exec(text))) {
+    const f = lf + m.index, t = f + m[0].length
+    const displayText = m[2] || m[1]
+    deco.push({ from: f, to: t, value: Decoration.mark({ class: 'cm-wikilink' }) })
+    if (!on) {
+      deco.push({ from: f, to: f + 2, value: hideMark })
+      if (!m[2]) {
+        deco.push({ from: t - 2, to: t, value: hideMark })
+      } else {
+        // [[file|display]] — hide |display]] part except display text
+        deco.push({ from: f + 2 + m[1].length, to: t, value: hideMark })
+      }
+    }
+  }
 }

@@ -199,6 +199,30 @@
   opacity: 0.8;
 }
 
+/* === Wiki 双链 === */
+.cm-wikilink {
+  color: var(--accent-color);
+  font-weight: 500;
+  background: rgba(9, 105, 218, 0.08);
+  border-radius: 3px;
+  padding: 0 3px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cm-wikilink:hover {
+  background: rgba(9, 105, 218, 0.15);
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .cm-wikilink {
+  background: rgba(88, 166, 255, 0.1);
+}
+
+[data-theme="dark"] .cm-wikilink:hover {
+  background: rgba(88, 166, 255, 0.2);
+}
+
 /* === @markwhen/codemirror-tables 表格 Widget 样式 === */
 
 .cm-table-widget {
