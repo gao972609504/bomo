@@ -84,6 +84,17 @@ export default function App() {
   const dragCounterRef = useRef(0)
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // ── 更新窗口标题 ──
+  useEffect(() => {
+    const activeTab = tabs.find((t) => t.id === activeTabId)
+    if (activeTab) {
+      const modified = activeTab.isModified ? '● ' : ''
+      document.title = `${modified}${activeTab.title} - MarkFlow`
+    } else {
+      document.title = 'MarkFlow'
+    }
+  }, [activeTabId, tabs])
+
   // ── 会话持久化：保存 ──
   useEffect(() => {
     if (tabs.length > 0) {
