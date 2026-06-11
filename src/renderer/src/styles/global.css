@@ -106,6 +106,25 @@ body {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  min-height: 0;
+}
+
+.editor-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.codemirror-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.codemirror-container .cm-editor {
+  height: 100%;
 }
 
 /* 禅模式 */
