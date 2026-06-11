@@ -12,6 +12,7 @@ export function FileTree() {
   const { fileTree, folderPath, sidebarVisible } = useEditorStore()
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
+  const [sortMode, setSortMode] = useState<'name' | 'type'>('name')
   const [ctxMenu, setCtxMenu] = useState<ContextMenuState | null>(null)
   const [renaming, setRenaming] = useState<{ path: string; name: string } | null>(null)
   const [creating, setCreating] = useState<{ parentPath: string; type: 'file' | 'folder'; name: string } | null>(null)
@@ -160,6 +161,24 @@ export function FileTree() {
 
   const filteredTree = useMemo(() => filterTree(fileTree, searchQuery), [fileTree, searchQuery])
 
+  // 排序
+  const sortedTree = useMemo(() => {
+    const sortNodes = (nodes: FileTreeNode[]): FileTreeNode[] => {
+      return nodes.map(n => n.isDirectory ? { ...n, children: sortNodes(n.children || []) } : n)
+        .sort((a, b) => {
+          // 目录始终在前
+          if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1
+          if (sortMode === 'type') {
+            const extA = a.name.split('.').pop() || ''
+            const extB = b.name.split('.').pop() || ''
+            if (extA !== extB) return extA.localeCompare(extB)
+          }
+          return a.name.localeCompare(b.name, 'zh-CN')
+        })
+    }
+    return sortNodes(filteredTree)
+  }, [filteredTree, sortMode])
+
   // 搜索时自动展开所有匹配的目录
   const effectiveExpanded = useMemo(() => {
     if (!searchQuery.trim()) return expandedDirs
@@ -241,6 +260,13 @@ export function FileTree() {
         )}
         <button
           className="file-tree-btn"
+          title={sortMode === 'name' ? '按名称排序（点击切换按类型）' : '按类型排序（点击切换按名称）'}
+          onClick={() => setSortMode(m => m === 'name' ? 'type' : 'name')}
+        >
+          {sortMode === 'name' ? '🔤' : '📁'}
+        </button>
+        <button
+          className="file-tree-btn"
           title="打开文件夹"
           onClick={async () => {
             if (!window.api) return
@@ -272,7 +298,7 @@ export function FileTree() {
       )}
       <div className="file-tree-content" onContextMenu={(e) => handleContextMenu(e, null)}>
         {fileTree.length > 0 ? (
-          filteredTree.length > 0 ? (
+          sortedTree.length > 0 ? (
             <>
               {/* 根目录新建项 */}
               {creating && creating.parentPath === folderPath && (
@@ -290,7 +316,7 @@ export function FileTree() {
                   />
                 </div>
               )}
-              {filteredTree.map((node) => renderNode(node))}
+              {sortedTree.map((node) => renderNode(node))}
             </>
           ) : (
             <div className="file-tree-empty">未找到匹配文件</div>
