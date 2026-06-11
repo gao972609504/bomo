@@ -37,6 +37,11 @@ export function createEditorTheme(isDark: boolean, fontSize: number = 15.5, font
     '.cm-scroller': {
       scrollBehavior: 'smooth',
     },
+    '.cm-scroller::-webkit-scrollbar': { width: '8px', height: '8px' },
+    '.cm-scroller::-webkit-scrollbar-track': { background: c.bg },
+    '.cm-scroller::-webkit-scrollbar-thumb': { background: isDark ? '#30363d' : '#c8ccd0', borderRadius: '4px' },
+    '.cm-scroller::-webkit-scrollbar-thumb:hover': { background: isDark ? '#484f58' : '#9099a2' },
+    '.cm-scroller::-webkit-scrollbar-corner': { background: c.bg },
     '.cm-content': {
       fontFamily: '"Segoe UI", "Noto Sans", system-ui, -apple-system, Helvetica, Arial, sans-serif',
       fontSize: `${fontSize}px`,
