@@ -65,6 +65,10 @@ const api = {
     ipcRenderer.on('menu:toggle-theme', callback)
     return () => ipcRenderer.removeListener('menu:toggle-theme', callback)
   },
+  onMenuToggleOutline: (callback: () => void) => {
+    ipcRenderer.on('menu:toggle-outline', callback)
+    return () => ipcRenderer.removeListener('menu:toggle-outline', callback)
+  },
   onMenuFindReplace: (callback: () => void) => {
     ipcRenderer.on('menu:find-replace', callback)
     return () => ipcRenderer.removeListener('menu:find-replace', callback)

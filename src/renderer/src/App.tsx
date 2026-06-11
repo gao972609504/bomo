@@ -5,6 +5,7 @@ import { TabBar } from './components/TabBar'
 import { Editor } from './components/Editor'
 import { StatusBar } from './components/StatusBar'
 import { FindReplace } from './components/FindReplace'
+import { OutlinePanel } from './components/OutlinePanel'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -25,6 +26,7 @@ declare global {
       onMenuToggleMode: (callback: () => void) => () => void
       onMenuToggleSidebar: (callback: () => void) => () => void
       onMenuToggleTheme: (callback: () => void) => () => void
+      onMenuToggleOutline: (callback: () => void) => () => void
       onMenuFindReplace: (callback: () => void) => () => void
       onFileOpened: (callback: (data: { filePath: string; content: string }) => void) => () => void
       onFolderOpened: (callback: (data: { folderPath: string; tree: FileTreeNode[] }) => void) => () => void
@@ -137,6 +139,9 @@ export default function App() {
       window.api.onMenuToggleTheme(() => {
         useEditorStore.getState().toggleTheme()
       }),
+      window.api.onMenuToggleOutline(() => {
+        useEditorStore.getState().toggleOutline()
+      }),
       window.api.onMenuFindReplace(() => {
         useEditorStore.getState().toggleFindReplace()
       }),
@@ -173,6 +178,11 @@ export default function App() {
         e.preventDefault()
         useEditorStore.getState().createTab()
       }
+      // Ctrl+Shift+O 切换大纲
+      if (e.ctrlKey && e.shiftKey && e.key === 'O') {
+        e.preventDefault()
+        useEditorStore.getState().toggleOutline()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -196,6 +206,7 @@ export default function App() {
       )}
       <div className="main-layout">
         {sidebarVisible && <FileTree />}
+        <OutlinePanel />
         <div className="editor-panel">
           <TabBar />
           {showFindReplace && <FindReplace />}

@@ -28,6 +28,7 @@ interface EditorState {
   showFindReplace: boolean
   focusMode: boolean
   typewriterMode: boolean
+  outlineVisible: boolean
 
   createTab: (filePath?: string, content?: string) => string
   closeTab: (id: string) => void
@@ -43,6 +44,7 @@ interface EditorState {
   setShowFindReplace: (show: boolean) => void
   toggleFocusMode: () => void
   toggleTypewriterMode: () => void
+  toggleOutline: () => void
   getActiveTab: () => Tab | undefined
 }
 
@@ -70,6 +72,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showFindReplace: false,
   focusMode: false,
   typewriterMode: false,
+  outlineVisible: false,
 
   createTab: (filePath?: string, content?: string) => {
     const id = `tab-${++tabCounter}`
@@ -121,6 +124,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowFindReplace: (show: boolean) => set({ showFindReplace: show }),
   toggleFocusMode: () => set(state => ({ focusMode: !state.focusMode })),
   toggleTypewriterMode: () => set(state => ({ typewriterMode: !state.typewriterMode })),
+  toggleOutline: () => set(state => ({ outlineVisible: !state.outlineVisible })),
 
   getActiveTab: () => {
     const state = get()

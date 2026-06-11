@@ -67,6 +67,7 @@ function createMenu(): void {
       submenu: [
         { label: '切换源码模式', accelerator: 'CmdOrCtrl+/', click: () => mainWindow?.webContents.send('menu:toggle-mode') },
         { label: '切换侧边栏', accelerator: 'CmdOrCtrl+B', click: () => mainWindow?.webContents.send('menu:toggle-sidebar') },
+        { label: '切换大纲', accelerator: 'CmdOrCtrl+Shift+O', click: () => mainWindow?.webContents.send('menu:toggle-outline') },
         { type: 'separator' },
         { label: '切换主题', click: () => mainWindow?.webContents.send('menu:toggle-theme') },
         { type: 'separator' },
