@@ -137,6 +137,7 @@ export function buildDecorations(view: EditorView): DecorationSet {
     }
     if (inCodeBlock) {
       codeBlockContentLines.push(t)
+      if (codeBlockLang.toLowerCase() === 'mermaid') deco.push({ from: line.from, to: line.from, value: Decoration.line({ class: 'cm-mermaid-line' }) })
       deco.push({ from: line.from, to: line.from, value: codeLine })
       continue
     }

@@ -501,3 +501,5 @@
 }
 .cm-center-text { text-align: center; display: block; font-style: italic; opacity: 0.9; }
 .cm-underline { text-decoration: underline; }
+.cm-mermaid-line { border-left: 3px solid #ff6b6b !important; background: linear-gradient(90deg, rgba(255,107,107,0.06), transparent) !important; }
+[data-theme="dark"] .cm-mermaid-line { border-left-color: #e74c3c !important; background: linear-gradient(90deg, rgba(231,76,60,0.1), transparent) !important; }
