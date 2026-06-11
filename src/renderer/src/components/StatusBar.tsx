@@ -236,6 +236,26 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         </button>
         <span className="status-item">UTF-8</span>
         <span className="status-item">Markdown</span>
+        <button
+          className="status-btn"
+          title="朗读选中文字 / 停止朗读"
+          onClick={() => {
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.cancel()
+              return
+            }
+            const sel = window.getSelection()
+            const text = sel?.toString().trim() || tab.content.slice(0, 5000)
+            if (text) {
+              const utter = new SpeechSynthesisUtterance(text)
+              utter.lang = /[一-鿿]/.test(text) ? 'zh-CN' : 'en-US'
+              utter.rate = 1
+              window.speechSynthesis.speak(utter)
+            }
+          }}
+        >
+          🔊 朗读
+        </button>
       </div>
     </div>
   )
