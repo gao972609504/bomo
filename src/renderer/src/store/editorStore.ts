@@ -45,6 +45,7 @@ interface EditorState {
   showDocStats: boolean
   showShortcuts: boolean
   closedTabsHistory: { filePath: string | null; title: string; content: string }[]
+  recentFiles: { filePath: string; title: string; lastOpened: number }[]
   zenMode: boolean
   fontSize: number
   wordGoal: number
@@ -126,6 +127,20 @@ function persistFontFamily(family: string) {
   try { localStorage.setItem('markflow-font-family', family) } catch { /* noop */ }
 }
 
+interface RecentFile { filePath: string; title: string; lastOpened: number }
+
+function loadRecentFiles(): RecentFile[] {
+  try {
+    const raw = localStorage.getItem('markflow-recent-files')
+    if (raw) return JSON.parse(raw)
+  } catch { /* noop */ }
+  return []
+}
+
+function persistRecentFiles(files: RecentFile[]) {
+  try { localStorage.setItem('markflow-recent-files', JSON.stringify(files.slice(0, 15))) } catch { /* noop */ }
+}
+
 export const useEditorStore = create<EditorState>((set, get) => ({
   tabs: [],
   activeTabId: null,
@@ -150,6 +165,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showDocStats: false,
   showShortcuts: false,
   closedTabsHistory: [],
+  recentFiles: loadRecentFiles(),
   zenMode: false,
   fontSize: loadPersistedFontSize(),
   fontFamily: loadPersistedFontFamily(),
@@ -160,7 +176,18 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const id = `tab-${++tabCounter}`
     const title = filePath ? filePath.split(/[/\\]/).pop()! : '未命名'
     const tab: Tab = { id, filePath: filePath || null, title, content: content || '', originalContent: content || '', isModified: false, cursorLine: 1, cursorCol: 1, pinned: false }
-    set(state => ({ tabs: [...state.tabs, tab], activeTabId: id }))
+    // 追踪最近文件
+    if (filePath) {
+      set(state => {
+        const recent = state.recentFiles.filter(f => f.filePath !== filePath)
+        recent.unshift({ filePath, title, lastOpened: Date.now() })
+        const updated = recent.slice(0, 15)
+        persistRecentFiles(updated)
+        return { tabs: [...state.tabs, tab], activeTabId: id, recentFiles: updated }
+      })
+    } else {
+      set(state => ({ tabs: [...state.tabs, tab], activeTabId: id }))
+    }
     return id
   },
 

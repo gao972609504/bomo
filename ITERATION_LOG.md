@@ -203,3 +203,9 @@
 - 状态栏点击字体按钮循环切换：默认、JetBrains Mono、Fira Code、Cascadia Code、Source Code Pro、Consolas、Menlo、Monaco
 - 字体设置自动持久化到 localStorage
 - 编辑器实时应用新字体
+
+### Iteration 50/100 — 欢迎页最近打开文件
+- 欢迎页显示最近打开的文件列表（最多8个）
+- 点击即可重新打开文件
+- 最近文件持久化到 localStorage（最多保存15条）
+- 文件打开时自动更新最近列表
