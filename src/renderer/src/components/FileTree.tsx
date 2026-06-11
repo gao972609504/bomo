@@ -140,6 +140,20 @@ export function FileTree() {
     } catch (err) { console.error('删除失败:', err) }
   }, [closeCtxMenu, refreshTree])
 
+  // 展开/折叠全部
+  const expandAll = useCallback(() => {
+    const allDirs = new Set<string>()
+    const collect = (nodes: FileTreeNode[]) => {
+      for (const n of nodes) {
+        if (n.isDirectory) { allDirs.add(n.path); if (n.children) collect(n.children) }
+      }
+    }
+    collect(fileTree)
+    setExpandedDirs(allDirs)
+  }, [fileTree])
+
+  const collapseAll = useCallback(() => setExpandedDirs(new Set()), [])
+
   // 搜索过滤：返回匹配的节点（包含匹配的子节点或自身匹配的目录）
   const filterTree = (nodes: FileTreeNode[], query: string): FileTreeNode[] => {
     if (!query.trim()) return nodes
@@ -258,6 +272,20 @@ export function FileTree() {
         ) : (
           <span>资源管理器</span>
         )}
+        <button
+          className="file-tree-btn"
+          title="展开全部"
+          onClick={expandAll}
+        >
+          📗
+        </button>
+        <button
+          className="file-tree-btn"
+          title="折叠全部"
+          onClick={collapseAll}
+        >
+          📕
+        </button>
         <button
           className="file-tree-btn"
           title={sortMode === 'name' ? '按名称排序（点击切换按类型）' : '按类型排序（点击切换按名称）'}

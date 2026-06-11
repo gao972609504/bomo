@@ -352,6 +352,12 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Enter', run: v => autoContinueList(v) },
           { key: 'Backspace', run: renumberLists },
           { key: 'Delete', run: renumberLists },
+          // 自动闭合括号
+          { key: '(', run: v => autoClosePair(v, '(', ')') },
+          { key: '[', run: v => autoClosePair(v, '[', ']') },
+          { key: '{', run: v => autoClosePair(v, '{', '}') },
+          { key: '"', run: v => autoClosePair(v, '"', '"') },
+          { key: "'", run: v => autoClosePair(v, "'", "'") },
         ]),
         updateHandler,
         pasteHandler,
@@ -803,6 +809,25 @@ function demoteHeading(view: EditorView): boolean {
 }
 
 // ============ 有序列表自动编号 ============
+
+// 自动闭合括号
+function autoClosePair(view: EditorView, open: string, close: string): boolean {
+  const { from, to } = view.state.selection.main
+  const sel = view.state.sliceDoc(from, to)
+  if (sel) {
+    // 有选区时包裹选中内容
+    view.dispatch({
+      changes: [{ from, to, insert: open + sel + close }],
+      selection: { anchor: from + 1, head: from + 1 + sel.length }
+    })
+    return true
+  }
+  view.dispatch({
+    changes: { from, to, insert: open + close },
+    selection: { anchor: from + 1 }
+  })
+  return true
+}
 
 function renumberLists(view: EditorView): boolean {
   const { head } = view.state.selection.main
