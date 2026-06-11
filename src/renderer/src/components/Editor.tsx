@@ -55,6 +55,53 @@ function createSelectionHighlightPlugin() {
   )
 }
 
+// ============ 缩进参考线 ============
+
+function createIndentGuidesPlugin() {
+  return ViewPlugin.fromClass(
+    class {
+      deco
+      constructor(view: EditorView) { this.deco = this.build(view) }
+      update(u: ViewUpdate) {
+        if (u.docChanged || u.viewportChanged) this.deco = this.build(u.view)
+      }
+      build(view: EditorView) {
+        const deco: { from: number; to: number; value: Decoration }[] = []
+        for (let i = 1; i <= view.state.doc.lines; i++) {
+          const line = view.state.doc.line(i)
+          const text = line.text
+          // 计算缩进级别（每2个空格或1个tab为一级）
+          const indentMatch = text.match(/^(\t|  )+/)
+          if (!indentMatch) continue
+          const indentStr = indentMatch[0]
+          let col = 0
+          for (let c = 0; c < indentStr.length;) {
+            if (indentStr[c] === '\t') {
+              col++
+              c++
+            } else if (indentStr.substr(c, 2) === '  ') {
+              col++
+              c += 2
+            } else {
+              c++
+            }
+          }
+          // 为每一级缩进添加参考线
+          for (let level = 1; level <= col; level++) {
+            deco.push({
+              from: line.from,
+              to: line.from,
+              value: Decoration.line({ attributes: { style: `border-left: 1px solid var(--border-color); margin-left: ${(level - 1) * 2}ch` } })
+            })
+          }
+        }
+        return deco.length ? Decoration.set(deco.map(d => d.value.range(d.from, d.to)), true) : Decoration.none
+      }
+    },
+    { decorations: v => v.deco }
+  )
+}
+
 // ============ ViewPlugin ============
 
 function createWysiwygPlugin() {
@@ -202,6 +249,7 @@ export function Editor({ tab }: EditorProps) {
         updateHandler,
         pasteHandler,
         createSelectionHighlightPlugin(),
+        createIndentGuidesPlugin(),
         createWysiwygPlugin(),
         createTypewriterPlugin(),
       ]
