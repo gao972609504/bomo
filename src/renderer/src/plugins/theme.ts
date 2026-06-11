@@ -70,7 +70,7 @@ export function createEditorTheme(isDark: boolean, fontSize: number = 15.5, font
     },
     '.cm-gutters': { backgroundColor: c.gutter, color: c.gutterColor, border: 'none', minWidth: '40px' },
     '.cm-activeLineGutter': { backgroundColor: c.activeGutterBg, color: c.activeGutterColor },
-    '.cm-activeLine': { backgroundColor: 'transparent' },
+    '.cm-activeLine': { backgroundColor: `${isDark ? 'rgba(88,166,255,0.06)' : 'rgba(9,105,218,0.04)'}` },
     '.cm-cursor': { borderLeftWidth: '2px', borderLeftColor: c.cursor, animation: 'cm-blink 1.2s step-end infinite' },
     '@keyframes cm-blink': {
       '0%, 100%': { borderLeftColor: c.cursor },
