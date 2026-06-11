@@ -287,6 +287,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-f', run: formatMarkdownTable },
           { key: 'Mod-Alt-ArrowUp', run: addCursorAbove },
           { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
+          { key: 'Tab', run: expandSnippet },
           { key: 'Enter', run: v => autoContinueList(v) },
         ]),
         updateHandler,
@@ -604,5 +605,46 @@ function addCursorBelow(view: EditorView): boolean {
   }
   if (newRanges.length === ranges.length) return false
   view.dispatch({ selection: view.state.selection.constructor.create(newRanges) })
+  return true
+}
+
+// ============ Markdown 片段快捷扩展 ============
+
+const snippets: Record<string, string> = {
+  'img': '![](url)',
+  'link': '[text](url)',
+  'code': '```\n\n```',
+  'table': '| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |',
+  'task': '- [ ] 任务项',
+  'h1': '# ',
+  'h2': '## ',
+  'h3': '### ',
+  'quote': '> ',
+  'bold': '**粗体**',
+  'italic': '*斜体*',
+  'strike': '~~删除线~~',
+  'hr': '---',
+  'math': '$$\n\n$$',
+  'callout': ':::tip\n\n:::',
+  'footnote': '[^1]: ',
+  'date': new Date().toLocaleDateString('zh-CN'),
+  'time': new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+}
+
+function expandSnippet(view: EditorView): boolean {
+  const sel = view.state.selection.main
+  if (sel.from !== sel.to) return false
+  const line = view.state.doc.lineAt(sel.from)
+  const textBefore = line.text.slice(0, sel.from - line.from)
+  const wordMatch = textBefore.match(/(\w+)$/)
+  if (!wordMatch) return false
+  const trigger = wordMatch[1]
+  const expansion = snippets[trigger]
+  if (!expansion) return false
+  const triggerStart = sel.from - trigger.length
+  view.dispatch({
+    changes: { from: triggerStart, to: sel.from, insert: expansion },
+    selection: { anchor: triggerStart + expansion.length }
+  })
   return true
 }

@@ -177,3 +177,8 @@
 - 自动在工作区中搜索匹配的 .md/.markdown/.txt 文件
 - 已打开的文件直接切换到对应标签页
 - Ctrl+点击 HTTP 链接在浏览器中打开
+
+### Iteration 45/100 — Markdown 片段快捷扩展
+- Tab 键触发片段扩展：img→图片, link→链接, code→代码块, table→表格
+- 支持 18 个常用 Markdown 片段：h1-h3, bold, italic, strike, quote, task, hr, math, callout, footnote, date, time
+- 输入触发词后按 Tab 自动替换为完整模板
