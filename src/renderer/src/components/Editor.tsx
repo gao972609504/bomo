@@ -17,6 +17,45 @@ import { createEditorTheme } from '../plugins/theme'
 
 interface EditorProps { tab: Tab }
 
+// ============ Wiki 链接导航 ============
+
+async function navigateToWikiLink(target: string) {
+  const store = useEditorStore.getState()
+  // 尝试在已打开的标签中查找
+  const existing = store.tabs.find(t => {
+    if (!t.filePath) return false
+    const name = t.filePath.split(/[/\\]/).pop() || ''
+    const baseName = name.replace(/\.(md|markdown|txt)$/i, '')
+    return baseName === target || name === target || name === target + '.md'
+  })
+  if (existing) {
+    store.setActiveTab(existing.id)
+    return
+  }
+  // 尝试在工作区中查找文件
+  const folderPath = store.folderPath
+  if (folderPath && window.api) {
+    const candidates = [
+      target,
+      target + '.md',
+      target + '.markdown',
+      target + '.txt',
+    ]
+    for (const candidate of candidates) {
+      // 简单拼接路径
+      const sep = folderPath.includes('\\') ? '\\' : '/'
+      const fullPath = folderPath + sep + candidate
+      try {
+        const content = await window.api.readFile(fullPath)
+        store.createTab(fullPath, content)
+        return
+      } catch { /* file not found, try next */ }
+    }
+  }
+  // 文件未找到，创建新标签页并提示
+  console.log(`Wiki 链接目标未找到: ${target}`)
+}
+
 // ============ 选中文字高亮所有匹配项 ============
 
 const selectionHighlightMark = Decoration.mark({ class: 'cm-selection-match' })
@@ -254,15 +293,50 @@ export function Editor({ tab }: EditorProps) {
         pasteHandler,
         EditorView.domEventHandlers({
           mousedown(event, view) {
-            // Ctrl+Click 添加额外光标
-            if (!event.ctrlKey || event.button !== 0) return false
+            if (event.button !== 0) return false
             const pos = view.posAtCoords({ x: event.clientX, y: event.clientY })
             if (pos === null) return false
-            event.preventDefault()
-            const sel = view.state.selection
-            const newRanges = [...sel.ranges, sel.constructor.range(pos, pos)]
-            view.dispatch({ selection: sel.constructor.create(newRanges) })
-            return true
+
+            // Ctrl+Click: wiki 链接导航
+            if (event.ctrlKey) {
+              const line = view.state.doc.lineAt(pos)
+              const text = line.text
+              const offset = pos - line.from
+              // 检查是否在 [[...]] 内
+              const wikiRe = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
+              let m
+              while ((m = wikiRe.exec(text))) {
+                const start = m.index
+                const end = start + m[0].length
+                if (offset >= start && offset <= end) {
+                  event.preventDefault()
+                  const linkTarget = m[1].trim()
+                  navigateToWikiLink(linkTarget)
+                  return true
+                }
+              }
+              // 检查是否在 [text](url) 内
+              const mdLinkRe = /\[([^\]]+)\]\(([^)]+)\)/g
+              while ((m = mdLinkRe.exec(text))) {
+                const start = m.index
+                const end = start + m[0].length
+                if (offset >= start && offset <= end) {
+                  const url = m[2]
+                  if (url.startsWith('http://') || url.startsWith('https://')) {
+                    event.preventDefault()
+                    window.open(url, '_blank')
+                    return true
+                  }
+                }
+              }
+              // 添加额外光标
+              event.preventDefault()
+              const sel = view.state.selection
+              const newRanges = [...sel.ranges, sel.constructor.range(pos, pos)]
+              view.dispatch({ selection: sel.constructor.create(newRanges) })
+              return true
+            }
+            return false
           }
         }),
         createSelectionHighlightPlugin(),
