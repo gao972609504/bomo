@@ -46,6 +46,12 @@ export function createEditorTheme(isDark: boolean, fontSize: number = 15.5, font
       caretColor: c.cursor,
     },
     '.cm-line': { padding: '3px 24px' },
+    '.cm-content[contenteditable="true"] .cm-line:only-child:empty::before': {
+      content: '"开始写作吧… (Ctrl+N 新建文件)"',
+      color: c.textMuted,
+      fontStyle: 'italic',
+      pointerEvents: 'none',
+    },
     '.cm-gutters': { backgroundColor: c.gutter, color: c.gutterColor, border: 'none', minWidth: '40px' },
     '.cm-activeLineGutter': { backgroundColor: c.activeGutterBg, color: c.activeGutterColor },
     '.cm-activeLine': { backgroundColor: 'transparent' },
