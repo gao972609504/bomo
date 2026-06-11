@@ -76,6 +76,36 @@ export function Editor({ tab }: EditorProps) {
       }
     })
 
+    const pasteHandler = EditorView.domEventHandlers({
+      paste(event, view) {
+        const items = event.clipboardData?.items
+        if (!items) return false
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i]
+          if (item.type.startsWith('image/')) {
+            event.preventDefault()
+            const file = item.getAsFile()
+            if (!file) continue
+            const reader = new FileReader()
+            reader.onload = async () => {
+              const base64 = (reader.result as string).split(',')[1]
+              if (!window.api) return
+              try {
+                const relPath = await window.api.savePastedImage(base64, tab.filePath || null)
+                const insertText = `![](${relPath})`
+                view.dispatch({
+                  changes: { from: view.state.selection.main.head, insert: insertText }
+                })
+              } catch (err) { console.error('粘贴图片保存失败:', err) }
+            }
+            reader.readAsDataURL(file)
+            return true
+          }
+        }
+        return false
+      }
+    })
+
     const state = EditorState.create({
       doc: tab.content,
       extensions: [
@@ -103,6 +133,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Enter', run: v => autoContinueList(v) },
         ]),
         updateHandler,
+        pasteHandler,
         createWysiwygPlugin(),
         createTypewriterPlugin(),
       ]

@@ -48,6 +48,10 @@ const api = {
   deleteFolder: (dirPath: string): Promise<boolean> =>
     ipcRenderer.invoke('fs:deleteFolder', dirPath),
 
+  // 图片粘贴保存
+  savePastedImage: (base64Data: string, filePath: string | null): Promise<string> =>
+    ipcRenderer.invoke('image:savePasted', base64Data, filePath),
+
   getDefaultPath: (): Promise<string> =>
     ipcRenderer.invoke('app:getDefaultPath'),
 

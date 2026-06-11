@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu, nativeTheme } from 'electron'
-import { join } from 'path'
+import { join, dirname, relative } from 'path'
 import { readFile, writeFile, readdir, stat, mkdir, unlink, rmdir, rename as fsRename } from 'fs/promises'
 import { existsSync } from 'fs'
 import { homedir } from 'os'
@@ -275,6 +275,26 @@ ipcMain.handle('fs:deleteFile', async (_event, filePath: string) => {
 ipcMain.handle('fs:deleteFolder', async (_event, dirPath: string) => {
   await rmdir(dirPath, { recursive: true })
   return true
+})
+
+// 图片粘贴：保存图片到 assets 目录并返回相对路径
+ipcMain.handle('image:savePasted', async (_event, base64Data: string, filePath: string | null) => {
+  const buffer = Buffer.from(base64Data, 'base64')
+  // 确定保存目录
+  const baseDir = filePath ? dirname(filePath) : homedir()
+  const assetsDir = join(baseDir, 'assets')
+  if (!existsSync(assetsDir)) {
+    await mkdir(assetsDir, { recursive: true })
+  }
+  // 生成文件名
+  const now = new Date()
+  const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`
+  const imgName = `image-${ts}.png`
+  const imgPath = join(assetsDir, imgName)
+  await writeFile(imgPath, buffer)
+  // 返回相对路径
+  const relPath = relative(baseDir, imgPath).replace(/\\/g, '/')
+  return relPath
 })
 
 /** 待打开的文件（窗口创建前拖入的） */

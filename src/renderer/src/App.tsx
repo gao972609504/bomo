@@ -31,6 +31,7 @@ declare global {
       renamePath: (oldPath: string, newPath: string) => Promise<boolean>
       deleteFile: (filePath: string) => Promise<boolean>
       deleteFolder: (dirPath: string) => Promise<boolean>
+      savePastedImage: (base64Data: string, filePath: string | null) => Promise<string>
       onMenuNewFile: (callback: () => void) => () => void
       onMenuSave: (callback: () => void) => () => void
       onMenuSaveAs: (callback: () => void) => () => void
