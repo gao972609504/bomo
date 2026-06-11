@@ -44,6 +44,52 @@ export default function App() {
   const dragCounterRef = useRef(0)
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // ── 会话持久化：保存 ──
+  useEffect(() => {
+    if (tabs.length > 0) {
+      const timer = setTimeout(() => useEditorStore.getState().saveSession(), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [tabs, activeTabId])
+
+  // ── 会话持久化：恢复 ──
+  useEffect(() => {
+    const store = useEditorStore.getState()
+    store.restoreSession()
+    // 延迟加载上次会话的文件
+    const check = setInterval(() => {
+      const s = useEditorStore.getState()
+      if (s.lastSession && s.lastSession.tabPaths.length > 0) {
+        const session = s.lastSession
+        // 用完后清空，避免重复加载
+        useEditorStore.setState({ lastSession: null })
+        clearInterval(check)
+        if (!window.api) return
+        ;(async () => {
+          for (const pathOrUntitled of session.tabPaths) {
+            if (pathOrUntitled.startsWith('__untitled__:')) {
+              s.createTab()
+            } else {
+              try {
+                const content = await window.api.readFile(pathOrUntitled)
+                s.createTab(pathOrUntitled, content)
+              } catch { /* file may no longer exist */ }
+            }
+          }
+          // 恢复活动标签
+          if (session.activeTabPath) {
+            const tabs = useEditorStore.getState().tabs
+            const match = tabs.find(t => t.filePath === session.activeTabPath)
+            if (match) useEditorStore.getState().setActiveTab(match.id)
+          }
+        })()
+      } else {
+        clearInterval(check)
+      }
+    }, 200)
+    return () => clearInterval(check)
+  }, [])
+
   // ── 自动保存（防抖） ──
   useEffect(() => {
     if (!activeTab?.isModified || !activeTab?.filePath) return

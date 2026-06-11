@@ -60,6 +60,8 @@ interface EditorState {
   setShowCommandPalette: (show: boolean) => void
   setFontSize: (size: number) => void
   resetFontSize: () => void
+  saveSession: () => void
+  restoreSession: () => void
   getActiveTab: () => Tab | undefined
 }
 
@@ -106,6 +108,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showQuickOpen: false,
   showCommandPalette: false,
   fontSize: loadPersistedFontSize(),
+  lastSession: null as { tabPaths: string[]; activeTabPath: string | null; folderPath: string | null } | null,
 
   createTab: (filePath?: string, content?: string) => {
     const id = `tab-${++tabCounter}`
@@ -170,6 +173,31 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
   setFontSize: (size: number) => { persistFontSize(size); set({ fontSize: size }) },
   resetFontSize: () => { const defaultSize = 15.5; persistFontSize(defaultSize); set({ fontSize: defaultSize }) },
+
+  saveSession: () => {
+    const state = get()
+    const session = {
+      tabPaths: state.tabs.map(t => t.filePath || `__untitled__:${t.title}`),
+      activeTabPath: state.tabs.find(t => t.id === state.activeTabId)?.filePath || null,
+      folderPath: state.folderPath
+    }
+    try { localStorage.setItem('markflow-session', JSON.stringify(session)) } catch { /* noop */ }
+  },
+
+  restoreSession: () => {
+    try {
+      const raw = localStorage.getItem('markflow-session')
+      if (!raw) return
+      const session = JSON.parse(raw) as { tabPaths: string[]; activeTabPath: string | null; folderPath: string | null }
+      if (session.folderPath && window.api) {
+        window.api.readdir(session.folderPath).then(tree => {
+          set({ fileTree: tree, folderPath: session.folderPath })
+        }).catch(() => {})
+      }
+      // Files will be reopened via App.tsx which reads the session
+      set({ lastSession: session })
+    } catch { /* noop */ }
+  },
 
   getActiveTab: () => {
     const state = get()
