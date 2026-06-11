@@ -62,7 +62,7 @@ function createMenu(): void {
       submenu: [
         { label: '新建文件', accelerator: 'CmdOrCtrl+N', click: () => mainWindow?.webContents.send('menu:new-file') },
         { label: '打开文件', accelerator: 'CmdOrCtrl+O', click: () => handleOpenFile() },
-        { label: '打开文件夹', accelerator: 'CmdOrCtrl+Shift+O', click: () => handleOpenFolder() },
+        { label: '打开文件夹', accelerator: 'CmdOrCtrl+K CmdOrCtrl+O', click: () => handleOpenFolder() },
         { type: 'separator' },
         { label: '保存', accelerator: 'CmdOrCtrl+S', click: () => mainWindow?.webContents.send('menu:save') },
         { label: '另存为', accelerator: 'CmdOrCtrl+Shift+S', click: () => mainWindow?.webContents.send('menu:save-as') },
@@ -158,7 +158,8 @@ interface FileTreeNode {
   children?: FileTreeNode[]
 }
 
-async function buildFileTree(dirPath: string): Promise<FileTreeNode[]> {
+async function buildFileTree(dirPath: string, maxDepth: number = 10): Promise<FileTreeNode[]> {
+  if (maxDepth <= 0) return []
   const entries = await readdir(dirPath, { withFileTypes: true })
   const nodes: FileTreeNode[] = []
 
@@ -166,7 +167,7 @@ async function buildFileTree(dirPath: string): Promise<FileTreeNode[]> {
     if (entry.name.startsWith('.')) continue
     const fullPath = join(dirPath, entry.name)
     if (entry.isDirectory()) {
-      const children = await buildFileTree(fullPath)
+      const children = await buildFileTree(fullPath, maxDepth - 1)
       nodes.push({ name: entry.name, path: fullPath, isDirectory: true, children })
     } else if (/\.(md|markdown|txt|mdown|mkd)$/i.test(entry.name)) {
       nodes.push({ name: entry.name, path: fullPath, isDirectory: false })

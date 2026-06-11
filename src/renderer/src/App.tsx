@@ -108,48 +108,38 @@ export default function App() {
   useEffect(() => {
     const store = useEditorStore.getState()
     store.restoreSession()
-    // 延迟加载上次会话的文件
-    const check = setInterval(() => {
-      const s = useEditorStore.getState()
-      if (s.lastSession && s.lastSession.tabPaths.length > 0) {
-        const session = s.lastSession
-        // 用完后清空，避免重复加载
-        useEditorStore.setState({ lastSession: null })
-        clearInterval(check)
-        if (!window.api) return
-        ;(async () => {
-          for (const pathOrUntitled of session.tabPaths) {
-            if (pathOrUntitled.startsWith('__untitled__:')) {
-              s.createTab()
-            } else {
-              try {
-                const content = await window.api.readFile(pathOrUntitled)
-                s.createTab(pathOrUntitled, content)
-              } catch { /* file may no longer exist */ }
-            }
-          }
-          // 恢复活动标签
-          if (session.activeTabPath) {
-            const tabs = useEditorStore.getState().tabs
-            const match = tabs.find(t => t.filePath === session.activeTabPath)
-            if (match) useEditorStore.getState().setActiveTab(match.id)
-          }
-          // 恢复光标位置
-          if (session.cursorPositions) {
-            const currentState = useEditorStore.getState()
-            for (const tab of currentState.tabs) {
-              if (tab.filePath && session.cursorPositions[tab.filePath]) {
-                const pos = session.cursorPositions[tab.filePath]
-                currentState.updateTabCursor(tab.id, pos.line, pos.col)
-              }
-            }
-          }
-        })()
-      } else {
-        clearInterval(check)
+    const session = store.lastSession
+    if (!session || session.tabPaths.length === 0 || !window.api) return
+    // 立即清空，避免重复加载
+    useEditorStore.setState({ lastSession: null })
+    ;(async () => {
+      for (const pathOrUntitled of session.tabPaths) {
+        if (pathOrUntitled.startsWith('__untitled__:')) {
+          store.createTab()
+        } else {
+          try {
+            const content = await window.api.readFile(pathOrUntitled)
+            store.createTab(pathOrUntitled, content)
+          } catch { /* file may no longer exist */ }
+        }
       }
-    }, 200)
-    return () => clearInterval(check)
+      // 恢复活动标签
+      if (session.activeTabPath) {
+        const tabs = useEditorStore.getState().tabs
+        const match = tabs.find(t => t.filePath === session.activeTabPath)
+        if (match) useEditorStore.getState().setActiveTab(match.id)
+      }
+      // 恢复光标位置
+      if (session.cursorPositions) {
+        const currentState = useEditorStore.getState()
+        for (const tab of currentState.tabs) {
+          if (tab.filePath && session.cursorPositions[tab.filePath]) {
+            const pos = session.cursorPositions[tab.filePath]
+            currentState.updateTabCursor(tab.id, pos.line, pos.col)
+          }
+        }
+      }
+    })()
   }, [])
 
   // ── 自动保存（防抖） ──
@@ -158,12 +148,18 @@ export default function App() {
     const { autoSave, autoSaveDelay } = useEditorStore.getState()
     if (!autoSave) return
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
+    const tabId = activeTab.id
+    const filePath = activeTab.filePath
     autoSaveTimerRef.current = setTimeout(() => {
       if (!window.api) return
+      // 从 store 获取最新内容，避免闭包捕获过期引用
+      const currentState = useEditorStore.getState()
+      const currentTab = currentState.tabs.find(t => t.id === tabId)
+      if (!currentTab || !currentTab.filePath || !currentTab.isModified) return
       setAutoSaveStatus('saving')
-      window.api.writeFile(activeTab.filePath!, activeTab.content).then((success) => {
+      window.api.writeFile(currentTab.filePath, currentTab.content).then((success) => {
         if (success) {
-          useEditorStore.getState().markTabSaved(activeTab.id)
+          useEditorStore.getState().markTabSaved(tabId)
           setAutoSaveStatus('saved')
           setTimeout(() => setAutoSaveStatus('idle'), 2000)
         }

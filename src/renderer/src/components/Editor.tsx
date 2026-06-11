@@ -8,7 +8,7 @@ import { EditorState } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter, foldEffect, unfoldEffect } from '@codemirror/language'
+import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter, foldEffect, unfoldEffect, foldedRanges } from '@codemirror/language'
 import { searchKeymap } from '@codemirror/search'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
@@ -132,6 +132,9 @@ function createParagraphGapPlugin() {
         const doc = view.state.doc
         for (let i = 1; i <= doc.lines; i++) {
           const line = doc.line(i)
+          // 仅在视口范围内计算
+          if (line.to < view.viewport.from) continue
+          if (line.from > view.viewport.to) break
           if (line.text.trim() === '' && i > 1 && doc.line(i - 1).text.trim() !== '') {
             deco.push({ from: line.from, to: line.from, value: paragraphGap })
           }
@@ -155,7 +158,10 @@ function createIndentGuidesPlugin() {
       }
       build(view: EditorView) {
         const deco: { from: number; to: number; value: Decoration }[] = []
-        for (let i = 1; i <= view.state.doc.lines; i++) {
+        const doc = view.state.doc
+        const startLine = doc.lineAt(view.viewport.from).number
+        const endLine = doc.lineAt(view.viewport.to).number
+        for (let i = startLine; i <= endLine; i++) {
           const line = view.state.doc.line(i)
           const text = line.text
           // 计算缩进级别（每2个空格或1个tab为一级）
@@ -492,7 +498,7 @@ export function Editor({ tab }: EditorProps) {
                 const tip = document.createElement('div')
                 tip.className = 'cm-link-tooltip'
                 tip.textContent = url.length > 60 ? url.slice(0, 57) + '...' : url
-                tip.style.cssText = 'position:fixed;z-index:9999;padding:4px 8px;border-radius:4px;font-size:12px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;background:#333;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.2)'
+                tip.style.cssText = `position:fixed;z-index:9999;padding:4px 8px;border-radius:4px;font-size:12px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;background:var(--bg-tertiary);color:var(--text-primary);box-shadow:var(--shadow)`
                 tip.style.left = event.clientX + 10 + 'px'
                 tip.style.top = event.clientY + 20 + 'px'
                 document.body.appendChild(tip)
@@ -623,6 +629,13 @@ function autoContinueList(view: EditorView): boolean {
     return true
   }
 
+  // 任务列表必须在无序列表之前匹配，否则 [-*+] 会先命中 ul 分支
+  const tk = t.match(/^(\s*)([-*+])\s\[([ xX])\]\s(.*)$/)
+  if (tk) {
+    if (!tk[4].trim()) { view.dispatch({ changes: { from: line.from, to: line.to, insert: '' }, selection: { anchor: line.from } }); return true }
+    view.dispatch({ changes: { from: head, insert: `\n${tk[1]}${tk[2]} [ ] ` }, selection: { anchor: head + 1 + tk[1].length + 6 } })
+    return true
+  }
   const ul = t.match(/^(\s*)([-*+])\s(.*)$/)
   if (ul) {
     if (!ul[3].trim()) { view.dispatch({ changes: { from: line.from, to: line.to, insert: '' }, selection: { anchor: line.from } }); return true }
@@ -630,18 +643,6 @@ function autoContinueList(view: EditorView): boolean {
     return true
   }
   const ol = t.match(/^(\s*)(\d+)\.\s(.*)$/)
-  if (ol) {
-    if (!ol[3].trim()) { view.dispatch({ changes: { from: line.from, to: line.to, insert: '' }, selection: { anchor: line.from } }); return true }
-    const n = parseInt(ol[2]) + 1
-    view.dispatch({ changes: { from: head, insert: `\n${ol[1]}${n}. ` }, selection: { anchor: head + 1 + ol[1].length + n.toString().length + 2 } })
-    return true
-  }
-  const tk = t.match(/^(\s*)([-*+])\s\[([ xX])\]\s(.*)$/)
-  if (tk) {
-    if (!tk[4].trim()) { view.dispatch({ changes: { from: line.from, to: line.to, insert: '' }, selection: { anchor: line.from } }); return true }
-    view.dispatch({ changes: { from: head, insert: `\n${tk[1]}${tk[2]} [ ] ` }, selection: { anchor: head + 1 + tk[1].length + 6 } })
-    return true
-  }
   const qt = t.match(/^(>\s?)(.*)$/)
   if (qt) {
     if (!qt[2].trim()) { view.dispatch({ changes: { from: line.from, to: line.to, insert: '' }, selection: { anchor: line.from } }); return true }
@@ -1042,13 +1043,12 @@ function foldToLevel(view: EditorView, level: number): boolean {
 
 function unfoldAll(view: EditorView): boolean {
   const effects: any[] = []
-  const folded = view.state.field(foldEffect as any, false)
-  if (!folded) return false
+  const folded = foldedRanges(view.state)
   folded.between(0, view.state.doc.length, (from: number, to: number) => {
     effects.push(unfoldEffect.of({ from, to }))
   })
   if (effects.length > 0) view.dispatch({ effects })
-  return true
+  return effects.length > 0
 }
 
 // ============ 快速插入表格 ============
@@ -1269,7 +1269,9 @@ function createSpellCheckPlugin() {
       build(view: EditorView) {
         const deco: { from: number; to: number; value: Decoration }[] = []
         const doc = view.state.doc
-        for (let i = 1; i <= doc.lines; i++) {
+        const startLine = doc.lineAt(view.viewport.from).number
+        const endLine = doc.lineAt(view.viewport.to).number
+        for (let i = startLine; i <= endLine; i++) {
           const line = doc.line(i)
           const text = line.text
           for (const [re] of commonTypos) {
