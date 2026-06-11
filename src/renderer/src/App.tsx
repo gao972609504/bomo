@@ -49,6 +49,34 @@ declare global {
 }
 
 export default function App() {
+
+  // ── 文件模板 ──
+  const templates: { name: string; icon: string; content: string }[] = [
+    {
+      name: '空白文档', icon: '📄',
+      content: ''
+    },
+    {
+      name: '博客文章', icon: '📝',
+      content: `---\ntitle: \ndate: ${new Date().toLocaleDateString('zh-CN')}\ntags: []\n---\n\n# 标题\n\n## 引言\n\n## 正文\n\n## 总结\n`
+    },
+    {
+      name: '会议记录', icon: '📋',
+      content: `# 会议记录\n\n**日期：** ${new Date().toLocaleDateString('zh-CN')}\n**参会人：** \n**议题：** \n\n---\n\n## 讨论内容\n\n- \n\n## 决议\n\n- [ ] \n\n## 后续跟进\n\n| 任务 | 负责人 | 截止日期 |\n| --- | --- | --- |\n|  |  |  |\n`
+    },
+    {
+      name: '每日笔记', icon: '📓',
+      content: `# ${new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}\n\n## 今日计划\n\n- [ ] \n- [ ] \n- [ ] \n\n## 笔记\n\n\n\n## 灵感\n\n\n\n## 明日计划\n\n- \n`
+    },
+    {
+      name: '技术文档', icon: '🔧',
+      content: `# 技术文档\n\n## 概述\n\n\n\n## 技术架构\n\n\n\n## API 接口\n\n### 接口名称\n\n**请求方式：** `GET`\n**路径：** `/api/endpoint`\n\n#### 参数\n\n| 参数 | 类型 | 必填 | 说明 |\n| --- | --- | --- | --- |\n|  |  |  |  |\n\n#### 返回值\n\n\`\`\`json\n{}\n\`\`\`\n\n## 注意事项\n\n> \n`
+    },
+    {
+      name: '读书笔记', icon: '📚',
+      content: `# 《书名》读书笔记\n\n**作者：** \n**出版日期：** \n**阅读日期：** ${new Date().toLocaleDateString('zh-CN')}\n\n---\n\n## 一句话总结\n\n\n\n## 核心观点\n\n1. \n2. \n3. \n\n## 精彩摘录\n\n> \n\n## 个人感悟\n\n\n\n## 推荐指数\n\n⭐⭐⭐⭐⭐\n`
+    },
+  ]
   const { theme, sidebarVisible, showFindReplace, activeTabId, tabs, scrollProgress, zenMode } = useEditorStore()
   const activeTab = tabs.find((t) => t.id === activeTabId)
   const [isDragging, setIsDragging] = useState(false)
@@ -403,7 +431,7 @@ export default function App() {
                 <p>轻量美观的 Markdown 编辑器</p>
                 <div className="welcome-actions">
                   <button onClick={() => useEditorStore.getState().createTab()}>
-                    新建文件
+                    空白文件
                   </button>
                   <button onClick={async () => {
                     if (!window.api) return
@@ -415,6 +443,17 @@ export default function App() {
                   }}>
                     打开文件夹
                   </button>
+                </div>
+                <div className="welcome-templates">
+                  <p>从模板创建</p>
+                  <div className="template-grid">
+                    {templates.map((tpl, idx) => (
+                      <button key={idx} className="template-card" onClick={() => useEditorStore.getState().createTab(undefined, tpl.content)}>
+                        <span className="template-icon">{tpl.icon}</span>
+                        <span className="template-name">{tpl.name}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div className="welcome-shortcuts">
                   <p>快捷操作</p>

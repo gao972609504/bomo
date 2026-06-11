@@ -49,8 +49,7 @@ interface EditorState {
   fontSize: number
   wordGoal: number
 
-  createTab: (filePath?: string, content?: string) => string
-  closeTab: (id: string) => void
+  createTab: (filePath?: string, content?: string) => string  closeTab: (id: string) => void
   setActiveTab: (id: string) => void
   updateTabContent: (id: string, content: string) => void
   updateTabCursor: (id: string, line: number, col: number) => void
