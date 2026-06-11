@@ -383,6 +383,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'F6', run: reverseSelectedLines },
           { key: 'F7', run: uniqueSelectedLines },
           { key: 'F8', run: numberSelectedLines },
+          { key: 'F9', run: insertToc },
           { key: 'Mod-1', run: v => foldToLevel(v, 1) },
           { key: 'Mod-2', run: v => foldToLevel(v, 2) },
           { key: 'Mod-3', run: v => foldToLevel(v, 3) },
@@ -1190,5 +1191,27 @@ function numberSelectedLines(view: EditorView): boolean {
   if (lines.length <= 1) return false
   const numbered = lines.map((l, i) => `${i + 1}. ${l.replace(/^\d+\.\s/, '')}`)
   view.dispatch({ changes: { from, to, insert: numbered.join('\n') }, selection: { anchor: from, head: from + numbered.join('\n').length } })
+  return true
+}
+
+// ============ 插入目录 ============
+
+function insertToc(view: EditorView): boolean {
+  const doc = view.state.doc
+  const tocLines: string[] = []
+  for (let i = 1; i <= doc.lines; i++) {
+    const line = doc.line(i)
+    const m = line.text.match(/^(#{1,6})\s+(.+)$/)
+    if (!m) continue
+    const level = m[1].length
+    const text = m[2].trim()
+    const indent = '  '.repeat(level - 1)
+    const anchor = text.toLowerCase().replace(/[^\w一-鿿]+/g, '-')
+    tocLines.push(`${indent}- [${text}](#${anchor})`)
+  }
+  if (tocLines.length === 0) return false
+  const tocText = '## 目录\n\n' + tocLines.join('\n') + '\n\n'
+  const pos = view.state.selection.main.head
+  view.dispatch({ changes: { from: pos, insert: tocText }, selection: { anchor: pos + tocText.length } })
   return true
 }
