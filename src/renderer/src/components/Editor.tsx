@@ -56,7 +56,7 @@ function createTypewriterPlugin() {
 export function Editor({ tab }: EditorProps) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
-  const { updateTabContent, theme, focusMode, typewriterMode } = useEditorStore()
+  const { updateTabContent, updateTabCursor, theme, focusMode, typewriterMode } = useEditorStore()
   const isDark = theme === 'dark'
 
   useEffect(() => {
@@ -64,6 +64,11 @@ export function Editor({ tab }: EditorProps) {
 
     const updateHandler = EditorView.updateListener.of(update => {
       if (update.docChanged) updateTabContent(tab.id, update.state.doc.toString())
+      if (update.selectionSet) {
+        const head = update.state.selection.main.head
+        const line = update.state.doc.lineAt(head)
+        updateTabCursor(tab.id, line.number, head - line.from + 1)
+      }
     })
 
     const state = EditorState.create({

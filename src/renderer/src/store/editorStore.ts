@@ -7,6 +7,8 @@ export interface Tab {
   content: string
   originalContent: string
   isModified: boolean
+  cursorLine: number
+  cursorCol: number
 }
 
 export interface FileTreeNode {
@@ -34,6 +36,7 @@ interface EditorState {
   closeTab: (id: string) => void
   setActiveTab: (id: string) => void
   updateTabContent: (id: string, content: string) => void
+  updateTabCursor: (id: string, line: number, col: number) => void
   markTabSaved: (id: string) => void
   renameTab: (id: string, title: string) => void
   setFileTree: (tree: FileTreeNode[], folderPath: string) => void
@@ -77,7 +80,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   createTab: (filePath?: string, content?: string) => {
     const id = `tab-${++tabCounter}`
     const title = filePath ? filePath.split(/[/\\]/).pop()! : '未命名'
-    const tab: Tab = { id, filePath: filePath || null, title, content: content || '', originalContent: content || '', isModified: false }
+    const tab: Tab = { id, filePath: filePath || null, title, content: content || '', originalContent: content || '', isModified: false, cursorLine: 1, cursorCol: 1 }
     set(state => ({ tabs: [...state.tabs, tab], activeTabId: id }))
     return id
   },
@@ -99,6 +102,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   updateTabContent: (id: string, content: string) => {
     set(state => ({
       tabs: state.tabs.map(t => t.id === id ? { ...t, content, isModified: content !== t.originalContent } : t)
+    }))
+  },
+
+  updateTabCursor: (id: string, line: number, col: number) => {
+    set(state => ({
+      tabs: state.tabs.map(t => t.id === id ? { ...t, cursorLine: line, cursorCol: col } : t)
     }))
   },
 
