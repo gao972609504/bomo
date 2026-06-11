@@ -337,6 +337,13 @@ function inlineDeco(text: string, lf: number, on: boolean, deco: { from: number;
     if (!on) { deco.push({ from: f, to: f + 1, value: hideMark }); deco.push({ from: t - 1, to: t, value: hideMark }) }
   }
 
+  // HTML 注释隐藏
+  const commentRe = /<!--[\s\S]*?-->/g
+  while ((m = commentRe.exec(text))) {
+    const f = lf + m.index, t = f + m[0].length
+    deco.push({ from: f, to: t, value: Decoration.mark({ class: 'cm-mark-hidden' }) })
+  }
+
   // 图片 ![alt](url) — 行内预览
   const imgRe = /!\[([^\]]*)\]\(([^)]+)\)/g
   while ((m = imgRe.exec(text))) {
