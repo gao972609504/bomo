@@ -45,6 +45,23 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
   const wordCount = tab.content.trim() ? tab.content.trim().split(/\s+/).length : 0
   const paragraphCount = tab.content.trim() ? tab.content.split(/\n\s*\n/).filter(p => p.trim()).length : 0
 
+  // 选区统计
+  const [selInfo, setSelInfo] = useState<{ chars: number; words: number; lines: number } | null>(null)
+  useEffect(() => {
+    const updateSel = () => {
+      const sel = window.getSelection()
+      if (sel && sel.toString().trim()) {
+        const text = sel.toString()
+        setSelInfo({ chars: text.length, words: text.trim().split(/\s+/).length, lines: text.split('\n').length })
+      } else {
+        setSelInfo(null)
+      }
+    }
+    document.addEventListener('mouseup', updateSel)
+    document.addEventListener('keyup', updateSel)
+    return () => { document.removeEventListener('mouseup', updateSel); document.removeEventListener('keyup', updateSel) }
+  }, [])
+
   // 阅读时间估算（中文按 300 字/分钟，英文按 200 词/分钟）
   const chineseChars = (tab.content.match(/[一-鿿]/g) || []).length
   const englishWords = (tab.content.match(/[a-zA-Z]+/g) || []).length
@@ -59,6 +76,11 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         <span className="status-item" title="词数">{wordCount} 词</span>
         <span className="status-item" title="行数">{lineCount} 行</span>
         <span className="status-item" title="段落数">{paragraphCount} 段</span>
+        {selInfo && (
+          <span className="status-item" title="选区统计" style={{ color: 'var(--accent-color, #0969da)' }}>
+            📊 选中: {selInfo.chars}字符 {selInfo.words}词 {selInfo.lines}行
+          </span>
+        )}
         <span className="status-item" title="预计阅读时间">📖 {readingTime}</span>
         {wordGoal > 0 && (() => {
           const progress = Math.min(100, Math.round((wordCount / wordGoal) * 100))
