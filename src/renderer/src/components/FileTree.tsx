@@ -1,10 +1,22 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useEditorStore, FileTreeNode } from '../store/editorStore'
+
+interface ContextMenuState {
+  x: number
+  y: number
+  node: FileTreeNode | null
+  isOnBackground: boolean
+}
 
 export function FileTree() {
   const { fileTree, folderPath, sidebarVisible } = useEditorStore()
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
+  const [ctxMenu, setCtxMenu] = useState<ContextMenuState | null>(null)
+  const [renaming, setRenaming] = useState<{ path: string; name: string } | null>(null)
+  const [creating, setCreating] = useState<{ parentPath: string; type: 'file' | 'folder'; name: string } | null>(null)
+  const renameInputRef = useRef<HTMLInputElement>(null)
+  const createInputRef = useRef<HTMLInputElement>(null)
 
   if (!sidebarVisible) return null
 
@@ -32,6 +44,100 @@ export function FileTree() {
       store.createTab(node.path, content)
     }
   }
+
+  const refreshTree = useCallback(async () => {
+    const fp = useEditorStore.getState().folderPath
+    if (!fp || !window.api) return
+    try {
+      const tree = await window.api.readdir(fp)
+      useEditorStore.getState().setFileTree(tree, fp)
+    } catch { /* ignore */ }
+  }, [])
+
+  const handleContextMenu = useCallback((e: React.MouseEvent, node: FileTreeNode | null) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCtxMenu({ x: e.clientX, y: e.clientY, node, isOnBackground: !node })
+  }, [])
+
+  const closeCtxMenu = useCallback(() => setCtxMenu(null), [])
+
+  // 点击其他区域关闭右键菜单
+  useEffect(() => {
+    if (!ctxMenu) return
+    const handler = () => closeCtxMenu()
+    window.addEventListener('click', handler)
+    return () => window.removeEventListener('click', handler)
+  }, [ctxMenu, closeCtxMenu])
+
+  const handleNewFile = useCallback(async (parentPath: string, type: 'file' | 'folder') => {
+    closeCtxMenu()
+    setCreating({ parentPath, type, name: type === 'file' ? '未命名.md' : '新建文件夹' })
+  }, [closeCtxMenu])
+
+  const confirmCreate = useCallback(async () => {
+    if (!creating || !window.api) return
+    const { parentPath, type, name } = creating
+    if (!name.trim()) { setCreating(null); return }
+    const sep = parentPath.includes('\\') ? '\\' : '/'
+    const fullPath = parentPath + sep + name
+    try {
+      if (type === 'file') await window.api.createFile(fullPath)
+      else await window.api.createFolder(fullPath)
+      await refreshTree()
+      // 如果是文件，打开它
+      if (type === 'file') {
+        const content = await window.api.readFile(fullPath)
+        useEditorStore.getState().createTab(fullPath, content)
+      }
+    } catch (err) { console.error('创建失败:', err) }
+    setCreating(null)
+  }, [creating, refreshTree])
+
+  const startRename = useCallback((node: FileTreeNode) => {
+    closeCtxMenu()
+    setRenaming({ path: node.path, name: node.name })
+  }, [closeCtxMenu])
+
+  const confirmRename = useCallback(async () => {
+    if (!renaming || !window.api) return
+    const { path: oldPath, name } = renaming
+    if (!name.trim()) { setRenaming(null); return }
+    const dir = oldPath.substring(0, oldPath.lastIndexOf(oldPath.includes('\\') ? '\\' : '/'))
+    const sep = oldPath.includes('\\') ? '\\' : '/'
+    const newPath = dir + sep + name
+    if (oldPath !== newPath) {
+      try {
+        await window.api.renamePath(oldPath, newPath)
+        await refreshTree()
+        // 更新已打开的标签
+        const store = useEditorStore.getState()
+        const tab = store.tabs.find(t => t.filePath === oldPath)
+        if (tab) {
+          useEditorStore.getState().renameTab(tab.id, name)
+          // 更新 filePath
+          useEditorStore.setState({ tabs: store.tabs.map(t => t.id === tab.id ? { ...t, filePath: newPath } : t) })
+        }
+      } catch (err) { console.error('重命名失败:', err) }
+    }
+    setRenaming(null)
+  }, [renaming, refreshTree])
+
+  const handleDelete = useCallback(async (node: FileTreeNode) => {
+    closeCtxMenu()
+    if (!window.api || !confirm(`确定要删除 "${node.name}" 吗？`)) return
+    try {
+      if (node.isDirectory) await window.api.deleteFolder(node.path)
+      else await window.api.deleteFile(node.path)
+      await refreshTree()
+      // 如果删除的是已打开的文件，关闭对应标签
+      if (!node.isDirectory) {
+        const store = useEditorStore.getState()
+        const tab = store.tabs.find(t => t.filePath === node.path)
+        if (tab) store.closeTab(tab.id)
+      }
+    } catch (err) { console.error('删除失败:', err) }
+  }, [closeCtxMenu, refreshTree])
 
   // 搜索过滤：返回匹配的节点（包含匹配的子节点或自身匹配的目录）
   const filterTree = (nodes: FileTreeNode[], query: string): FileTreeNode[] => {
@@ -73,19 +179,54 @@ export function FileTree() {
   const renderNode = (node: FileTreeNode, depth: number = 0) => {
     const isExpanded = effectiveExpanded.has(node.path)
     const isMatch = searchQuery.trim() && node.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const isRenaming = renaming?.path === node.path
+
     return (
       <div key={node.path}>
         <div
           className={`file-tree-item ${node.isDirectory ? 'directory' : 'file'} ${isMatch ? 'file-tree-match' : ''}`}
           style={{ paddingLeft: `${12 + depth * 16}px` }}
           onClick={() => openFile(node)}
+          onContextMenu={(e) => handleContextMenu(e, node)}
         >
           <span className="file-tree-icon">
             {node.isDirectory ? (isExpanded ? '📂' : '📁') : getFileIcon(node.name)}
           </span>
-          <span className="file-tree-name">{node.name}</span>
+          {isRenaming ? (
+            <input
+              ref={renameInputRef}
+              className="file-tree-rename-input"
+              value={renaming.name}
+              onChange={(e) => setRenaming({ ...renaming, name: e.target.value })}
+              onKeyDown={(e) => { if (e.key === 'Enter') confirmRename(); if (e.key === 'Escape') setRenaming(null) }}
+              onBlur={confirmRename}
+              onClick={(e) => e.stopPropagation()}
+              autoFocus
+            />
+          ) : (
+            <span className="file-tree-name">{node.name}</span>
+          )}
         </div>
-        {node.isDirectory && isExpanded && node.children?.map((child) => renderNode(child, depth + 1))}
+        {node.isDirectory && isExpanded && (
+          <>
+            {creating && creating.parentPath === node.path && (
+              <div className="file-tree-item" style={{ paddingLeft: `${12 + (depth + 1) * 16}px` }}>
+                <span className="file-tree-icon">{creating.type === 'file' ? '📝' : '📁'}</span>
+                <input
+                  ref={createInputRef}
+                  className="file-tree-rename-input"
+                  value={creating.name}
+                  onChange={(e) => setCreating({ ...creating, name: e.target.value })}
+                  onKeyDown={(e) => { if (e.key === 'Enter') confirmCreate(); if (e.key === 'Escape') setCreating(null) }}
+                  onBlur={confirmCreate}
+                  onClick={(e) => e.stopPropagation()}
+                  autoFocus
+                />
+              </div>
+            )}
+            {node.children?.map((child) => renderNode(child, depth + 1))}
+          </>
+        )}
       </div>
     )
   }
@@ -129,10 +270,28 @@ export function FileTree() {
           )}
         </div>
       )}
-      <div className="file-tree-content">
+      <div className="file-tree-content" onContextMenu={(e) => handleContextMenu(e, null)}>
         {fileTree.length > 0 ? (
           filteredTree.length > 0 ? (
-            filteredTree.map((node) => renderNode(node))
+            <>
+              {/* 根目录新建项 */}
+              {creating && creating.parentPath === folderPath && (
+                <div className="file-tree-item" style={{ paddingLeft: '12px' }}>
+                  <span className="file-tree-icon">{creating.type === 'file' ? '📝' : '📁'}</span>
+                  <input
+                    ref={createInputRef}
+                    className="file-tree-rename-input"
+                    value={creating.name}
+                    onChange={(e) => setCreating({ ...creating, name: e.target.value })}
+                    onKeyDown={(e) => { if (e.key === 'Enter') confirmCreate(); if (e.key === 'Escape') setCreating(null) }}
+                    onBlur={confirmCreate}
+                    onClick={(e) => e.stopPropagation()}
+                    autoFocus
+                  />
+                </div>
+              )}
+              {filteredTree.map((node) => renderNode(node))}
+            </>
           ) : (
             <div className="file-tree-empty">未找到匹配文件</div>
           )
@@ -152,6 +311,49 @@ export function FileTree() {
           </div>
         )}
       </div>
+      {/* 右键菜单 */}
+      {ctxMenu && (
+        <div
+          className="context-menu"
+          style={{ left: ctxMenu.x, top: ctxMenu.y }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {ctxMenu.node ? (
+            <>
+              {ctxMenu.node.isDirectory && (
+                <>
+                  <div className="context-menu-item" onClick={() => handleNewFile(ctxMenu.node!.path, 'file')}>
+                    <span>📝</span> 新建文件
+                  </div>
+                  <div className="context-menu-item" onClick={() => handleNewFile(ctxMenu.node!.path, 'folder')}>
+                    <span>📁</span> 新建文件夹
+                  </div>
+                  <div className="context-menu-divider" />
+                </>
+              )}
+              <div className="context-menu-item" onClick={() => startRename(ctxMenu.node!)}>
+                <span>✏️</span> 重命名
+              </div>
+              <div className="context-menu-item" onClick={() => handleDelete(ctxMenu.node!)}>
+                <span>🗑️</span> 删除
+              </div>
+            </>
+          ) : (
+            <>
+              {folderPath && (
+                <>
+                  <div className="context-menu-item" onClick={() => handleNewFile(folderPath, 'file')}>
+                    <span>📝</span> 新建文件
+                  </div>
+                  <div className="context-menu-item" onClick={() => handleNewFile(folderPath, 'folder')}>
+                    <span>📁</span> 新建文件夹
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   )
 }

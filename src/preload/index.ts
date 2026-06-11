@@ -32,6 +32,22 @@ const api = {
   readdir: (dirPath: string): Promise<FileTreeNode[]> =>
     ipcRenderer.invoke('fs:readdir', dirPath),
 
+  // 文件树操作
+  createFile: (filePath: string): Promise<boolean> =>
+    ipcRenderer.invoke('fs:createFile', filePath),
+
+  createFolder: (dirPath: string): Promise<boolean> =>
+    ipcRenderer.invoke('fs:createFolder', dirPath),
+
+  renamePath: (oldPath: string, newPath: string): Promise<boolean> =>
+    ipcRenderer.invoke('fs:rename', oldPath, newPath),
+
+  deleteFile: (filePath: string): Promise<boolean> =>
+    ipcRenderer.invoke('fs:deleteFile', filePath),
+
+  deleteFolder: (dirPath: string): Promise<boolean> =>
+    ipcRenderer.invoke('fs:deleteFolder', dirPath),
+
   getDefaultPath: (): Promise<string> =>
     ipcRenderer.invoke('app:getDefaultPath'),
 

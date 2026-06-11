@@ -26,6 +26,11 @@ declare global {
       openFolder: () => Promise<string | null>
       readdir: (dirPath: string) => Promise<FileTreeNode[]>
       getDefaultPath: () => Promise<string>
+      createFile: (filePath: string) => Promise<boolean>
+      createFolder: (dirPath: string) => Promise<boolean>
+      renamePath: (oldPath: string, newPath: string) => Promise<boolean>
+      deleteFile: (filePath: string) => Promise<boolean>
+      deleteFolder: (dirPath: string) => Promise<boolean>
       onMenuNewFile: (callback: () => void) => () => void
       onMenuSave: (callback: () => void) => () => void
       onMenuSaveAs: (callback: () => void) => () => void

@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu, nativeTheme } from 'electron'
 import { join } from 'path'
-import { readFile, writeFile, readdir, stat, mkdir } from 'fs/promises'
+import { readFile, writeFile, readdir, stat, mkdir, unlink, rmdir, rename as fsRename } from 'fs/promises'
 import { existsSync } from 'fs'
 import { homedir } from 'os'
 
@@ -245,6 +245,36 @@ ipcMain.handle('fs:readdir', async (_event, dirPath: string) => {
 
 ipcMain.handle('app:getDefaultPath', () => {
   return homedir()
+})
+
+// 文件树操作：新建文件
+ipcMain.handle('fs:createFile', async (_event, filePath: string) => {
+  await writeFile(filePath, '', 'utf-8')
+  return true
+})
+
+// 文件树操作：新建文件夹
+ipcMain.handle('fs:createFolder', async (_event, dirPath: string) => {
+  await mkdir(dirPath, { recursive: true })
+  return true
+})
+
+// 文件树操作：重命名
+ipcMain.handle('fs:rename', async (_event, oldPath: string, newPath: string) => {
+  await fsRename(oldPath, newPath)
+  return true
+})
+
+// 文件树操作：删除文件
+ipcMain.handle('fs:deleteFile', async (_event, filePath: string) => {
+  await unlink(filePath)
+  return true
+})
+
+// 文件树操作：删除文件夹
+ipcMain.handle('fs:deleteFolder', async (_event, dirPath: string) => {
+  await rmdir(dirPath, { recursive: true })
+  return true
 })
 
 /** 待打开的文件（窗口创建前拖入的） */
