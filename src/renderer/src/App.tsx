@@ -13,6 +13,7 @@ import { InsertToolbar } from './components/InsertToolbar'
 import { TagPanel } from './components/TagPanel'
 import { DocStats } from './components/DocStats'
 import { ShortcutReference } from './components/ShortcutReference'
+import { GlobalSearch } from './components/GlobalSearch'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -391,6 +392,11 @@ export default function App() {
         e.preventDefault()
         useEditorStore.getState().reopenClosedTab()
       }
+      // Ctrl+Shift+H 全局搜索
+      if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+        e.preventDefault()
+        useEditorStore.getState().setShowGlobalSearch(true)
+      }
       // F11 禅模式
       if (e.key === 'F11') {
         e.preventDefault()
@@ -546,6 +552,7 @@ export default function App() {
       <CommandPalette />
       <DocStats />
       <ShortcutReference />
+      <GlobalSearch />
     </div>
   )
 }

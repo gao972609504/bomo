@@ -39,6 +39,7 @@ interface EditorState {
   showQuickOpen: boolean
   showCommandPalette: boolean
   showGoToLine: boolean
+  showGlobalSearch: boolean
   headingNumbering: boolean
   tagPanelVisible: boolean
   wordWrap: boolean
@@ -77,6 +78,7 @@ interface EditorState {
   setShowQuickOpen: (show: boolean) => void
   setShowCommandPalette: (show: boolean) => void
   setShowGoToLine: (show: boolean) => void
+  setShowGlobalSearch: (show: boolean) => void
   toggleHeadingNumbering: () => void
   toggleTagPanel: () => void
   toggleWordWrap: () => void
@@ -168,6 +170,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showQuickOpen: false,
   showCommandPalette: false,
   showGoToLine: false,
+  showGlobalSearch: false,
   headingNumbering: false,
   tagPanelVisible: false,
   wordWrap: true,
@@ -267,6 +270,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowQuickOpen: (show: boolean) => set({ showQuickOpen: show }),
   setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
   setShowGoToLine: (show: boolean) => set({ showGoToLine: show }),
+  setShowGlobalSearch: (show: boolean) => set({ showGlobalSearch: show }),
   toggleHeadingNumbering: () => set(state => ({ headingNumbering: !state.headingNumbering })),
   toggleTagPanel: () => set(state => ({ tagPanelVisible: !state.tagPanelVisible })),
   toggleWordWrap: () => set(state => ({ wordWrap: !state.wordWrap })),
