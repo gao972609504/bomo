@@ -42,7 +42,7 @@ function fuzzyMatch(query: string, text: string): { match: boolean; score: numbe
 }
 
 export function QuickOpen() {
-  const { fileTree, showQuickOpen, setShowQuickOpen } = useEditorStore()
+  const { fileTree, showQuickOpen, setShowQuickOpen, recentFiles } = useEditorStore()
   const [query, setQuery] = useState('')
   const [selectedIdx, setSelectedIdx] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -50,13 +50,22 @@ export function QuickOpen() {
   const allFiles = useMemo(() => flattenTree(fileTree), [fileTree])
 
   const results = useMemo(() => {
-    if (!query.trim()) return allFiles.slice(0, 50)
+    if (!query.trim()) {
+      // 无搜索词：最近文件 + 工作区文件
+      const recentItems: FlatFile[] = recentFiles.slice(0, 10).map(f => ({
+        name: f.title,
+        path: f.filePath,
+        dir: f.filePath.split(/[/\\]/).slice(-2, -1).join('/') || ''
+      }))
+      const workspaceItems = allFiles.filter(f => !recentItems.some(r => r.path === f.path)).slice(0, 40)
+      return [...recentItems, ...workspaceItems]
+    }
     const scored = allFiles
       .map(f => ({ ...f, ...fuzzyMatch(query, f.name) }))
       .filter(f => f.match)
       .sort((a, b) => b.score - a.score)
     return scored.slice(0, 30)
-  }, [allFiles, query])
+  }, [allFiles, query, recentFiles])
 
   useEffect(() => { inputRef.current?.focus() }, [])
   useEffect(() => { setSelectedIdx(0) }, [query])
@@ -109,16 +118,23 @@ export function QuickOpen() {
             <div className="quick-open-empty">未找到匹配文件</div>
           ) : (
             results.map((file, idx) => (
-              <div
-                key={file.path}
-                className={`quick-open-item ${idx === selectedIdx ? 'selected' : ''}`}
-                onClick={() => openFile(file)}
-                onMouseEnter={() => setSelectedIdx(idx)}
-              >
-                <span className="quick-open-file-icon">📄</span>
-                <span className="quick-open-file-name">{file.name}</span>
-                {file.dir && <span className="quick-open-file-dir">{file.dir}</span>}
-              </div>
+              <React.Fragment key={file.path}>
+                {!query && idx === 0 && recentFiles.length > 0 && (
+                  <div className="cmd-category">最近打开</div>
+                )}
+                {!query && idx === Math.min(recentFiles.length, 10) && allFiles.length > 0 && (
+                  <div className="cmd-category">工作区文件</div>
+                )}
+                <div
+                  className={`quick-open-item ${idx === selectedIdx ? 'selected' : ''}`}
+                  onClick={() => openFile(file)}
+                  onMouseEnter={() => setSelectedIdx(idx)}
+                >
+                  <span className="quick-open-file-icon">{idx < recentFiles.length && !query ? '🕐' : '📄'}</span>
+                  <span className="quick-open-file-name">{file.name}</span>
+                  {file.dir && <span className="quick-open-file-dir">{file.dir}</span>}
+                </div>
+              </React.Fragment>
             ))
           )}
         </div>
