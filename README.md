@@ -1,8 +1,7 @@
 <div align="center">
 
-<img src="logo.jpg" alt="MarkFlow" width="180" height="180" />
+<img src="logo.jpg" alt="MarkFlow" width="260" height="260" />
 
-# ✨ MarkFlow
 
 **轻量美观的类 Typora 所见即所得 Markdown 编辑器**
 
@@ -388,9 +387,8 @@ git push origin feature/amazing-feature
 
 <div align="center">
 
-<img src="logo.jpg" alt="MarkFlow" width="180" height="180" />
+<img src="logo.jpg" alt="MarkFlow" width="260" height="260" />
 
-# ✨ MarkFlow
 
 **A Lightweight, Beautiful Typora-like Markdown Editor with Live Rendering**
 
