@@ -42,6 +42,7 @@ interface EditorState {
   wordWrap: boolean
   showLineNumbers: boolean
   showDocStats: boolean
+  showShortcuts: boolean
   fontSize: number
 
   createTab: (filePath?: string, content?: string) => string
@@ -70,6 +71,7 @@ interface EditorState {
   toggleWordWrap: () => void
   toggleLineNumbers: () => void
   setShowDocStats: (show: boolean) => void
+  setShowShortcuts: (show: boolean) => void
   setFontSize: (size: number) => void
   resetFontSize: () => void
   saveSession: () => void
@@ -125,6 +127,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   wordWrap: true,
   showLineNumbers: true,
   showDocStats: false,
+  showShortcuts: false,
   fontSize: loadPersistedFontSize(),
   lastSession: null as { tabPaths: string[]; activeTabPath: string | null; folderPath: string | null } | null,
 
@@ -195,6 +198,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   toggleWordWrap: () => set(state => ({ wordWrap: !state.wordWrap })),
   toggleLineNumbers: () => set(state => ({ showLineNumbers: !state.showLineNumbers })),
   setShowDocStats: (show: boolean) => set({ showDocStats: show }),
+  setShowShortcuts: (show: boolean) => set({ showShortcuts: show }),
   setFontSize: (size: number) => { persistFontSize(size); set({ fontSize: size }) },
   resetFontSize: () => { const defaultSize = 15.5; persistFontSize(defaultSize); set({ fontSize: defaultSize }) },
 

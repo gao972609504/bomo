@@ -12,6 +12,7 @@ import { GoToLine } from './components/GoToLine'
 import { InsertToolbar } from './components/InsertToolbar'
 import { TagPanel } from './components/TagPanel'
 import { DocStats } from './components/DocStats'
+import { ShortcutReference } from './components/ShortcutReference'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -294,6 +295,11 @@ export default function App() {
         e.preventDefault()
         useEditorStore.getState().setShowDocStats(true)
       }
+      // Ctrl+Shift+/ 快捷键参考
+      if (e.ctrlKey && e.shiftKey && e.key === '/') {
+        e.preventDefault()
+        useEditorStore.getState().setShowShortcuts(true)
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -367,6 +373,7 @@ export default function App() {
       <QuickOpen />
       <CommandPalette />
       <DocStats />
+      <ShortcutReference />
     </div>
   )
 }
