@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Tab, useEditorStore } from '../store/editorStore'
 
 interface StatusBarProps {
@@ -8,6 +8,37 @@ interface StatusBarProps {
 
 export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
   const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers, wordGoal, setWordGoal } = useEditorStore()
+
+  // ── 番茄钟计时器 ──
+  const [pomoRunning, setPomoRunning] = useState(false)
+  const [pomoSeconds, setPomoSeconds] = useState(25 * 60)
+  const [pomoTotal, setPomoTotal] = useState(25 * 60)
+  const [pomoMode, setPomoMode] = useState<'work' | 'break'>('work')
+  const pomoInterval = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  useEffect(() => {
+    if (pomoRunning) {
+      pomoInterval.current = setInterval(() => {
+        setPomoSeconds(s => {
+          if (s <= 1) {
+            setPomoRunning(false)
+            // 切换工作/休息模式
+            if (pomoMode === 'work') {
+              setPomoMode('break')
+              setPomoTotal(5 * 60)
+              return 5 * 60
+            } else {
+              setPomoMode('work')
+              setPomoTotal(25 * 60)
+              return 25 * 60
+            }
+          }
+          return s - 1
+        })
+      }, 1000)
+    }
+    return () => { if (pomoInterval.current) clearInterval(pomoInterval.current) }
+  }, [pomoRunning, pomoMode])
 
   const lineCount = tab.content.split('\n').length
   const charCount = tab.content.length
@@ -108,6 +139,31 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         </button>
         <button className="status-btn" onClick={toggleTheme} title="切换主题">
           {theme === 'light' ? '🌙 暗色' : '☀️ 亮色'}
+        </button>
+        <button
+          className={`status-btn ${pomoRunning ? 'status-btn-active' : ''}`}
+          title={`番茄钟 (${pomoMode === 'work' ? '工作' : '休息'}) - 点击${pomoRunning ? '暂停' : '开始'}`}
+          onClick={() => {
+            if (!pomoRunning && pomoSeconds === pomoTotal && pomoMode === 'work') {
+              // 首次点击或已结束，可选择时长
+              const input = prompt('设置专注时间（分钟）:', '25')
+              if (input) {
+                const mins = Math.max(1, parseInt(input, 10) || 25)
+                setPomoTotal(mins * 60)
+                setPomoSeconds(mins * 60)
+              }
+            }
+            setPomoRunning(!pomoRunning)
+          }}
+          onContextMenu={(e) => {
+            e.preventDefault()
+            setPomoRunning(false)
+            setPomoMode('work')
+            setPomoTotal(25 * 60)
+            setPomoSeconds(25 * 60)
+          }}
+        >
+          🍅 {String(Math.floor(pomoSeconds / 60)).padStart(2, '0')}:{String(pomoSeconds % 60).padStart(2, '0')}
         </button>
         <span className="status-item" title="字体大小 (Ctrl++/- 调整, Ctrl+0 重置)">
           🔤 {fontSize.toFixed(1)}px
