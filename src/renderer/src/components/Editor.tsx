@@ -221,7 +221,9 @@ export function Editor({ tab }: EditorProps) {
 
     const state = EditorState.create({
       doc: tab.content,
+      selection: { anchor: 0 },
       extensions: [
+        EditorState.allowMultipleSelections.of(true),
         ...(showLineNumbers ? [lineNumbers(), highlightActiveLineGutter()] : []),
         history(),
         indentOnInput(),
@@ -244,10 +246,25 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Enter', run: insertLineBelow },
           { key: 'Mod-Shift-Enter', run: insertLineAbove },
           { key: 'Mod-Shift-f', run: formatMarkdownTable },
+          { key: 'Mod-Alt-ArrowUp', run: addCursorAbove },
+          { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
           { key: 'Enter', run: v => autoContinueList(v) },
         ]),
         updateHandler,
         pasteHandler,
+        EditorView.domEventHandlers({
+          mousedown(event, view) {
+            // Ctrl+Click 添加额外光标
+            if (!event.ctrlKey || event.button !== 0) return false
+            const pos = view.posAtCoords({ x: event.clientX, y: event.clientY })
+            if (pos === null) return false
+            event.preventDefault()
+            const sel = view.state.selection
+            const newRanges = [...sel.ranges, sel.constructor.range(pos, pos)]
+            view.dispatch({ selection: sel.constructor.create(newRanges) })
+            return true
+          }
+        }),
         createSelectionHighlightPlugin(),
         createIndentGuidesPlugin(),
         createWysiwygPlugin(),
@@ -475,5 +492,43 @@ export function formatMarkdownTable(view: EditorView): boolean {
 
   if (changes.length === 0) return false
   view.dispatch({ changes })
+  return true
+}
+
+// ============ 多光标编辑 ============
+
+function addCursorAbove(view: EditorView): boolean {
+  const sel = view.state.selection
+  const ranges = sel.ranges.map(r => r)
+  const newRanges: typeof ranges = []
+  for (const range of ranges) {
+    const line = view.state.doc.lineAt(range.head)
+    if (line.number > 1) {
+      const prevLine = view.state.doc.line(line.number - 1)
+      const pos = Math.min(range.head - line.from, prevLine.length) + prevLine.from
+      newRanges.push(view.state.selection.constructor.range(pos, pos))
+    }
+    newRanges.push(range)
+  }
+  if (newRanges.length === ranges.length) return false
+  view.dispatch({ selection: view.state.selection.constructor.create(newRanges) })
+  return true
+}
+
+function addCursorBelow(view: EditorView): boolean {
+  const sel = view.state.selection
+  const ranges = sel.ranges.map(r => r)
+  const newRanges: typeof ranges = []
+  for (const range of ranges) {
+    newRanges.push(range)
+    const line = view.state.doc.lineAt(range.head)
+    if (line.number < view.state.doc.lines) {
+      const nextLine = view.state.doc.line(line.number + 1)
+      const pos = Math.min(range.head - line.from, nextLine.length) + nextLine.from
+      newRanges.push(view.state.selection.constructor.range(pos, pos))
+    }
+  }
+  if (newRanges.length === ranges.length) return false
+  view.dispatch({ selection: view.state.selection.constructor.create(newRanges) })
   return true
 }

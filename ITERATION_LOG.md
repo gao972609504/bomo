@@ -159,3 +159,9 @@
 - 在缩进行左侧显示垂直参考线
 - 每2个空格或1个Tab为一级缩进
 - 使用边框颜色变量，适配深色/浅色主题
+
+### Iteration 42/100 — 多光标编辑
+- Ctrl+Click 在任意位置添加额外光标
+- Ctrl+Alt+上/下箭头在上方/下方行添加光标
+- 支持同时编辑多个位置
+- 启用 EditorState.allowMultipleSelections
