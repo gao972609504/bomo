@@ -3,8 +3,11 @@
 
 .editor-wrapper {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
   background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
 }
 
 /* 阅读进度条 */
@@ -21,7 +24,8 @@
 }
 
 .codemirror-container {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 }
 
