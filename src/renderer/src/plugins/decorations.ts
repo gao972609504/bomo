@@ -35,6 +35,8 @@ export function buildDecorations(view: EditorView): DecorationSet {
   const doc = view.state.doc
   let inCodeBlock = false
   let inCallout = false
+  let inFrontMatter = false
+  let frontMatterChecked = false
   let calloutType = ''
   let calloutContent: string[] = []
   let calloutStartFrom = 0
@@ -65,6 +67,38 @@ export function buildDecorations(view: EditorView): DecorationSet {
     const line = doc.line(i)
     const t = line.text
     const on = isCursorOnLine(view.state, i)
+
+    // ── YAML Front Matter ──
+    if (!inCodeBlock && !inCallout) {
+      if (!frontMatterChecked && i === 1 && /^---\s*$/.test(t.trim())) {
+        inFrontMatter = true
+        frontMatterChecked = true
+        deco.push({ from: line.from, to: line.from, value: Decoration.line({ class: 'cm-front-matter cm-front-matter-start' }) })
+        if (!on) deco.push({ from: line.from, to: line.to, value: hideMark })
+        continue
+      }
+      if (inFrontMatter) {
+        if (/^---\s*$/.test(t.trim())) {
+          inFrontMatter = false
+          deco.push({ from: line.from, to: line.from, value: Decoration.line({ class: 'cm-front-matter cm-front-matter-end' }) })
+          if (!on) deco.push({ from: line.from, to: line.to, value: hideMark })
+          continue
+        }
+        // Front matter content line — render as key-value pairs
+        deco.push({ from: line.from, to: line.from, value: Decoration.line({ class: 'cm-front-matter-content' }) })
+        const kvMatch = t.match(/^(\w[\w-]*):\s*(.*)$/)
+        if (kvMatch && !on) {
+          // Highlight the key
+          deco.push({ from: line.from, to: line.from + kvMatch[1].length, value: Decoration.mark({ class: 'cm-yaml-key' }) })
+          // Highlight the value
+          if (kvMatch[2]) {
+            deco.push({ from: line.from + kvMatch[0].length - kvMatch[2].length, to: line.from + kvMatch[0].length, value: Decoration.mark({ class: 'cm-yaml-value' }) })
+          }
+        }
+        continue
+      }
+      if (i === 1) frontMatterChecked = true
+    }
 
     // ── 围栏代码块 ──
     if (/^\s{0,3}```/.test(t)) {

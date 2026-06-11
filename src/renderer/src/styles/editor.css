@@ -232,6 +232,36 @@
   margin-right: 4px;
 }
 
+/* === YAML Front Matter === */
+.cm-front-matter {
+  background: var(--bg-tertiary) !important;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.cm-front-matter-start {
+  border-radius: 6px 6px 0 0;
+  padding-top: 8px !important;
+}
+
+.cm-front-matter-end {
+  border-radius: 0 0 6px 6px;
+  padding-bottom: 8px !important;
+}
+
+.cm-front-matter-content {
+  padding: 1px 16px !important;
+}
+
+.cm-yaml-key {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.cm-yaml-value {
+  color: var(--text-secondary);
+}
+
 /* === @markwhen/codemirror-tables 表格 Widget 样式 === */
 
 .cm-table-widget {
