@@ -1,0 +1,265 @@
+/* 全局样式 */
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css');
+@import url('https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github.min.css');
+
+:root {
+  /* 亮色主题 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-tertiary: #eaeef2;
+  --text-primary: #1f2328;
+  --text-secondary: #59636e;
+  --text-muted: #8b949e;
+  --border-color: #d1d9e0;
+  --accent-color: #0969da;
+  --accent-hover: #0550ae;
+  --hover-bg: #f3f4f6;
+  --active-bg: #ddf4ff;
+  --shadow: 0 1px 3px rgba(31,35,40,0.04), 0 1px 2px rgba(31,35,40,0.06);
+  --tab-active-bg: #ffffff;
+  --tab-inactive-bg: #f6f8fa;
+  --heading-color: #1f2328;
+  --blockquote-bg: #f6f8fa;
+  --code-bg: #eff1f3;
+  --code-block-bg: #f6f8fa;
+  --link-color: #0969da;
+  --link-hover-color: #0550ae;
+  --hr-color: #d1d9e0;
+  --list-marker-color: #656d76;
+  --selection-bg: #add6ff;
+  --search-match-bg: #fff3b0;
+  --search-match-selected-bg: #ffe088;
+  --img-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #1c2128;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --border-color: #30363d;
+  --accent-color: #58a6ff;
+  --accent-hover: #79c0ff;
+  --hover-bg: #1c2128;
+  --active-bg: #1f2a3b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --tab-active-bg: #0d1117;
+  --tab-inactive-bg: #161b22;
+  --heading-color: #e6edf3;
+  --blockquote-bg: #161b22;
+  --code-bg: #1c2128;
+  --code-block-bg: #161b22;
+  --link-color: #58a6ff;
+  --link-hover-color: #79c0ff;
+  --hr-color: #30363d;
+  --list-marker-color: #484f58;
+  --selection-bg: #264f78;
+  --search-match-bg: #554400;
+  --search-match-selected-bg: #776600;
+  --img-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* 按钮基础样式 */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* 欢迎页面 */
+.welcome-screen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.welcome-content h1 {
+  font-size: 48px;
+  font-weight: 300;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+}
+
+.welcome-content > p {
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.welcome-actions button {
+  padding: 10px 24px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.welcome-actions button:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.welcome-shortcuts {
+  text-align: left;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
+.welcome-shortcuts p {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.welcome-shortcuts div {
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text-primary);
+  margin-right: 8px;
+}
+
+/* 拖拽遮罩 */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(74, 144, 217, 0.12);
+  border: 3px dashed var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.drop-overlay-content {
+  text-align: center;
+  background: var(--bg-primary);
+  padding: 32px 48px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.drop-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.drop-overlay-content p {
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 欢迎页拖拽提示 */
+.welcome-hint {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  font-size: 13px;
+  color: var(--text-muted);
+}

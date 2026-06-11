@@ -1,0 +1,127 @@
+{
+  "name": "markflow",
+  "version": "1.0.0",
+  "description": "A lightweight, beautiful Typora-like Markdown editor built with Electron + React + CodeMirror 6",
+  "author": "MarkFlow Contributors",
+  "license": "MIT",
+  "main": "./out/main/index.js",
+  "displayName": "MarkFlow",
+  "keywords": [
+    "markdown",
+    "editor",
+    "wysiwyg",
+    "typora",
+    "electron",
+    "codemirror",
+    "react",
+    "note-taking",
+    "writing",
+    "katex",
+    "highlight"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gao972609504/markflow.git"
+  },
+  "homepage": "https://github.com/gao972609504/markflow#readme",
+  "bugs": {
+    "url": "https://github.com/gao972609504/markflow/issues"
+  },
+  "scripts": {
+    "dev": "npx electron-vite dev",
+    "build": "npx electron-vite build",
+    "preview": "npx electron-vite preview",
+    "start": "npx electron-vite preview",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.markflow.app",
+    "productName": "MarkFlow",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/main/**/*",
+      "out/preload/**/*",
+      "out/renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "resources/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDir": true,
+      "installerLanguages": ["zh-CN", "en-US"],
+      "language": "2052",
+      "shortcutName": "MarkFlow",
+      "artifactName": "MarkFlow-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "MarkFlow-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "icon": "resources/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.6.0",
+    "@codemirror/lang-markdown": "^6.2.0",
+    "@codemirror/language": "^6.9.0",
+    "@codemirror/language-data": "^6.3.0",
+    "@codemirror/search": "^6.5.0",
+    "@codemirror/state": "^6.4.0",
+    "@codemirror/view": "^6.33.0",
+    "@markwhen/codemirror-tables": "^0.1.1",
+    "highlight.js": "^11.10.0",
+    "katex": "^0.16.11",
+    "markdown-it": "^14.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/markdown-it": "^14.1.2",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.2",
+    "electron": "^33.0.0",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0"
+  }
+}

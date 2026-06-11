@@ -1,0 +1,121 @@
+/* 编辑器样式 — 仅保留无法通过 EditorView.theme 设置的样式 */
+/* 主要的行内/块级样式统一由 createEditorTheme() 管理 */
+
+.editor-wrapper {
+  flex: 1;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.codemirror-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.codemirror-container .cm-editor {
+  height: 100%;
+  outline: none;
+}
+
+/* === 分割线 — ::after 伪元素（JS 主题无法实现） === */
+
+.cm-hr-line .cm-lineContent::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: linear-gradient(to right, transparent 0%, var(--hr-color, var(--border-color)) 15%, var(--hr-color, var(--border-color)) 85%, transparent 100%);
+  border-radius: 1px;
+}
+
+/* === 代码块 — ::before 伪元素显示语言标签 === */
+
+.cm-code-block-line.cm-code-block-first.cm-code-block-last {
+  border-radius: 8px;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.cm-code-block-first::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 2px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* === @markwhen/codemirror-tables 表格 Widget 样式 === */
+
+.cm-table-widget {
+  margin: 8px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.cm-table-widget table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.cm-table-widget th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.cm-table-widget td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.cm-table-widget tr:last-child td {
+  border-bottom: none;
+}
+
+.cm-table-widget .cell-editing {
+  background: var(--active-bg);
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+}
+
+/* === 浮动工具栏 === */
+
+.cm-table-toolbar {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  z-index: 100;
+}
+
+.cm-table-toolbar button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.cm-table-toolbar button:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.cm-table-toolbar .toolbar-divider {
+  width: 1px;
+  background: var(--border-color);
+  margin: 2px 4px;
+}
