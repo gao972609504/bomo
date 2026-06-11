@@ -7,7 +7,7 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
-  const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers } = useEditorStore()
+  const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers, wordGoal, setWordGoal } = useEditorStore()
 
   const lineCount = tab.content.split('\n').length
   const charCount = tab.content.length
@@ -29,6 +29,33 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         <span className="status-item" title="行数">{lineCount} 行</span>
         <span className="status-item" title="段落数">{paragraphCount} 段</span>
         <span className="status-item" title="预计阅读时间">📖 {readingTime}</span>
+        {wordGoal > 0 && (() => {
+          const progress = Math.min(100, Math.round((wordCount / wordGoal) * 100))
+          return (
+            <span
+              className={`status-btn ${progress >= 100 ? 'status-btn-active' : ''}`}
+              title={`写作目标: ${wordCount}/${wordGoal} 词 (${progress}%)`}
+              onClick={() => {
+                const input = prompt('设置字数目标（输入 0 取消）:', String(wordGoal))
+                if (input !== null) setWordGoal(parseInt(input, 10) || 0)
+              }}
+            >
+              🎯 {progress >= 100 ? '✅' : `${progress}%`} {wordCount}/{wordGoal}
+            </span>
+          )
+        })()}
+        {!wordGoal && (
+          <span
+            className="status-btn"
+            title="设置字数写作目标"
+            onClick={() => {
+              const input = prompt('设置字数目标:', '1000')
+              if (input) setWordGoal(parseInt(input, 10) || 0)
+            }}
+          >
+            🎯 设目标
+          </span>
+        )}
         {tab.isModified && autoSave && autoSaveStatus === 'saving' && (
           <span className="status-item status-auto-saving">⏳ 保存中...</span>
         )}
