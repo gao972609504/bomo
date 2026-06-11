@@ -35,6 +35,7 @@ interface EditorState {
   autoSaveDelay: number
   scrollProgress: number
   showQuickOpen: boolean
+  showCommandPalette: boolean
 
   createTab: (filePath?: string, content?: string) => string
   closeTab: (id: string) => void
@@ -55,6 +56,7 @@ interface EditorState {
   toggleAutoSave: () => void
   setScrollProgress: (progress: number) => void
   setShowQuickOpen: (show: boolean) => void
+  setShowCommandPalette: (show: boolean) => void
   getActiveTab: () => Tab | undefined
 }
 
@@ -87,6 +89,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   autoSaveDelay: 2000,
   scrollProgress: 0,
   showQuickOpen: false,
+  showCommandPalette: false,
 
   createTab: (filePath?: string, content?: string) => {
     const id = `tab-${++tabCounter}`
@@ -148,6 +151,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   toggleAutoSave: () => set(state => ({ autoSave: !state.autoSave })),
   setScrollProgress: (progress: number) => set({ scrollProgress: progress }),
   setShowQuickOpen: (show: boolean) => set({ showQuickOpen: show }),
+  setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
 
   getActiveTab: () => {
     const state = get()
