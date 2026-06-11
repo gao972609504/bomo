@@ -36,6 +36,7 @@ interface EditorState {
   scrollProgress: number
   showQuickOpen: boolean
   showCommandPalette: boolean
+  showGoToLine: boolean
   fontSize: number
 
   createTab: (filePath?: string, content?: string) => string
@@ -58,6 +59,7 @@ interface EditorState {
   setScrollProgress: (progress: number) => void
   setShowQuickOpen: (show: boolean) => void
   setShowCommandPalette: (show: boolean) => void
+  setShowGoToLine: (show: boolean) => void
   setFontSize: (size: number) => void
   resetFontSize: () => void
   saveSession: () => void
@@ -107,6 +109,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   scrollProgress: 0,
   showQuickOpen: false,
   showCommandPalette: false,
+  showGoToLine: false,
   fontSize: loadPersistedFontSize(),
   lastSession: null as { tabPaths: string[]; activeTabPath: string | null; folderPath: string | null } | null,
 
@@ -171,6 +174,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setScrollProgress: (progress: number) => set({ scrollProgress: progress }),
   setShowQuickOpen: (show: boolean) => set({ showQuickOpen: show }),
   setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
+  setShowGoToLine: (show: boolean) => set({ showGoToLine: show }),
   setFontSize: (size: number) => { persistFontSize(size); set({ fontSize: size }) },
   resetFontSize: () => { const defaultSize = 15.5; persistFontSize(defaultSize); set({ fontSize: defaultSize }) },
 
