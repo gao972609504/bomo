@@ -330,3 +330,8 @@
 - 状态栏新增自动保存延迟显示按钮（⏱️ Xs）
 - 点击可输入秒数修改保存间隔（最小 0.5 秒）
 - store 新增 setAutoSaveDelay action
+
+### Iteration 74/100 — 标题折叠到级别
+- Ctrl+1/2/3/4 快速将文档折叠到指定标题级别
+- Ctrl+Shift+1 展开所有折叠
+- 基于 markdownHeadingFold 的折叠范围计算

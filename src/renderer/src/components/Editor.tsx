@@ -8,7 +8,7 @@ import { EditorState } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter } from '@codemirror/language'
+import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter, foldEffect, unfoldEffect } from '@codemirror/language'
 import { searchKeymap } from '@codemirror/search'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
@@ -348,6 +348,11 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
           { key: 'Mod-Shift-BracketLeft', run: promoteHeading },
           { key: 'Mod-Shift-BracketRight', run: demoteHeading },
+          { key: 'Mod-1', run: v => foldToLevel(v, 1) },
+          { key: 'Mod-2', run: v => foldToLevel(v, 2) },
+          { key: 'Mod-3', run: v => foldToLevel(v, 3) },
+          { key: 'Mod-4', run: v => foldToLevel(v, 4) },
+          { key: 'Mod-Shift-1', run: unfoldAll },
           { key: 'Tab', run: expandSnippet },
           { key: 'Enter', run: v => autoContinueList(v) },
           { key: 'Backspace', run: renumberLists },
@@ -917,5 +922,43 @@ function prevBookmark(view: EditorView): boolean {
   const prev = sorted.find(b => b.line < curLine) || sorted[0]
   const targetLine = view.state.doc.line(prev.line)
   view.dispatch({ selection: { anchor: targetLine.from }, effects: EditorView.scrollIntoView(targetLine.from) })
+  return true
+}
+
+// ============ 折叠到级别 ============
+
+function foldToLevel(view: EditorView, level: number): boolean {
+  const effects: any[] = []
+  const doc = view.state.doc
+  for (let i = 1; i <= doc.lines; i++) {
+    const line = doc.line(i)
+    const m = line.text.match(/^(#{1,6})\s/)
+    if (!m) continue
+    const headingLevel = m[1].length
+    if (headingLevel > level) continue
+    // Find fold range same as foldService
+    let endLine = i
+    for (let j = i + 1; j <= doc.lines; j++) {
+      const nextText = doc.line(j).text
+      const nextMatch = nextText.match(/^(#{1,6})\s/)
+      if (nextMatch && nextMatch[1].length <= headingLevel) break
+      endLine = j
+    }
+    if (endLine > i) {
+      effects.push(foldEffect.of({ from: line.to, to: doc.line(endLine).to }))
+    }
+  }
+  if (effects.length > 0) view.dispatch({ effects })
+  return true
+}
+
+function unfoldAll(view: EditorView): boolean {
+  const effects: any[] = []
+  const folded = view.state.field(foldEffect as any, false)
+  if (!folded) return false
+  folded.between(0, view.state.doc.length, (from: number, to: number) => {
+    effects.push(unfoldEffect.of({ from, to }))
+  })
+  if (effects.length > 0) view.dispatch({ effects })
   return true
 }
