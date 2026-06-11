@@ -300,6 +300,11 @@ export default function App() {
         e.preventDefault()
         useEditorStore.getState().setShowShortcuts(true)
       }
+      // Ctrl+Shift+T 重新打开已关闭标签
+      if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+        e.preventDefault()
+        useEditorStore.getState().reopenClosedTab()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)

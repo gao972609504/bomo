@@ -43,6 +43,7 @@ interface EditorState {
   showLineNumbers: boolean
   showDocStats: boolean
   showShortcuts: boolean
+  closedTabsHistory: { filePath: string | null; title: string; content: string }[]
   fontSize: number
 
   createTab: (filePath?: string, content?: string) => string
@@ -72,6 +73,7 @@ interface EditorState {
   toggleLineNumbers: () => void
   setShowDocStats: (show: boolean) => void
   setShowShortcuts: (show: boolean) => void
+  reopenClosedTab: () => void
   setFontSize: (size: number) => void
   resetFontSize: () => void
   saveSession: () => void
@@ -128,6 +130,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showLineNumbers: true,
   showDocStats: false,
   showShortcuts: false,
+  closedTabsHistory: [],
   fontSize: loadPersistedFontSize(),
   lastSession: null as { tabPaths: string[]; activeTabPath: string | null; folderPath: string | null } | null,
 
@@ -141,13 +144,16 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   closeTab: (id: string) => {
     set(state => {
+      const tab = state.tabs.find(t => t.id === id)
       const newTabs = state.tabs.filter(t => t.id !== id)
       let newActiveId = state.activeTabId
       if (state.activeTabId === id) {
         const idx = state.tabs.findIndex(t => t.id === id)
         newActiveId = newTabs.length > 0 ? newTabs[Math.min(idx, newTabs.length - 1)]?.id || null : null
       }
-      return { tabs: newTabs, activeTabId: newActiveId }
+      // 保存到关闭历史（最多 20 条）
+      const history = tab ? [{ filePath: tab.filePath, title: tab.title, content: tab.content }, ...state.closedTabsHistory].slice(0, 20) : state.closedTabsHistory
+      return { tabs: newTabs, activeTabId: newActiveId, closedTabsHistory: history }
     })
   },
 
@@ -199,6 +205,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   toggleLineNumbers: () => set(state => ({ showLineNumbers: !state.showLineNumbers })),
   setShowDocStats: (show: boolean) => set({ showDocStats: show }),
   setShowShortcuts: (show: boolean) => set({ showShortcuts: show }),
+  reopenClosedTab: () => {
+    set(state => {
+      if (state.closedTabsHistory.length === 0) return state
+      const [last, ...rest] = state.closedTabsHistory
+      const id = `tab-${++tabCounter}`
+      const tab: Tab = { id, filePath: last.filePath, title: last.title, content: last.content, originalContent: last.content, isModified: false, cursorLine: 1, cursorCol: 1 }
+      return { tabs: [...state.tabs, tab], activeTabId: id, closedTabsHistory: rest }
+    })
+  },
   setFontSize: (size: number) => { persistFontSize(size); set({ fontSize: size }) },
   resetFontSize: () => { const defaultSize = 15.5; persistFontSize(defaultSize); set({ fontSize: defaultSize }) },
 
