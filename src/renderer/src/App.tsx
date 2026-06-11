@@ -32,6 +32,7 @@ declare global {
       deleteFile: (filePath: string) => Promise<boolean>
       deleteFolder: (dirPath: string) => Promise<boolean>
       savePastedImage: (base64Data: string, filePath: string | null) => Promise<string>
+      getFileModifiedTime: (filePath: string) => Promise<number | null>
       onMenuNewFile: (callback: () => void) => () => void
       onMenuSave: (callback: () => void) => () => void
       onMenuSaveAs: (callback: () => void) => () => void
@@ -241,6 +242,36 @@ export default function App() {
       })
     ]
     return () => cleanups.forEach((fn) => fn())
+  }, [])
+
+  // 键盘快捷键
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+
+  // 文件外部变更检测：窗口获得焦点时检查
+  useEffect(() => {
+    if (!window.api) return
+    const checkFiles = async () => {
+      const store = useEditorStore.getState()
+      for (const tab of store.tabs) {
+        if (!tab.filePath) continue
+        try {
+          const mtime = await window.api.getFileModifiedTime(tab.filePath)
+          if (mtime === null) continue
+          // 如果文件在外部被修改且当前内容未修改，自动重新加载
+          const content = await window.api.readFile(tab.filePath)
+          if (content !== tab.content && !tab.isModified) {
+            store.updateTabContent(tab.id, content)
+            useEditorStore.setState({
+              tabs: store.tabs.map(t => t.id === tab.id ? { ...t, originalContent: content, isModified: false } : t)
+            })
+          }
+        } catch { /* ignore */ }
+      }
+    }
+    const onFocus = () => { checkFiles() }
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
   }, [])
 
   // 键盘快捷键

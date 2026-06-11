@@ -52,6 +52,10 @@ const api = {
   savePastedImage: (base64Data: string, filePath: string | null): Promise<string> =>
     ipcRenderer.invoke('image:savePasted', base64Data, filePath),
 
+  // 文件变更检测
+  getFileModifiedTime: (filePath: string): Promise<number | null> =>
+    ipcRenderer.invoke('fs:getModifiedTime', filePath),
+
   getDefaultPath: (): Promise<string> =>
     ipcRenderer.invoke('app:getDefaultPath'),
 

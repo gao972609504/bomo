@@ -247,6 +247,16 @@ ipcMain.handle('app:getDefaultPath', () => {
   return homedir()
 })
 
+// 文件变更检测：返回文件的修改时间戳
+ipcMain.handle('fs:getModifiedTime', async (_event, filePath: string) => {
+  try {
+    const s = await stat(filePath)
+    return s.mtimeMs
+  } catch {
+    return null
+  }
+})
+
 // 文件树操作：新建文件
 ipcMain.handle('fs:createFile', async (_event, filePath: string) => {
   await writeFile(filePath, '', 'utf-8')
