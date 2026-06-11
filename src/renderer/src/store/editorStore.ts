@@ -36,6 +36,7 @@ interface EditorState {
   scrollProgress: number
   showQuickOpen: boolean
   showCommandPalette: boolean
+  fontSize: number
 
   createTab: (filePath?: string, content?: string) => string
   closeTab: (id: string) => void
@@ -57,6 +58,8 @@ interface EditorState {
   setScrollProgress: (progress: number) => void
   setShowQuickOpen: (show: boolean) => void
   setShowCommandPalette: (show: boolean) => void
+  setFontSize: (size: number) => void
+  resetFontSize: () => void
   getActiveTab: () => Tab | undefined
 }
 
@@ -72,6 +75,18 @@ function loadPersistedTheme(): Theme {
 
 function persistTheme(theme: Theme) {
   try { localStorage.setItem('markflow-theme', theme) } catch { /* noop */ }
+}
+
+function loadPersistedFontSize(): number {
+  try {
+    const stored = localStorage.getItem('markflow-font-size')
+    if (stored) return Math.max(10, Math.min(32, parseInt(stored, 10)))
+  } catch { /* noop */ }
+  return 15.5
+}
+
+function persistFontSize(size: number) {
+  try { localStorage.setItem('markflow-font-size', String(size)) } catch { /* noop */ }
 }
 
 export const useEditorStore = create<EditorState>((set, get) => ({
@@ -90,6 +105,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   scrollProgress: 0,
   showQuickOpen: false,
   showCommandPalette: false,
+  fontSize: loadPersistedFontSize(),
 
   createTab: (filePath?: string, content?: string) => {
     const id = `tab-${++tabCounter}`
@@ -152,6 +168,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setScrollProgress: (progress: number) => set({ scrollProgress: progress }),
   setShowQuickOpen: (show: boolean) => set({ showQuickOpen: show }),
   setShowCommandPalette: (show: boolean) => set({ showCommandPalette: show }),
+  setFontSize: (size: number) => { persistFontSize(size); set({ fontSize: size }) },
+  resetFontSize: () => { const defaultSize = 15.5; persistFontSize(defaultSize); set({ fontSize: defaultSize }) },
 
   getActiveTab: () => {
     const state = get()

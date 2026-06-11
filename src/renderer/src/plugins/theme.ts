@@ -6,7 +6,7 @@ import { EditorView } from '@codemirror/view'
 
 export const monoFont = '"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, monospace'
 
-export function createEditorTheme(isDark: boolean) {
+export function createEditorTheme(isDark: boolean, fontSize: number = 15.5) {
   const c = {
     bg: isDark ? '#0d1117' : '#ffffff',
     bg2: isDark ? '#161b22' : '#f6f8fa',
@@ -35,7 +35,7 @@ export function createEditorTheme(isDark: boolean) {
     '&': { backgroundColor: c.bg, color: c.text, height: '100%' },
     '.cm-content': {
       fontFamily: '"Segoe UI", "Noto Sans", system-ui, -apple-system, Helvetica, Arial, sans-serif',
-      fontSize: '15.5px',
+      fontSize: `${fontSize}px`,
       lineHeight: '1.75',
       padding: '20px 0',
       letterSpacing: '0.01em',

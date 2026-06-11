@@ -217,6 +217,23 @@ export default function App() {
         e.preventDefault()
         useEditorStore.getState().setShowCommandPalette(true)
       }
+      // Ctrl++ 字体放大
+      if (e.ctrlKey && (e.key === '=' || e.key === '+')) {
+        e.preventDefault()
+        const s = useEditorStore.getState()
+        s.setFontSize(Math.min(32, s.fontSize + 1))
+      }
+      // Ctrl+- 字体缩小
+      if (e.ctrlKey && e.key === '-') {
+        e.preventDefault()
+        const s = useEditorStore.getState()
+        s.setFontSize(Math.max(10, s.fontSize - 1))
+      }
+      // Ctrl+0 重置字体
+      if (e.ctrlKey && e.key === '0') {
+        e.preventDefault()
+        useEditorStore.getState().resetFontSize()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)

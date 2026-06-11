@@ -56,7 +56,7 @@ function createTypewriterPlugin() {
 export function Editor({ tab }: EditorProps) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
-  const { updateTabContent, updateTabCursor, setScrollProgress, theme, focusMode, typewriterMode } = useEditorStore()
+  const { updateTabContent, updateTabCursor, setScrollProgress, theme, focusMode, typewriterMode, fontSize } = useEditorStore()
   const isDark = theme === 'dark'
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export function Editor({ tab }: EditorProps) {
         indentOnInput(),
         bracketMatching(),
         EditorView.lineWrapping,
-        createEditorTheme(isDark),
+        createEditorTheme(isDark, fontSize),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
         createTableExtension({ cellEditorExtensions: [isDark ? tableDarkTheme : tableLightTheme] }),
@@ -106,7 +106,7 @@ export function Editor({ tab }: EditorProps) {
     const view = new EditorView({ state, parent: editorRef.current })
     viewRef.current = view
     return () => { view.destroy(); viewRef.current = null }
-  }, [tab.id, isDark])
+  }, [tab.id, isDark, fontSize])
 
   // focusMode / typewriterMode 变化时触发装饰重建
   useEffect(() => {
