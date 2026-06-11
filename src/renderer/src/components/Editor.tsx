@@ -141,6 +141,34 @@ export function Editor({ tab }: EditorProps) {
           }
         }
         return false
+      },
+      drop(event, view) {
+        const files = event.dataTransfer?.files
+        if (!files || files.length === 0) return false
+        const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'))
+        if (imageFiles.length === 0) return false
+        event.preventDefault()
+        // 获取拖放位置
+        const pos = view.posAtCoords({ x: event.clientX, y: event.clientY })
+        const insertFrom = pos ?? view.state.selection.main.head
+        let offset = 0
+        for (const file of imageFiles) {
+          const reader = new FileReader()
+          reader.onload = async () => {
+            const base64 = (reader.result as string).split(',')[1]
+            if (!window.api) return
+            try {
+              const relPath = await window.api.savePastedImage(base64, tab.filePath || null)
+              const insertText = `\n![](${relPath})\n`
+              view.dispatch({
+                changes: { from: insertFrom + offset, insert: insertText }
+              })
+              offset += insertText.length
+            } catch (err) { console.error('拖拽图片保存失败:', err) }
+          }
+          reader.readAsDataURL(file)
+        }
+        return true
       }
     })
 
