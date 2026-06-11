@@ -68,6 +68,10 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
   const readingMinutes = Math.max(1, Math.ceil(chineseChars / 300 + englishWords / 200))
   const readingTime = readingMinutes < 60 ? `${readingMinutes} 分钟` : `${Math.floor(readingMinutes / 60)} 小时 ${readingMinutes % 60} 分`
 
+  // 任务列表统计
+  const taskAll = (tab.content.match(/- \[[ xX]\]/g) || []).length
+  const taskDone = (tab.content.match(/- \[[xX]\]/g) || []).length
+
   return (
     <div className="status-bar">
       <div className="status-left">
@@ -76,6 +80,11 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         <span className="status-item" title="词数">{wordCount} 词</span>
         <span className="status-item" title="行数">{lineCount} 行</span>
         <span className="status-item" title="段落数">{paragraphCount} 段</span>
+        {taskAll > 0 && (
+          <span className="status-item" title={`任务进度: ${taskDone}/${taskAll}`}>
+            ✅ {taskDone}/{taskAll} {Math.round(taskDone / taskAll * 100)}%
+          </span>
+        )}
         {selInfo && (
           <span className="status-item" title="选区统计" style={{ color: 'var(--accent-color, #0969da)' }}>
             📊 选中: {selInfo.chars}字符 {selInfo.words}词 {selInfo.lines}行
