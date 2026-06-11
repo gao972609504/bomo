@@ -346,6 +346,8 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-f', run: formatMarkdownTable },
           { key: 'Mod-Alt-ArrowUp', run: addCursorAbove },
           { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
+          { key: 'Mod-Shift-BracketLeft', run: promoteHeading },
+          { key: 'Mod-Shift-BracketRight', run: demoteHeading },
           { key: 'Tab', run: expandSnippet },
           { key: 'Enter', run: v => autoContinueList(v) },
         ]),
@@ -762,6 +764,38 @@ function expandSnippet(view: EditorView): boolean {
   view.dispatch({
     changes: { from: triggerStart, to: sel.from, insert: expansion },
     selection: { anchor: triggerStart + expansion.length }
+  })
+  return true
+}
+
+// ============ 标题层级升降 ============
+
+function promoteHeading(view: EditorView): boolean {
+  const { head } = view.state.selection.main
+  const line = view.state.doc.lineAt(head)
+  const m = line.text.match(/^(#{1,6})\s/)
+  if (!m) return false
+  const level = m[1].length
+  if (level <= 1) return false
+  const newHash = '#'.repeat(level - 1)
+  view.dispatch({
+    changes: { from: line.from, to: line.from + level, insert: newHash + ' ' },
+    selection: { anchor: head - 1 }
+  })
+  return true
+}
+
+function demoteHeading(view: EditorView): boolean {
+  const { head } = view.state.selection.main
+  const line = view.state.doc.lineAt(head)
+  const m = line.text.match(/^(#{1,6})\s/)
+  if (!m) return false
+  const level = m[1].length
+  if (level >= 6) return false
+  const newHash = '#'.repeat(level + 1)
+  view.dispatch({
+    changes: { from: line.from, to: line.from + level, insert: newHash + ' ' },
+    selection: { anchor: head + 1 }
   })
   return true
 }
