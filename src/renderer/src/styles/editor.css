@@ -1,5 +1,7 @@
-/* 编辑器样式 — 仅保留无法通过 EditorView.theme 设置的样式 */
-/* 主要的行内/块级样式统一由 createEditorTheme() 管理 */
+/* ═══════════════════════════════════════════════════════
+   编辑器样式 — Inkstone 主题配套
+   仅保留无法通过 EditorView.theme 设置的样式
+   ═══════════════════════════════════════════════════════ */
 
 .editor-wrapper {
   flex: 1;
@@ -40,9 +42,9 @@
   outline: none;
 }
 
-/* === 分割线 — ::after 伪元素（JS 主题无法实现） === */
+/* === 分割线 — 渐变 === */
 
-.cm-hr-line .cm-lineContent::after {
+.cm-hr-line::after {
   content: "";
   display: block;
   height: 1px;
@@ -50,7 +52,7 @@
   border-radius: 1px;
 }
 
-/* === 代码块 — ::before 伪元素显示语言标签 === */
+/* === 代码块 — 语言标签 === */
 
 .cm-code-block-line.cm-code-block-first.cm-code-block-last {
   border-radius: var(--radius-md);
@@ -72,7 +74,7 @@
   opacity: 0.8;
 }
 
-/* 代码块头部 Widget（语言标签 + 复制按钮） */
+/* 代码块头部 Widget */
 .cm-code-block-header {
   display: flex;
   align-items: center;
@@ -112,15 +114,16 @@
 .cm-code-copy-done {
   color: var(--success);
   border-color: var(--success);
-  background: rgba(45, 164, 78, 0.10);
+  background: rgba(74, 139, 111, 0.10);
 }
 
 [data-theme="dark"] .cm-code-copy-done {
-  color: #3fb950;
-  background: rgba(63, 185, 80, 0.12);
+  color: #5CB88A;
+  background: rgba(92, 184, 138, 0.12);
 }
 
 /* === KaTeX 数学公式 === */
+
 .cm-katex-block {
   margin: 10px 0;
   padding: 14px 18px;
@@ -137,7 +140,7 @@
 }
 
 .cm-katex-error {
-  color: #e53935;
+  color: #C4463A;
   font-family: monospace;
   font-size: 13px;
 }
@@ -147,26 +150,26 @@
 }
 
 .cm-math-inline-active {
-  background: rgba(210, 153, 34, 0.15);
+  background: rgba(184, 134, 11, 0.12);
   border-radius: 2px;
-  outline: 1px dashed rgba(210, 153, 34, 0.4);
+  outline: 1px dashed rgba(184, 134, 11, 0.4);
 }
 
 /* 选中文字匹配高亮 */
 .cm-selection-match {
-  background: rgba(255, 200, 0, 0.25);
+  background: rgba(201, 100, 66, 0.18);
   border-radius: 2px;
-  outline: 1px solid rgba(255, 200, 0, 0.4);
+  outline: 1px solid rgba(201, 100, 66, 0.3);
 }
 
 /* 行变更指示器 */
 .cm-line-added {
-  background: rgba(45, 164, 78, 0.06) !important;
+  background: rgba(74, 139, 111, 0.06) !important;
   border-left: 2px solid var(--success) !important;
 }
 
 .cm-line-modified {
-  background: rgba(255, 193, 7, 0.06) !important;
+  background: rgba(184, 134, 11, 0.06) !important;
   border-left: 2px solid var(--warning) !important;
 }
 
@@ -205,9 +208,8 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* === @markwhen/codemirror-tables 表格 Widget 样式 === */
+/* === TOC 目录 Widget === */
 
-/* === TOC 目录 Widget 样式 === */
 .cm-toc-line {
   padding: 0 !important;
 }
@@ -215,8 +217,8 @@
 .cm-toc-widget {
   margin: 14px 24px;
   padding: 18px 22px;
-  background: var(--bg-secondary, #f6f8fa);
-  border: 1px solid var(--border-color, #d1d9e0);
+  background: var(--bg-secondary, #F0EDE6);
+  border: 1px solid var(--border-color, #D5D1C8);
   border-radius: var(--radius-md);
   max-height: 320px;
   overflow-y: auto;
@@ -226,16 +228,16 @@
 .cm-toc-title {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-primary, #1f2328);
+  color: var(--text-primary, #232328);
   margin-bottom: 12px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color, #d1d9e0);
+  border-bottom: 1px solid var(--border-color, #D5D1C8);
 }
 
 .cm-toc-item {
   padding: 4px 0;
   font-size: var(--font-size-base);
-  color: var(--accent-color, #0969da);
+  color: var(--accent-color, #C96442);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
@@ -256,18 +258,20 @@
 .cm-toc-level-6 { padding-left: 80px; font-size: var(--font-size-sm); }
 
 .cm-toc-empty {
-  color: var(--text-muted, #8b949e);
+  color: var(--text-muted, #95959E);
   font-size: var(--font-size-base);
   font-style: italic;
 }
 
 /* === Emoji 渲染 === */
+
 .cm-emoji-rendered {
   font-size: 1.1em;
   line-height: 1;
 }
 
-/* === Admonition/Callout 提示框 === */
+/* ══════════════ Admonition/Callout 提示框 — 暖色系 ══════════════ */
+
 .cm-callout-line {
   padding: 0 !important;
 }
@@ -302,39 +306,44 @@
   white-space: pre-wrap;
 }
 
-.cm-callout-tip { border-left-color: var(--success); background: rgba(45, 164, 78, 0.10); }
-.cm-callout-tip .cm-callout-label { color: var(--success); }
-.cm-callout-info { border-left-color: #0969da; background: rgba(9, 105, 218, 0.08); }
-.cm-callout-info .cm-callout-label { color: #0969da; }
-.cm-callout-warning { border-left-color: var(--warning); background: rgba(210, 153, 34, 0.08); }
-.cm-callout-warning .cm-callout-label { color: var(--warning); }
-.cm-callout-danger { border-left-color: var(--danger); background: rgba(244, 67, 54, 0.08); }
-.cm-callout-danger .cm-callout-label { color: var(--danger); }
-.cm-callout-note { border-left-color: #6e7781; background: rgba(110, 119, 129, 0.08); }
-.cm-callout-note .cm-callout-label { color: #6e7781; }
-.cm-callout-quote { border-left-color: #8250df; background: rgba(130, 80, 223, 0.08); }
-.cm-callout-quote .cm-callout-label { color: #8250df; }
-.cm-callout-success { border-left-color: var(--success); background: rgba(45, 164, 78, 0.10); }
-.cm-callout-success .cm-callout-label { color: var(--success); }
-.cm-callout-bug { border-left-color: var(--danger); background: rgba(207, 34, 46, 0.08); }
-.cm-callout-bug .cm-callout-label { color: var(--danger); }
-.cm-callout-example { border-left-color: #6e7781; background: rgba(110, 119, 129, 0.08); }
-.cm-callout-example .cm-callout-label { color: #6e7781; }
-.cm-callout-question { border-left-color: #0969da; background: rgba(9, 105, 218, 0.08); }
-.cm-callout-question .cm-callout-label { color: #0969da; }
+/* 亮色 callout — Typora 简洁色系 */
+.cm-callout-tip { border-left-color: #2e8b57; background: rgba(46, 139, 87, 0.08); }
+.cm-callout-tip .cm-callout-label { color: #2e8b57; }
+.cm-callout-info { border-left-color: #4183c4; background: rgba(65, 131, 196, 0.08); }
+.cm-callout-info .cm-callout-label { color: #4183c4; }
+.cm-callout-warning { border-left-color: #b8860b; background: rgba(184, 134, 11, 0.06); }
+.cm-callout-warning .cm-callout-label { color: #b8860b; }
+.cm-callout-danger { border-left-color: #cb4335; background: rgba(203, 67, 53, 0.06); }
+.cm-callout-danger .cm-callout-label { color: #cb4335; }
+.cm-callout-note { border-left-color: #6a737d; background: rgba(106, 115, 125, 0.06); }
+.cm-callout-note .cm-callout-label { color: #6a737d; }
+.cm-callout-quote { border-left-color: #6f42c1; background: rgba(111, 66, 193, 0.06); }
+.cm-callout-quote .cm-callout-label { color: #6f42c1; }
+.cm-callout-success { border-left-color: #2e8b57; background: rgba(46, 139, 87, 0.08); }
+.cm-callout-success .cm-callout-label { color: #2e8b57; }
+.cm-callout-bug { border-left-color: #cb4335; background: rgba(203, 67, 53, 0.06); }
+.cm-callout-bug .cm-callout-label { color: #cb4335; }
+.cm-callout-example { border-left-color: #6a737d; background: rgba(106, 115, 125, 0.06); }
+.cm-callout-example .cm-callout-label { color: #6a737d; }
+.cm-callout-question { border-left-color: #4183c4; background: rgba(65, 131, 196, 0.08); }
+.cm-callout-question .cm-callout-label { color: #4183c4; }
 
-/* === 暗色 callout 覆写 === */
-[data-theme="dark"] .cm-callout-tip { background: rgba(63, 185, 80, 0.12); border-left-color: #3fb950; }
-[data-theme="dark"] .cm-callout-tip .cm-callout-label { color: #56d364; }
-[data-theme="dark"] .cm-callout-info { background: rgba(88, 166, 255, 0.12); border-left-color: #58a6ff; }
-[data-theme="dark"] .cm-callout-info .cm-callout-label { color: #79c0ff; }
-[data-theme="dark"] .cm-callout-warning { background: rgba(187, 128, 9, 0.15); border-left-color: var(--warning); }
-[data-theme="dark"] .cm-callout-warning .cm-callout-label { color: #e3b341; }
-[data-theme="dark"] .cm-callout-danger { background: rgba(248, 81, 73, 0.12); border-left-color: #f85149; }
-[data-theme="dark"] .cm-callout-danger .cm-callout-label { color: #ff6e6e; }
-
+/* 暗色 callout 覆写 */
+[data-theme="dark"] .cm-callout-tip { background: rgba(46, 139, 87, 0.10); border-left-color: #3cb371; }
+[data-theme="dark"] .cm-callout-tip .cm-callout-label { color: #5fcf8e; }
+[data-theme="dark"] .cm-callout-info { background: rgba(78, 176, 214, 0.10); border-left-color: #4eb0d6; }
+[data-theme="dark"] .cm-callout-info .cm-callout-label { color: #6fc3e0; }
+[data-theme="dark"] .cm-callout-warning { background: rgba(218, 165, 32, 0.12); border-left-color: #daa520; }
+[data-theme="dark"] .cm-callout-warning .cm-callout-label { color: #e8c246; }
+[data-theme="dark"] .cm-callout-danger { background: rgba(231, 76, 60, 0.10); border-left-color: #e74c3c; }
+[data-theme="dark"] .cm-callout-danger .cm-callout-label { color: #f08070; }
+[data-theme="dark"] .cm-callout-note { background: rgba(139, 148, 158, 0.10); border-left-color: #8b949e; }
+[data-theme="dark"] .cm-callout-note .cm-callout-label { color: #b0b8c0; }
+[data-theme="dark"] .cm-callout-quote { background: rgba(111, 66, 193, 0.10); border-left-color: #9b6fdb; }
+[data-theme="dark"] .cm-callout-quote .cm-callout-label { color: #b68feb; }
 
 /* === 脚注 === */
+
 .cm-footnote-ref {
   color: var(--accent-color);
   font-size: 0.75em;
@@ -358,6 +367,7 @@
 }
 
 /* === Wiki 双链 === */
+
 .cm-wikilink {
   color: var(--accent-color);
   font-weight: 500;
@@ -376,7 +386,8 @@
 }
 
 /* === 标题自动编号 === */
-.cm-heading[data-heading-num] .cm-lineContent::before {
+
+.cm-heading[data-heading-num]::before {
   content: attr(data-heading-num) " ";
   color: var(--accent-color);
   font-weight: 700;
@@ -385,6 +396,7 @@
 }
 
 /* === YAML Front Matter === */
+
 .cm-front-matter {
   background: var(--bg-tertiary) !important;
   font-family: monospace;
@@ -415,6 +427,7 @@
 }
 
 /* === 标签 #tag === */
+
 .cm-tag {
   color: var(--accent-color);
   background: var(--accent-soft);
@@ -431,17 +444,19 @@
 }
 
 /* === 高亮标记 ==text== === */
+
 .cm-highlight-mark {
-  background: rgba(255, 235, 59, 0.4);
+  background: rgba(250, 215, 160, 0.45);
   border-radius: 2px;
   padding: 0 2px;
 }
 
 [data-theme="dark"] .cm-highlight-mark {
-  background: rgba(255, 235, 59, 0.2);
+  background: rgba(212, 169, 78, 0.25);
 }
 
 /* === 上标/下标 === */
+
 .cm-superscript {
   font-size: 0.75em;
   vertical-align: super;
@@ -456,7 +471,7 @@
   color: var(--text-secondary);
 }
 
-/* === @markwhen/codemirror-tables 表格 Widget 样式 === */
+/* === 表格 Widget === */
 
 .cm-table-widget {
   margin: 10px 0;
@@ -528,8 +543,13 @@
   background: var(--border-subtle);
   margin: 2px 4px;
 }
+
 .cm-center-text { text-align: center; display: block; font-style: italic; opacity: 0.9; }
 .cm-underline { text-decoration: underline; }
-.cm-mermaid-line { border-left: 3px solid #cf222e !important; background: linear-gradient(90deg, rgba(207, 34, 46, 0.06), transparent) !important; }
-[data-theme="dark"] .cm-mermaid-line { border-left-color: var(--danger) !important; background: linear-gradient(90deg, rgba(248, 81, 73, 0.12), transparent) !important; }
+
+/* Mermaid 代码行标识 */
+.cm-mermaid-line { border-left: 3px solid #C4463A !important; background: linear-gradient(90deg, rgba(196, 70, 58, 0.06), transparent) !important; }
+[data-theme="dark"] .cm-mermaid-line { border-left-color: #E86658 !important; background: linear-gradient(90deg, rgba(232, 102, 88, 0.10), transparent) !important; }
+
+/* 拼写检查波浪线 */
 .cm-typo-mark { text-decoration: wavy underline var(--danger); text-underline-offset: 3px; }

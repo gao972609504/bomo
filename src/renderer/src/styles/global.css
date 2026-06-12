@@ -1,52 +1,61 @@
-/* 全局样式 */
+/* ═══════════════════════════════════════════════════════
+   MarkFlow — Typora-Inspired Design System
+   Clean · Minimal · Writing-Focused
+   ═══════════════════════════════════════════════════════ */
+
 @import url('https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css');
 @import url('https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github.min.css');
 
+/* 字体 CDN — 思源宋体（中文衬线）+ Source Serif 4（西文衬线）+ Inter（无衬线 UI） */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Regular/result.css');
+@import url('https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Light/result.css');
+
 :root {
-  /* 亮色主题 */
+  /* === 亮色主题 — Typora White === */
   --bg-primary: #ffffff;
-  --bg-secondary: #f6f8fa;
-  --bg-tertiary: #eaeef2;
+  --bg-secondary: #f8f8f8;
+  --bg-tertiary: #f0f0f0;
   --bg-elevated: #ffffff;
-  --bg-overlay: rgba(255, 255, 255, 0.7);
-  --text-primary: #1f2328;
-  --text-secondary: #59636e;
-  --text-muted: #8b949e;
-  --border-color: #d1d9e0;
-  --border-subtle: #e9ecef;
-  --accent-color: #0969da;
-  --accent-hover: #0550ae;
-  --accent-soft: rgba(9, 105, 218, 0.10);
-  --accent-softer: rgba(9, 105, 218, 0.06);
-  --hover-bg: #f3f4f6;
-  --active-bg: #ddf4ff;
-  --selection-bg: rgba(9, 105, 218, 0.18);
-  --success: #2da44e;
-  --warning: #d29922;
-  --danger: #cf222e;
-  --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.04);
-  --shadow: 0 1px 3px rgba(31,35,40,0.06), 0 1px 2px rgba(31,35,40,0.04);
-  --shadow-md: 0 4px 12px rgba(31, 35, 40, 0.08), 0 2px 4px rgba(31, 35, 40, 0.04);
-  --shadow-lg: 0 10px 32px rgba(31, 35, 40, 0.12), 0 4px 12px rgba(31, 35, 40, 0.06);
+  --bg-overlay: rgba(255, 255, 255, 0.92);
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --border-subtle: #ebebeb;
+  --accent-color: #4183c4;
+  --accent-hover: #3468a0;
+  --accent-soft: rgba(65, 131, 196, 0.08);
+  --accent-softer: rgba(65, 131, 196, 0.04);
+  --hover-bg: #f0f0f0;
+  --active-bg: rgba(65, 131, 196, 0.06);
+  --selection-bg: rgba(65, 131, 196, 0.14);
+  --success: #2e8b57;
+  --warning: #b8860b;
+  --danger: #cb4335;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
   --tab-active-bg: #ffffff;
-  --tab-inactive-bg: #f6f8fa;
-  --heading-color: #1f2328;
-  --blockquote-bg: #f6f8fa;
-  --code-bg: #eff1f3;
+  --tab-inactive-bg: #f8f8f8;
+  --heading-color: #1a1a1a;
+  --blockquote-bg: transparent;
+  --code-bg: rgba(27, 31, 35, 0.06);
   --code-block-bg: #f6f8fa;
-  --link-color: #0969da;
-  --link-hover-color: #0550ae;
-  --hr-color: #d1d9e0;
-  --list-marker-color: #656d76;
-  --search-match-bg: #fff3b0;
-  --search-match-selected-bg: #ffe088;
-  --img-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --link-color: #4183c4;
+  --link-hover-color: #3468a0;
+  --hr-color: #e0e0e0;
+  --list-marker-color: #999999;
+  --search-match-bg: #fff8c5;
+  --search-match-selected-bg: #ffe58f;
+  --img-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 
   /* 尺寸系统 */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -54,9 +63,12 @@
   --space-5: 20px;
   --space-6: 24px;
 
-  /* 字体系统 */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, Menlo, monospace;
+  /* 字体系统 — Editorial：UI 无衬线，正文衬线 */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-serif: "Source Serif 4", "LXGW WenKai", "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, "Times New Roman", serif;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, monospace;
+
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 13px;
@@ -66,50 +78,53 @@
   --font-size-2xl: 24px;
 
   /* 过渡 */
-  --transition-fast: 0.12s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.15s ease;
+  --transition-slow: 0.25s ease;
 }
 
 [data-theme="dark"] {
-  --bg-primary: #0d1117;
-  --bg-secondary: #161b22;
-  --bg-tertiary: #1c2128;
-  --bg-elevated: #1c2128;
-  --bg-overlay: rgba(13, 17, 23, 0.7);
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #6e7681;
-  --border-color: #30363d;
-  --border-subtle: #21262d;
-  --accent-color: #58a6ff;
-  --accent-hover: #79c0ff;
-  --accent-soft: rgba(88, 166, 255, 0.16);
-  --accent-softer: rgba(88, 166, 255, 0.10);
-  --hover-bg: #1c2128;
-  --active-bg: #1f2a3b;
-  --selection-bg: rgba(88, 166, 255, 0.28);
-  --success: #3fb950;
-  --warning: #d29922;
-  --danger: #f85149;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.25);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
-  --tab-active-bg: #0d1117;
-  --tab-inactive-bg: #161b22;
-  --heading-color: #e6edf3;
-  --blockquote-bg: #161b22;
-  --code-bg: #1c2128;
-  --code-block-bg: #161b22;
-  --link-color: #58a6ff;
-  --link-hover-color: #79c0ff;
-  --hr-color: #30363d;
-  --list-marker-color: #8b949e;
-  --search-match-bg: #554400;
-  --search-match-selected-bg: #776600;
-  --img-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  /* === 暗色主题 — Typora Dark === */
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #252526;
+  --bg-tertiary: #2d2d2d;
+  --bg-elevated: #282828;
+  --bg-overlay: rgba(30, 30, 30, 0.92);
+  --text-primary: #d4d4d4;
+  --text-secondary: #999999;
+  --text-muted: #666666;
+  --border-color: #3e3e3e;
+  --border-subtle: #333333;
+  --accent-color: #4eb0d6;
+  --accent-hover: #6fc3e0;
+  --accent-soft: rgba(78, 176, 214, 0.10);
+  --accent-softer: rgba(78, 176, 214, 0.05);
+  --hover-bg: #333333;
+  --active-bg: rgba(78, 176, 214, 0.08);
+  --selection-bg: rgba(78, 176, 214, 0.18);
+  --success: #3cb371;
+  --warning: #daa520;
+  --danger: #e74c3c;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --tab-active-bg: #1e1e1e;
+  --tab-inactive-bg: #252526;
+  --heading-color: #d4d4d4;
+  --blockquote-bg: transparent;
+  --code-bg: rgba(200, 200, 200, 0.08);
+  --code-block-bg: #282c34;
+  --link-color: #4eb0d6;
+  --link-hover-color: #6fc3e0;
+  --hr-color: #3e3e3e;
+  --list-marker-color: #999999;
+  --search-match-bg: #4a4500;
+  --search-match-selected-bg: #6b5f00;
+  --img-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
+
+/* ══════════════ Reset & Base ══════════════ */
 
 * {
   margin: 0;
@@ -118,16 +133,43 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: "kern" 1, "liga" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-optical-sizing: auto;
   overflow: hidden;
   height: 100vh;
   width: 100vw;
+}
+
+/* 欢迎页大标题 — Display 字体（紧凑无衬线 + 细字重） */
+.welcome-content h1 {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01" 1, "cv11" 1;
+  font-weight: 200;
+  letter-spacing: -0.04em;
+}
+
+/* 欢迎页段落、模板名 — 衬线轻量 */
+.welcome-content > p,
+.template-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+
+/* 快捷键面板标题 — 小字号宽字距无衬线大写 */
+.welcome-shortcuts p,
+.welcome-templates > p,
+.welcome-recent > p {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 10.5px;
 }
 
 #root {
@@ -152,6 +194,7 @@ body {
 
 .editor-panel {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -178,10 +221,11 @@ body {
   overflow-y: auto;
 }
 
-/* 滚动条 — 细线化，仅 hover 时显示 */
+/* ══════════════ 滚动条 — 极简 ══════════════ */
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -196,7 +240,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
-  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:active {
@@ -217,7 +260,8 @@ body {
   scrollbar-color: var(--text-muted) transparent;
 }
 
-/* 文本选区 — 主题化，不再用 #add6ff 强蓝 */
+/* ══════════════ 文本选区 ══════════════ */
+
 ::selection {
   background: var(--selection-bg);
   color: inherit;
@@ -228,7 +272,8 @@ body {
   color: inherit;
 }
 
-/* 按钮基础样式 */
+/* ══════════════ 按钮基础 ══════════════ */
+
 button {
   cursor: pointer;
   border: none;
@@ -236,7 +281,7 @@ button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-  transition: color var(--transition-fast), background var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast), opacity var(--transition-fast);
 }
 
 button:hover {
@@ -245,27 +290,28 @@ button:hover {
 
 button:focus-visible {
   outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-  border-radius: 3px;
+  outline-offset: 1px;
+  border-radius: 2px;
 }
 
 button:disabled,
 button[aria-disabled="true"] {
   cursor: not-allowed;
-  opacity: 0.45;
+  opacity: 0.4;
   pointer-events: none;
 }
 
-/* 输入框焦点态通用 */
+/* 输入框焦点态 */
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--accent-softer);
+  box-shadow: 0 0 0 2px var(--accent-soft);
   border-color: var(--accent-color) !important;
 }
 
-/* Loading 旋转器 */
+/* ══════════════ Loading 旋转器 ══════════════ */
+
 @keyframes cm-spin {
   to { transform: rotate(360deg); }
 }
@@ -280,16 +326,20 @@ select:focus-visible {
   animation: cm-spin 0.7s linear infinite;
 }
 
-/* 欢迎页面 */
+/* ══════════════ 欢迎页面 — Inkstone 2.0 ══════════════
+   设计语言：杂志感（衬线 tagline）+ 产品级排版
+   - 大标题 56px / 极细 200 字重 / 紧字距
+   - 模板卡片：四段式 icon + 标题 + 描述 + 角标
+   - 快捷键：macOS Tahoe 风格 kbd，圆角 6px
+   - 径向高光背景，0.04 opacity，避免纯白
+*/
+
 .welcome-screen {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--bg-primary);
-  background-image:
-    radial-gradient(circle at 20% 0%, var(--accent-softer) 0%, transparent 50%),
-    radial-gradient(circle at 80% 100%, var(--accent-softer) 0%, transparent 50%);
   position: relative;
   overflow: hidden;
 }
@@ -298,22 +348,18 @@ select:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-  opacity: 0.5;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-softer) 0%, transparent 60%);
   pointer-events: none;
+  z-index: 0;
 }
 
 .welcome-content {
   text-align: center;
-  max-width: 420px;
+  max-width: 560px;
   position: relative;
   z-index: 1;
   animation: cm-fadein-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  padding: 0 24px;
 }
 
 @keyframes cm-fadein-up {
@@ -324,40 +370,43 @@ select:focus-visible {
 .welcome-content h1 {
   font-size: 56px;
   font-weight: 200;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: var(--text-primary);
   letter-spacing: -0.04em;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1;
+  font-family: var(--font-display);
 }
 
 .welcome-content > p {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 36px;
-  font-size: var(--font-size-md);
+  font-size: 15px;
   font-weight: 400;
+  font-style: italic;
+  font-family: var(--font-serif);
   letter-spacing: 0.01em;
 }
 
+/* 主操作区 */
 .welcome-actions {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .welcome-actions button {
-  padding: 9px 20px;
+  padding: 10px 22px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   background: var(--bg-primary);
   color: var(--text-primary);
   font-weight: 500;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .welcome-actions button:hover {
@@ -365,25 +414,45 @@ select:focus-visible {
   border-color: var(--accent-color);
   color: var(--accent-color);
   transform: translateY(-1px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px var(--accent-softer);
 }
 
-.welcome-actions button:active {
-  transform: translateY(0);
+.welcome-actions svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 .welcome-templates {
-  margin-top: 16px;
+  margin-top: 0;
   text-align: left;
+  margin-bottom: 28px;
 }
 
-.welcome-templates > p {
+.welcome-templates > p,
+.welcome-recent > p,
+.welcome-shortcuts > p {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-templates > p::after,
+.welcome-recent > p::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-color), transparent);
 }
 
 .template-grid {
@@ -395,63 +464,151 @@ select:focus-visible {
 .template-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 14px 8px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 14px 14px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: var(--bg-primary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  text-align: left;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.template-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-softer), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
 
 .template-card:hover {
   border-color: var(--accent-color);
-  background: var(--accent-softer);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 20px var(--accent-softer), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.template-card:hover::before { opacity: 1; }
+
+.template-card:hover .template-icon {
+  transform: scale(1.08) rotate(-3deg);
+  color: var(--accent-color);
+  background: var(--bg-primary);
+}
+
+.template-card:hover .template-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+  color: var(--accent-color);
 }
 
 .template-icon {
-  font-size: 26px;
-  line-height: 1;
+  font-size: 0;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease, background 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.template-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.template-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
 }
 
 .template-name {
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.template-arrow {
+  font-size: 0;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0.4;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.template-arrow svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.template-desc {
   font-size: var(--font-size-xs);
-  color: var(--text-secondary);
-  font-weight: 500;
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
+  line-height: 1.5;
+  font-weight: 400;
   letter-spacing: 0.01em;
 }
 
-/* 最近打开文件 */
 .welcome-recent {
-  margin-top: 20px;
+  margin-top: 24px;
   text-align: left;
-}
-
-.welcome-recent > p {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
 .recent-files-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   max-height: 180px;
   overflow-y: auto;
+  padding: 2px;
+  margin: -2px;
 }
 
 .recent-file-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 10px;
+  padding: 7px 10px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background var(--transition-fast);
@@ -467,10 +624,27 @@ select:focus-visible {
   background: var(--hover-bg);
 }
 
+.recent-file-item:hover .recent-file-name { color: var(--accent-color); }
+
 .recent-file-icon {
   flex-shrink: 0;
-  font-size: 14px;
-  opacity: 0.7;
+  font-size: 0;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.recent-file-icon svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 .recent-file-name {
@@ -478,34 +652,69 @@ select:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--transition-fast);
 }
 
 .recent-file-path {
   margin-left: auto;
   color: var(--text-muted);
   font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 50%;
+  letter-spacing: -0.01em;
 }
 
+/* 快捷键面板 — macOS Tahoe 风格 */
 .welcome-shortcuts {
   text-align: left;
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-  margin-top: 16px;
+  border-radius: var(--radius-lg);
+  padding: 16px 18px 14px;
+  margin-top: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-shortcuts::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--accent-softer) 0%, transparent 60%);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .welcome-shortcuts p {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
   font-weight: 600;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-shortcuts p::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-color), transparent);
+}
+
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .welcome-shortcuts div {
@@ -514,71 +723,100 @@ select:focus-visible {
   color: var(--text-secondary);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 400;
+}
+
+.welcome-shortcuts div .action {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.005em;
 }
 
 kbd {
-  background: var(--bg-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
   border: 1px solid var(--border-color);
-  border-bottom-width: 2px;
-  border-radius: var(--radius-sm);
-  padding: 1px 6px;
-  font-size: var(--font-size-xs);
+  border-bottom-color: color-mix(in srgb, var(--border-color) 80%, transparent);
+  border-radius: 5px;
+  font-size: 10.5px;
   font-family: var(--font-mono);
-  color: var(--text-primary);
-  margin-right: 10px;
-  min-width: 20px;
-  text-align: center;
+  color: var(--text-secondary);
   font-weight: 500;
-  box-shadow: 0 1px 0 var(--border-color);
+  text-align: center;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
 }
 
-/* 拖拽遮罩 */
+[data-theme="dark"] kbd {
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-tertiary) 100%);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ══════════════ 拖拽遮罩 ══════════════ */
+
 .drop-overlay {
   position: fixed;
   inset: 12px;
   z-index: 9999;
   background: var(--bg-overlay);
-  backdrop-filter: blur(8px) saturate(1.4);
-  -webkit-backdrop-filter: blur(8px) saturate(1.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 2px dashed var(--accent-color);
   border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  animation: cm-fadein 0.2s ease;
+  animation: cm-fadein 0.15s ease;
 }
 
 .drop-overlay-content {
   text-align: center;
   background: var(--bg-elevated);
-  padding: 40px 56px;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  padding: 36px 48px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
-  animation: cm-slidein 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cm-slidein 0.2s ease;
 }
 
 .drop-icon {
-  font-size: 56px;
-  margin-bottom: 12px;
+  font-size: 48px;
+  margin-bottom: 10px;
   display: block;
 }
 
 .drop-overlay-content p {
   font-size: var(--font-size-md);
   color: var(--text-primary);
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+@keyframes cm-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cm-slidein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 欢迎页拖拽提示 */
 .welcome-hint {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid var(--border-subtle);
   font-size: var(--font-size-sm);
   color: var(--text-muted);
   text-align: center;
-  letter-spacing: 0.01em;
 }

@@ -6,6 +6,169 @@ interface StatusBarProps {
   autoSaveStatus?: 'idle' | 'saving' | 'saved'
 }
 
+/* ══════════════ 内联 SVG 图标库 — 线性 1.5 笔触 ══════════════ */
+
+const Icon = {
+  Cursor: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 2l3.5 11 1.6-4.4 4.4-1.6L3 2z" />
+    </svg>
+  ),
+  Type: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4h12M8 4v9M5 13h6" />
+    </svg>
+  ),
+  Hash: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M5.5 2L4 14M11 2L9.5 14M3 6h10M2.5 10h10" />
+    </svg>
+  ),
+  Rows: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4h12M2 8h12M2 12h12" />
+    </svg>
+  ),
+  Paragraph: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M9 2v12M9 2H5a3 3 0 100 6h4M5 2v6" />
+    </svg>
+  ),
+  CheckSquare: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <rect x="2.5" y="2.5" width="11" height="11" rx="1.5" />
+      <path d="M5 8l2 2 4-4" />
+    </svg>
+  ),
+  Selection: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 2l4 12 1.4-4 4-1.4L2 2z" transform="translate(3 0)" />
+      <path d="M11 13l3 3M2 6l-1 1" />
+    </svg>
+  ),
+  BookTime: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 2.5h7a2 2 0 012 2v9M3 2.5v11h7a2 2 0 002-2M3 13.5h7" />
+    </svg>
+  ),
+  Target: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="5.5" />
+      <circle cx="8" cy="8" r="2.5" />
+      <circle cx="8" cy="8" r="0.5" fill="currentColor" />
+    </svg>
+  ),
+  Save: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 2h8l2 2v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
+      <path d="M5 2v3h5V2M5 14V9h6v5" />
+    </svg>
+  ),
+  Clock: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="5.5" />
+      <path d="M8 5v3l2 1.5" />
+    </svg>
+  ),
+  ListOrdered: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4h1v2H2M2.5 5.5L4 5M5 7.5h1v2.5L4 12h2.5" />
+      <path d="M8 4h6M8 8h6M8 12h6" />
+    </svg>
+  ),
+  Tag: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2.5 8.5L7.5 13l6-6V2.5H8.5l-6 6z" />
+      <circle cx="10.5" cy="5.5" r="0.8" fill="currentColor" />
+    </svg>
+  ),
+  Outline: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 4h10M3 8h10M3 12h7" />
+      <path d="M2 4h.5M2 8h.5M2 12h.5" />
+    </svg>
+  ),
+  Focus: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="2" />
+      <path d="M8 1.5v3M8 11.5v3M1.5 8h3M11.5 8h3M3.5 3.5l2 2M10.5 10.5l2 2M3.5 12.5l2-2M10.5 5.5l2-2" />
+    </svg>
+  ),
+  Typewriter: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 6h12v2H2zM4 4h8M4 12h8M8 8v4" />
+    </svg>
+  ),
+  Sun: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 1.5v1.5M8 13v1.5M1.5 8h1.5M13 8h1.5M3.3 3.3l1 1M11.7 11.7l1 1M3.3 12.7l1-1M11.7 4.3l1-1" />
+    </svg>
+  ),
+  Moon: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M13 9.5A5.5 5.5 0 016.5 3a5.5 5.5 0 106.5 6.5z" />
+    </svg>
+  ),
+  Tomato: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="9.5" r="5" />
+      <path d="M5 4.5C5.5 3.5 6.5 3 8 3s2.5.5 3 1.5" />
+      <path d="M8 3V1.5M6.5 2.2L8 3l1.5-.8" />
+    </svg>
+  ),
+  TextSize: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 12l3-7 3 7M3.2 9.5h3.6M11 12V6M9 8h4" />
+    </svg>
+  ),
+  FontFamily: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 12l4-9 4 9M4.5 9h5" />
+    </svg>
+  ),
+  Wrap: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4h10a2 2 0 010 4H4l3 3M4 8L7 11" />
+    </svg>
+  ),
+  LineNumbers: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4h1M2 8h1M2 12h1M4 4h10M4 8h10M4 12h10" />
+    </svg>
+  ),
+  Tab: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 4l3 4-3 4M7 12h6" />
+    </svg>
+  ),
+  Speaker: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 6h2.5L8 3v10L4.5 10H2V6z" />
+      <path d="M11 5.5c.8.7 1.2 1.5 1.2 2.5s-.4 1.8-1.2 2.5M12.5 3.5c1.5 1.2 2.3 2.8 2.3 4.5s-.8 3.3-2.3 4.5" />
+    </svg>
+  ),
+  Stop: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <rect x="3.5" y="3.5" width="9" height="9" rx="1" />
+    </svg>
+  ),
+  Check: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 8l3.5 3.5L13 4.5" />
+    </svg>
+  ),
+  Spinner: () => (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 2.5a5.5 5.5 0 015.5 5.5" />
+    </svg>
+  ),
+}
+
+function Divider() {
+  return <span className="status-divider" aria-hidden="true" />
+}
+
 export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
   const { theme, toggleTheme, focusMode, toggleFocusMode, typewriterMode, toggleTypewriterMode, outlineVisible, toggleOutline, autoSave, toggleAutoSave, autoSaveDelay, setAutoSaveDelay, fontSize, headingNumbering, toggleHeadingNumbering, tagPanelVisible, toggleTagPanel, wordWrap, toggleWordWrap, showLineNumbers, toggleLineNumbers, wordGoal, setWordGoal, fontFamily, setFontFamily, tabSize, setTabSize } = useEditorStore()
 
@@ -22,7 +185,6 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         setPomoSeconds(s => {
           if (s <= 1) {
             setPomoRunning(false)
-            // 切换工作/休息模式
             if (pomoMode === 'work') {
               setPomoMode('break')
               setPomoTotal(5 * 60)
@@ -62,131 +224,218 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
     return () => { document.removeEventListener('mouseup', updateSel); document.removeEventListener('keyup', updateSel) }
   }, [])
 
-  // 阅读时间估算（中文按 300 字/分钟，英文按 200 词/分钟）
+  // 阅读时间估算
   const chineseChars = (tab.content.match(/[一-鿿]/g) || []).length
   const englishWords = (tab.content.match(/[a-zA-Z]+/g) || []).length
   const readingMinutes = Math.max(1, Math.ceil(chineseChars / 300 + englishWords / 200))
   const readingTime = readingMinutes < 60 ? `${readingMinutes} 分钟` : `${Math.floor(readingMinutes / 60)} 小时 ${readingMinutes % 60} 分`
 
-  // 任务列表统计
+  // 任务列表
   const taskAll = (tab.content.match(/- \[[ xX]\]/g) || []).length
   const taskDone = (tab.content.match(/- \[[xX]\]/g) || []).length
+  const taskPercent = taskAll > 0 ? Math.round((taskDone / taskAll) * 100) : 0
 
   return (
     <div className="status-bar">
+      {/* ═══════════ 左侧 — 文档信息 ═══════════ */}
       <div className="status-left">
-        <span className="status-item" title="光标位置">行 {tab.cursorLine}, 列 {tab.cursorCol}</span>
-        <span className="status-item" title="字符数">{charCount} 字符</span>
-        <span className="status-item" title="词数">{wordCount} 词</span>
-        <span className="status-item" title="行数">{lineCount} 行</span>
-        <span className="status-item" title="段落数">{paragraphCount} 段</span>
+        <span className="status-item" title={`光标位置：第 ${tab.cursorLine} 行，第 ${tab.cursorCol} 列`}>
+          <Icon.Cursor />
+          <span className="status-item-num">{tab.cursorLine}</span>
+          <span className="status-item-label">:</span>
+          <span className="status-item-num">{tab.cursorCol}</span>
+        </span>
+
+        <Divider />
+
+        <span className="status-item" title={`字符数（不含空白 ${(tab.content.replace(/\s/g, '')).length}）`}>
+          <Icon.Type />
+          <span className="status-item-num">{charCount.toLocaleString()}</span>
+        </span>
+        <span className="status-item" title="词数">
+          <Icon.Hash />
+          <span className="status-item-num">{wordCount.toLocaleString()}</span>
+        </span>
+        <span className="status-item" title="行数">
+          <Icon.Rows />
+          <span className="status-item-num">{lineCount.toLocaleString()}</span>
+        </span>
+        <span className="status-item" title="段落数">
+          <Icon.Paragraph />
+          <span className="status-item-num">{paragraphCount.toLocaleString()}</span>
+        </span>
+
         {taskAll > 0 && (
-          <span className="status-item" title={`任务进度: ${taskDone}/${taskAll}`}>
-            ✅ {taskDone}/{taskAll} {Math.round(taskDone / taskAll * 100)}%
-          </span>
+          <>
+            <Divider />
+            <span
+              className={`status-progress ${taskPercent >= 100 ? 'status-progress-done' : 'status-progress-running'}`}
+              title={`任务进度: ${taskDone}/${taskAll} 已完成（${taskPercent}%）`}
+            >
+              <Icon.CheckSquare />
+              <span className="status-progress-track">
+                <span className="status-progress-fill" style={{ width: `${taskPercent}%` }} />
+              </span>
+              <span className="status-progress-text">{taskDone}/{taskAll}</span>
+            </span>
+          </>
         )}
+
         {selInfo && (
-          <span className="status-item" title="选区统计" style={{ color: 'var(--accent-color, #0969da)' }}>
-            📊 选中: {selInfo.chars}字符 {selInfo.words}词 {selInfo.lines}行
-          </span>
+          <>
+            <Divider />
+            <span className="status-item" title="选区统计" style={{ color: 'var(--accent-color)' }}>
+              <Icon.Selection />
+              <span className="status-item-num">{selInfo.chars}</span>
+              <span className="status-item-label">选</span>
+            </span>
+          </>
         )}
-        <span className="status-item" title="预计阅读时间">📖 {readingTime}</span>
-        {wordGoal > 0 && (() => {
+
+        <Divider />
+
+        <span className="status-item" title="预计阅读时间">
+          <Icon.BookTime />
+          <span className="status-item-num">{readingTime}</span>
+        </span>
+
+        {wordGoal > 0 ? (() => {
           const progress = Math.min(100, Math.round((wordCount / wordGoal) * 100))
           return (
-            <span
-              className={`status-btn ${progress >= 100 ? 'status-btn-active' : ''}`}
-              title={`写作目标: ${wordCount}/${wordGoal} 词 (${progress}%)`}
+            <>
+              <Divider />
+              <span
+                className={`status-progress ${progress >= 100 ? 'status-progress-done' : 'status-progress-running'}`}
+                title={`写作目标: ${wordCount}/${wordGoal} 词（${progress}%）`}
+                onClick={() => {
+                  const input = prompt('设置字数目标（输入 0 取消）:', String(wordGoal))
+                  if (input !== null) setWordGoal(parseInt(input, 10) || 0)
+                }}
+              >
+                <Icon.Target />
+                <span className="status-progress-track">
+                  <span className="status-progress-fill" style={{ width: `${progress}%` }} />
+                </span>
+                <span className="status-progress-text">{wordCount}/{wordGoal}</span>
+              </span>
+            </>
+          )
+        })() : (
+          <>
+            <Divider />
+            <button
+              className="status-btn"
+              title="设置字数写作目标"
               onClick={() => {
-                const input = prompt('设置字数目标（输入 0 取消）:', String(wordGoal))
-                if (input !== null) setWordGoal(parseInt(input, 10) || 0)
+                const input = prompt('设置字数目标:', '1000')
+                if (input) setWordGoal(parseInt(input, 10) || 0)
               }}
             >
-              🎯 {progress >= 100 ? '✅' : `${progress}%`} {wordCount}/{wordGoal}
-            </span>
-          )
-        })()}
-        {!wordGoal && (
-          <span
-            className="status-btn"
-            title="设置字数写作目标"
-            onClick={() => {
-              const input = prompt('设置字数目标:', '1000')
-              if (input) setWordGoal(parseInt(input, 10) || 0)
-            }}
-          >
-            🎯 设目标
-          </span>
+              <Icon.Target />
+              <span>设目标</span>
+            </button>
+          </>
         )}
+
         {tab.isModified && autoSave && autoSaveStatus === 'saving' && (
-          <span className="status-item status-auto-saving">⏳ 保存中...</span>
+          <>
+            <Divider />
+            <span className="status-save status-save-saving" title="正在自动保存…">
+              <Icon.Spinner />
+              <span>保存中</span>
+            </span>
+          </>
         )}
         {autoSaveStatus === 'saved' && (
-          <span className="status-item status-auto-saved">✅ 已自动保存</span>
+          <>
+            <Divider />
+            <span className="status-save status-save-saved" title="已自动保存">
+              <Icon.Check />
+              <span>已保存</span>
+            </span>
+          </>
         )}
       </div>
+
+      {/* ═══════════ 右侧 — 视图控制 ═══════════ */}
       <div className="status-right">
         <button
           className={`status-btn ${autoSave ? 'status-btn-active' : ''}`}
           onClick={toggleAutoSave}
           title={`自动保存: ${autoSave ? '已开启' : '已关闭'}`}
         >
-          💾 自动保存
+          <Icon.Save />
+          <span>自动保存</span>
         </button>
         <button
           className="status-btn"
-          title={`自动保存延迟: ${autoSaveDelay / 1000}秒（点击修改）`}
+          title={`自动保存延迟: ${(autoSaveDelay / 1000).toFixed(1)}秒（点击修改）`}
           onClick={() => {
             const input = prompt('自动保存延迟（秒）:', String(autoSaveDelay / 1000))
             if (input) setAutoSaveDelay(Math.max(0.5, parseFloat(input) || 2) * 1000)
           }}
         >
-          ⏱️ {autoSaveDelay / 1000}s
+          <Icon.Clock />
+          <span className="status-item-num">{(autoSaveDelay / 1000).toFixed(1)}s</span>
         </button>
+
+        <Divider />
+
         <button
           className={`status-btn ${headingNumbering ? 'status-btn-active' : ''}`}
           onClick={toggleHeadingNumbering}
           title="标题自动编号"
         >
-          🔢 编号
+          <Icon.ListOrdered />
+          <span>编号</span>
         </button>
         <button
           className={`status-btn ${tagPanelVisible ? 'status-btn-active' : ''}`}
           onClick={toggleTagPanel}
           title="标签面板"
         >
-          🏷️ 标签
+          <Icon.Tag />
+          <span>标签</span>
         </button>
         <button
           className={`status-btn ${outlineVisible ? 'status-btn-active' : ''}`}
           onClick={toggleOutline}
           title="大纲面板 (Ctrl+Shift+O)"
         >
-          📋 大纲
+          <Icon.Outline />
+          <span>大纲</span>
         </button>
+
+        <Divider />
+
         <button
           className={`status-btn ${focusMode ? 'status-btn-active' : ''}`}
           onClick={toggleFocusMode}
           title="Focus 模式：只高亮当前段落"
         >
-          🎯 Focus
+          <Icon.Focus />
+          <span>Focus</span>
         </button>
         <button
           className={`status-btn ${typewriterMode ? 'status-btn-active' : ''}`}
           onClick={toggleTypewriterMode}
           title="Typewriter 模式：光标行始终居中"
         >
-          📜 打字机
+          <Icon.Typewriter />
+          <span>打字机</span>
         </button>
         <button className="status-btn" onClick={toggleTheme} title="切换主题">
-          {theme === 'light' ? '🌙 暗色' : '☀️ 亮色'}
+          {theme === 'light' ? <Icon.Moon /> : <Icon.Sun />}
+          <span>{theme === 'light' ? '暗色' : '亮色'}</span>
         </button>
+
+        <Divider />
+
         <button
-          className={`status-btn ${pomoRunning ? 'status-btn-active' : ''}`}
+          className={`status-pomo ${pomoRunning ? (pomoMode === 'work' ? 'status-pomo-active' : 'status-pomo-break') : ''}`}
           title={`番茄钟 (${pomoMode === 'work' ? '工作' : '休息'}) - 点击${pomoRunning ? '暂停' : '开始'}`}
           onClick={() => {
             if (!pomoRunning && pomoSeconds === pomoTotal && pomoMode === 'work') {
-              // 首次点击或已结束，可选择时长
               const input = prompt('设置专注时间（分钟）:', '25')
               if (input) {
                 const mins = Math.max(1, parseInt(input, 10) || 25)
@@ -204,10 +453,16 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
             setPomoSeconds(25 * 60)
           }}
         >
-          🍅 {String(Math.floor(pomoSeconds / 60)).padStart(2, '0')}:{String(pomoSeconds % 60).padStart(2, '0')}
+          {pomoRunning && <span className="status-pomo-pulse" aria-hidden="true" />}
+          <Icon.Tomato />
+          <span>{String(Math.floor(pomoSeconds / 60)).padStart(2, '0')}:{String(pomoSeconds % 60).padStart(2, '0')}</span>
         </button>
+
+        <Divider />
+
         <span className="status-item" title="字体大小 (Ctrl++/- 调整, Ctrl+0 重置)">
-          🔤 {fontSize.toFixed(1)}px
+          <Icon.TextSize />
+          <span className="status-item-num">{fontSize.toFixed(1)}</span>
         </span>
         <button
           className="status-btn"
@@ -220,31 +475,41 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
             setFontFamily(next === '默认' ? '' : next)
           }}
         >
-          🔠 {fontFamily || '默认'}
+          <Icon.FontFamily />
+          <span>{fontFamily || '默认'}</span>
         </button>
         <button
           className={`status-btn ${wordWrap ? 'status-btn-active' : ''}`}
           onClick={toggleWordWrap}
           title="自动换行"
         >
-          ↩️ 换行
+          <Icon.Wrap />
+          <span>换行</span>
         </button>
         <button
           className={`status-btn ${showLineNumbers ? 'status-btn-active' : ''}`}
           onClick={toggleLineNumbers}
           title="显示行号"
         >
-          🔢 行号
+          <Icon.LineNumbers />
+          <span>行号</span>
         </button>
         <button
           className="status-btn"
           title="切换 Tab 大小"
           onClick={() => setTabSize(tabSize === 2 ? 4 : 2)}
         >
-          ⇥ Tab:{tabSize}
+          <Icon.Tab />
+          <span>Tab:{tabSize}</span>
         </button>
-        <span className="status-item">UTF-8</span>
-        <span className="status-item">Markdown</span>
+
+        <Divider />
+
+        <span className="status-item" title="文件编码">UTF-8</span>
+        <span className="status-item" title="文件类型">Markdown</span>
+
+        <Divider />
+
         <button
           className="status-btn"
           title="朗读选中文字 / 停止朗读"
@@ -263,7 +528,8 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
             }
           }}
         >
-          🔊 朗读
+          {window.speechSynthesis.speaking ? <Icon.Stop /> : <Icon.Speaker />}
+          <span>{window.speechSynthesis.speaking ? '停止' : '朗读'}</span>
         </button>
       </div>
     </div>

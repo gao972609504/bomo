@@ -52,30 +52,74 @@ declare global {
 export default function App() {
 
   // ── 文件模板 ──
-  const templates: { name: string; icon: string; content: string }[] = [
+  const templates: { name: string; desc: string; content: string; icon: React.ReactNode }[] = [
     {
-      name: '空白文档', icon: '📄',
-      content: ''
+      name: '空白文档',
+      desc: '从一张白纸开始',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3.5 2h6L12 4.5V13a1 1 0 01-1 1H3.5a1 1 0 01-1-1V3a1 1 0 011-1z" />
+          <path d="M9.5 2v2.5H12" />
+        </svg>
+      ),
+      content: '',
     },
     {
-      name: '博客文章', icon: '📝',
-      content: `---\ntitle: \ndate: ${new Date().toLocaleDateString('zh-CN')}\ntags: []\n---\n\n# 标题\n\n## 引言\n\n## 正文\n\n## 总结\n`
+      name: '博客文章',
+      desc: '结构化叙事与发布',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 2h7l3 3v9H3V2z" />
+          <path d="M5.5 7.5h5M5.5 10h5M5.5 12.5h3" />
+        </svg>
+      ),
+      content: `---\ntitle: \ndate: ${new Date().toLocaleDateString('zh-CN')}\ntags: []\n---\n\n# 标题\n\n## 引言\n\n## 正文\n\n## 总结\n`,
     },
     {
-      name: '会议记录', icon: '📋',
-      content: `# 会议记录\n\n**日期：** ${new Date().toLocaleDateString('zh-CN')}\n**参会人：** \n**议题：** \n\n---\n\n## 讨论内容\n\n- \n\n## 决议\n\n- [ ] \n\n## 后续跟进\n\n| 任务 | 负责人 | 截止日期 |\n| --- | --- | --- |\n|  |  |  |\n`
+      name: '会议记录',
+      desc: '议题 · 决议 · 行动项',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="11" height="11" rx="1" />
+          <path d="M5 6h6M5 8.5h6M5 11h4" />
+          <circle cx="11" cy="11" r="1.5" />
+          <path d="M10.5 11.5l1 1 1.5-1.5" />
+        </svg>
+      ),
+      content: `# 会议记录\n\n**日期：** ${new Date().toLocaleDateString('zh-CN')}\n**参会人：** \n**议题：** \n\n---\n\n## 讨论内容\n\n- \n\n## 决议\n\n- [ ] \n\n## 后续跟进\n\n| 任务 | 负责人 | 截止日期 |\n| --- | --- | --- |\n|  |  |  |\n`,
     },
     {
-      name: '每日笔记', icon: '📓',
-      content: `# ${new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}\n\n## 今日计划\n\n- [ ] \n- [ ] \n- [ ] \n\n## 笔记\n\n\n\n## 灵感\n\n\n\n## 明日计划\n\n- \n`
+      name: '每日笔记',
+      desc: '今日 · 灵感 · 明日',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 2h7l3 3v9H3V2z" />
+          <path d="M5 7.5l1.5 1.5L10 5M5 11h6" />
+        </svg>
+      ),
+      content: `# ${new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}\n\n## 今日计划\n\n- [ ] \n- [ ] \n- [ ] \n\n## 笔记\n\n\n\n## 灵感\n\n\n\n## 明日计划\n\n- \n`,
     },
     {
-      name: '技术文档', icon: '🔧',
-      content: `# 技术文档\n\n## 概述\n\n\n\n## 技术架构\n\n\n\n## API 接口\n\n### 接口名称\n\n**请求方式：** \`GET\`\n**路径：** \`/api/endpoint\`\n\n#### 参数\n\n| 参数 | 类型 | 必填 | 说明 |\n| --- | --- | --- | --- |\n|  |  |  |  |\n\n#### 返回值\n\n\`\`\`json\n{}\n\`\`\`\n\n## 注意事项\n\n> \n`
+      name: '技术文档',
+      desc: 'API · 架构 · 注意事项',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5.5 2L3 4.5l2.5 2.5M10.5 2L13 4.5l-2.5 2.5" />
+          <path d="M8 5l-1.5 8" />
+        </svg>
+      ),
+      content: `# 技术文档\n\n## 概述\n\n\n\n## 技术架构\n\n\n\n## API 接口\n\n### 接口名称\n\n**请求方式：** \`GET\`\n**路径：** \`/api/endpoint\`\n\n#### 参数\n\n| 参数 | 类型 | 必填 | 说明 |\n| --- | --- | --- | --- |\n|  |  |  |  |\n\n#### 返回值\n\n\`\`\`json\n{}\n\`\`\`\n\n## 注意事项\n\n> \n`,
     },
     {
-      name: '读书笔记', icon: '📚',
-      content: `# 《书名》读书笔记\n\n**作者：** \n**出版日期：** \n**阅读日期：** ${new Date().toLocaleDateString('zh-CN')}\n\n---\n\n## 一句话总结\n\n\n\n## 核心观点\n\n1. \n2. \n3. \n\n## 精彩摘录\n\n> \n\n## 个人感悟\n\n\n\n## 推荐指数\n\n⭐⭐⭐⭐⭐\n`
+      name: '读书笔记',
+      desc: '摘录 · 感悟 · 推荐',
+      icon: (
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 2.5h5a2 2 0 012 2V14a1 1 0 01-1 1H4a1 1 0 01-1-1V2.5z" />
+          <path d="M13 2.5H8a2 2 0 00-2 2V14a1 1 0 011-1h6V2.5z" />
+        </svg>
+      ),
+      content: `# 《书名》读书笔记\n\n**作者：** \n**出版日期：** \n**阅读日期：** ${new Date().toLocaleDateString('zh-CN')}\n\n---\n\n## 一句话总结\n\n\n\n## 核心观点\n\n1. \n2. \n3. \n\n## 精彩摘录\n\n> \n\n## 个人感悟\n\n\n\n## 推荐指数\n\n⭐⭐⭐⭐⭐\n`,
     },
   ]
   const { theme, sidebarVisible, showFindReplace, activeTabId, tabs, scrollProgress, zenMode, recentFiles, favoriteFiles } = useEditorStore()
@@ -422,8 +466,6 @@ export default function App() {
       )}
       <div className="main-layout">
         {!zenMode && sidebarVisible && <FileTree />}
-        {!zenMode && <OutlinePanel />}
-        {!zenMode && <TagPanel />}
         <div className={`editor-panel${zenMode ? ' zen-mode' : ''}`}>
           {activeTab && !zenMode && <div className="reading-progress-bar" style={{ width: `${scrollProgress}%` }} />}
           {!zenMode && <TabBar />}
@@ -447,10 +489,17 @@ export default function App() {
           ) : (
             <div className="welcome-screen">
               <div className="welcome-content">
+                <div className="welcome-mark">
+                  <span className="welcome-mark-dot" aria-hidden="true" />
+                  MarkFlow
+                </div>
                 <h1>MarkFlow</h1>
-                <p>轻量美观的 Markdown 编辑器</p>
+                <p>轻量美观的 Markdown 编辑器 · 专为写作者打造</p>
                 <div className="welcome-actions">
                   <button onClick={() => useEditorStore.getState().createTab()}>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M8 3v10M3 8h10" />
+                    </svg>
                     空白文件
                   </button>
                   <button onClick={async () => {
@@ -461,6 +510,9 @@ export default function App() {
                       useEditorStore.getState().setFileTree(tree, folderPath)
                     }
                   }}>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M2 4.5l3-2h4l1.5 1.5h3.5a1 1 0 011 1V12a1 1 0 01-1 1H2V4.5z" />
+                    </svg>
                     打开文件夹
                   </button>
                 </div>
@@ -470,7 +522,17 @@ export default function App() {
                     {templates.map((tpl, idx) => (
                       <button key={idx} className="template-card" onClick={() => useEditorStore.getState().createTab(undefined, tpl.content)}>
                         <span className="template-icon">{tpl.icon}</span>
-                        <span className="template-name">{tpl.name}</span>
+                        <div className="template-body">
+                          <div className="template-name">
+                            <span>{tpl.name}</span>
+                            <span className="template-arrow" aria-hidden="true">
+                              <svg viewBox="0 0 16 16">
+                                <path d="M5 3l5 5-5 5" />
+                              </svg>
+                            </span>
+                          </div>
+                          <div className="template-desc">{tpl.desc}</div>
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -493,7 +555,11 @@ export default function App() {
                               } catch { /* file may no longer exist */ }
                             }}
                           >
-                            <span className="recent-file-icon">⭐</span>
+                            <span className="recent-file-icon">
+                              <svg viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M8 1.5l1.9 4 4.4.6-3.2 3 .8 4.4L8 11.5 4.1 13.5l.8-4.4-3.2-3 4.4-.6L8 1.5z" />
+                              </svg>
+                            </span>
                             <span className="recent-file-name">{name}</span>
                             <span className="recent-file-path">{fp.split(/[/\\]/).slice(-2, -1).join('/') || ''}</span>
                           </button>
@@ -518,7 +584,12 @@ export default function App() {
                             } catch { /* file may no longer exist */ }
                           }}
                         >
-                          <span className="recent-file-icon">📝</span>
+                          <span className="recent-file-icon">
+                            <svg viewBox="0 0 16 16" aria-hidden="true">
+                              <path d="M3.5 2h6L12 4.5V13a1 1 0 01-1 1H3.5a1 1 0 01-1-1V3a1 1 0 011-1z" />
+                              <path d="M5.5 7h5M5.5 9.5h5M5.5 12h3" />
+                            </svg>
+                          </span>
                           <span className="recent-file-name">{file.title}</span>
                           <span className="recent-file-path">{file.filePath.split(/[/\\]/).slice(-2, -1).join('/') || ''}</span>
                         </button>
@@ -528,11 +599,16 @@ export default function App() {
                 )}
                 <div className="welcome-shortcuts">
                   <p>快捷操作</p>
-                  <div><kbd>Ctrl+N</kbd> 新建文件</div>
-                  <div><kbd>Ctrl+O</kbd> 打开文件</div>
-                  <div><kbd>Ctrl+S</kbd> 保存</div>
-                  <div><kbd>Ctrl+B</kbd> 加粗</div>
-                  <div><kbd>Ctrl+I</kbd> 斜体</div>
+                  <div className="shortcut-grid">
+                    <div><span className="action">新建文件</span><kbd>Ctrl+N</kbd></div>
+                    <div><span className="action">打开文件</span><kbd>Ctrl+O</kbd></div>
+                    <div><span className="action">保存</span><kbd>Ctrl+S</kbd></div>
+                    <div><span className="action">快速打开</span><kbd>Ctrl+P</kbd></div>
+                    <div><span className="action">命令面板</span><kbd>Ctrl+Shift+P</kbd></div>
+                    <div><span className="action">查找替换</span><kbd>Ctrl+H</kbd></div>
+                    <div><span className="action">大纲面板</span><kbd>Ctrl+Shift+O</kbd></div>
+                    <div><span className="action">禅模式</span><kbd>F11</kbd></div>
+                  </div>
                   <div className="welcome-hint">💡 拖拽 .md 文件到窗口即可打开</div>
                 </div>
               </div>
@@ -540,6 +616,8 @@ export default function App() {
           )}
           {activeTab && !zenMode && <StatusBar tab={activeTab} autoSaveStatus={autoSaveStatus} />}
         </div>
+        {!zenMode && <OutlinePanel />}
+        {!zenMode && <TagPanel />}
       </div>
       <QuickOpen />
       <CommandPalette />

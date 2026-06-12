@@ -169,6 +169,7 @@
   min-height: 34px;
   overflow-x: auto;
   scrollbar-width: none;
+  flex-shrink: 0;
 }
 
 .tab-bar::-webkit-scrollbar {
@@ -265,34 +266,65 @@
   opacity: 0.7;
 }
 
-/* 状态栏 */
+/* ══════════════ 状态栏 — Inkstone 2.0 ══════════════
+   设计原则：
+   1. 移除 emoji，全部采用线性 SVG（1.5 笔触，圆头端点）
+   2. 数字 monospace，对齐感更整
+   3. 按钮态四级：default / hover / active / pulsing
+   4. 0.5px 透明分隔槽，信息分组有节奏
+   5. 任务进度用 inline 进度条替代"33%"文字
+   6. 28px 高度，padding 12px
+*/
+
+:root {
+  --status-h: 28px;
+  --status-icon: 13px;
+  --status-gap: 1px;
+  --status-divider: rgba(125, 125, 125, 0.18);
+}
+
+[data-theme="dark"] {
+  --status-divider: rgba(255, 255, 255, 0.10);
+}
+
 .status-bar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   padding: 0 12px;
-  height: 26px;
+  height: var(--status-h);
   background: var(--bg-secondary);
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
   flex-shrink: 0;
   overflow: hidden;
   border-top: 1px solid var(--border-subtle);
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.status-bar button,
+.status-bar span.status-item {
+  -webkit-app-region: no-drag;
 }
 
 .status-left, .status-right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0;
   min-width: 0;
   overflow: hidden;
 }
 
+.status-left { padding-right: 4px; }
+.status-right { padding-left: 4px; }
+
+/* ── 基础 pill ── */
 .status-item {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 0 6px;
+  gap: 5px;
+  padding: 0 7px;
   height: 18px;
   border-radius: 9px;
   white-space: nowrap;
@@ -300,7 +332,8 @@
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: color var(--transition-fast), background var(--transition-fast);
+  letter-spacing: 0.01em;
 }
 
 .status-item:hover {
@@ -308,10 +341,42 @@
   color: var(--text-primary);
 }
 
+.status-item svg {
+  width: var(--status-icon);
+  height: var(--status-icon);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+}
+
+.status-item:hover svg { opacity: 1; }
+
+.status-item-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-item-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.status-item[title]:hover .status-item-label {
+  color: var(--text-secondary);
+}
+
+/* ── 按钮态（可点击） ── */
 .status-btn {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
   padding: 0 8px;
   height: 20px;
   border-radius: var(--radius-sm);
@@ -325,21 +390,226 @@
   border: 1px solid transparent;
 }
 
+.status-btn svg {
+  width: var(--status-icon);
+  height: var(--status-icon);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
 .status-btn:hover {
   background: var(--hover-bg);
   color: var(--text-primary);
   border-color: var(--border-subtle);
 }
 
+.status-btn:hover svg { opacity: 1; }
+
+/* 激活态（toggle on） */
 .status-btn-active {
   background: var(--accent-soft) !important;
   color: var(--accent-color) !important;
-  font-weight: 600;
+  font-weight: 500;
   border-color: transparent !important;
 }
 
+.status-btn-active svg { opacity: 1; }
+
 .status-btn-active:hover {
   background: var(--accent-soft) !important;
+}
+
+.status-btn-active::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: -2px;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ── 分隔槽（用于状态组之间） ── */
+.status-divider {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  background: var(--status-divider);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── 任务进度 — inline bar ── */
+.status-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 7px;
+  height: 18px;
+  border-radius: 9px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.status-progress:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.status-progress-track {
+  display: inline-block;
+  width: 32px;
+  height: 3px;
+  background: var(--border-color);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.status-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--success);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.status-progress-done .status-progress-fill { background: var(--success); }
+.status-progress-running .status-progress-fill {
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+}
+
+.status-progress-text {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.status-progress-done .status-progress-text { color: var(--success); }
+
+/* ── 番茄钟 — 刻度感动画 ── */
+.status-pomo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.status-pomo svg {
+  width: var(--status-icon);
+  height: var(--status-icon);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.status-pomo:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.status-pomo-pulse {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.status-pomo-active {
+  color: var(--danger);
+}
+
+.status-pomo-active .status-pomo-pulse {
+  background: currentColor;
+  animation: pomo-tick 0.4s steps(2) infinite;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.status-pomo-break {
+  color: var(--success);
+}
+
+.status-pomo-break .status-pomo-pulse {
+  background: currentColor;
+  animation: pomo-tick 0.4s steps(2) infinite;
+  box-shadow: 0 0 6px currentColor;
+}
+
+@keyframes pomo-tick {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── 自动保存状态 ── */
+.status-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  height: 18px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.status-save svg {
+  width: var(--status-icon);
+  height: var(--status-icon);
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.status-save-saving {
+  color: var(--accent-color);
+}
+
+.status-save-saving svg {
+  animation: pomo-tick 1s ease-in-out infinite;
+}
+
+.status-save-saved {
+  color: var(--success);
+}
+
+.status-save-saved svg {
+  fill: currentColor;
+  fill-opacity: 0.18;
 }
 
 /* 查找替换面板 */
@@ -352,6 +622,7 @@
   border-bottom: 1px solid var(--border-color);
   position: relative;
   box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
 }
 
 .find-replace-row {
@@ -447,7 +718,7 @@
   width: 232px;
   min-width: 200px;
   background: var(--bg-primary);
-  border-right: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -542,19 +813,15 @@
   text-overflow: ellipsis;
 }
 
-/* 自动保存状态指示 */
+/* 自动保存状态 — 旧类（兼容保留，新结构用 .status-save-*） */
 .status-auto-saving {
   animation: pulse 1s infinite;
   color: var(--accent-color);
 }
 
 .status-auto-saved {
-  color: #2da44e;
+  color: var(--success);
   font-weight: 500;
-}
-
-[data-theme="dark"] .status-auto-saved {
-  color: #3fb950;
 }
 
 @keyframes pulse {
@@ -749,6 +1016,7 @@
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
 }
 
 .go-to-line-label {
@@ -800,6 +1068,7 @@
   min-height: 32px;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 /* 面包屑导航 */
@@ -814,6 +1083,7 @@
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
+  flex-shrink: 0;
 }
 
 .breadcrumb-bar::-webkit-scrollbar {
@@ -920,7 +1190,7 @@
   width: 216px;
   min-width: 180px;
   background: var(--bg-primary);
-  border-right: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -980,7 +1250,7 @@
 
 .tag-count {
   font-size: 10px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 8px;
   padding: 0 5px;
   color: inherit;
@@ -988,7 +1258,7 @@
 }
 
 [data-theme="dark"] .tag-count {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .tag-panel-hint {
@@ -1124,25 +1394,25 @@
 
 /* === 暗色模式微调 === */
 [data-theme="dark"] .status-btn:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(78, 176, 214, 0.06);
   border-color: var(--border-subtle);
 }
 
 [data-theme="dark"] .status-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(78, 176, 214, 0.06);
   color: var(--text-primary);
 }
 
 [data-theme="dark"] .tab-item:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(78, 176, 214, 0.04);
 }
 
 [data-theme="dark"] .outline-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(78, 176, 214, 0.06);
 }
 
 [data-theme="dark"] .file-tree-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(78, 176, 214, 0.06);
 }
 
 [data-theme="dark"] .template-card,
@@ -1181,6 +1451,6 @@
 
 [data-theme="dark"] .outline-empty::before,
 [data-theme="dark"] .file-tree-empty::before {
-  opacity: 0.5;
+  opacity: 0.4;
   color: var(--accent-color);
 }
