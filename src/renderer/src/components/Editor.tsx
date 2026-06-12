@@ -14,6 +14,7 @@ import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen
 import { Tab, useEditorStore } from '../store/editorStore'
 import { buildDecorations } from '../plugins/decorations'
 import { createEditorTheme } from '../plugins/theme'
+import { createSlashCommandExtension } from '../plugins/slashCommand'
 
 interface EditorProps { tab: Tab }
 
@@ -556,6 +557,7 @@ export function Editor({ tab }: EditorProps) {
         createLineDiffPlugin(tab.originalContent),
         createWysiwygPlugin(),
         createTypewriterPlugin(),
+        createSlashCommandExtension(),
       ]
     })
 
