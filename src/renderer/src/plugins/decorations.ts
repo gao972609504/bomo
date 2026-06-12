@@ -5,7 +5,7 @@
 import { EditorView, Decoration, DecorationSet } from '@codemirror/view'
 import { EditorState, RangeSet } from '@codemirror/state'
 import { useEditorStore } from '../store/editorStore'
-import { ImageWidget, CheckboxWidget, TocWidget, EmojiWidget, CalloutWidget, FootnoteRefWidget, CodeBlockHeaderWidget, KatexWidget } from './widgets'
+import { ImageWidget, CheckboxWidget, TocWidget, EmojiWidget, CalloutWidget, FootnoteRefWidget, CodeBlockHeaderWidget, KatexWidget, MermaidWidget } from './widgets'
 import { emojiMap, emojiPattern } from '../utils/emoji'
 
 // ============ 装饰常量 ============
@@ -137,6 +137,14 @@ export function buildDecorations(view: EditorView): DecorationSet {
           from: codeBlockStartFrom, to: codeBlockStartFrom,
           value: Decoration.widget({ widget: new CodeBlockHeaderWidget(codeBlockLang, codeContent), side: -1 })
         })
+        // Mermaid 图表渲染
+        if (codeBlockLang.toLowerCase() === 'mermaid' && codeContent.trim()) {
+          const isDark = useEditorStore.getState().theme === 'dark'
+          deco.push({
+            from: line.to, to: line.to,
+            value: Decoration.widget({ widget: new MermaidWidget(codeContent, isDark), side: 1 })
+          })
+        }
       }
       continue
     }

@@ -246,6 +246,53 @@ export class KatexWidget extends WidgetType {
   ignoreEvent() { return false }
 }
 
+// ============ Mermaid 图表 Widget ============
+
+export class MermaidWidget extends WidgetType {
+  constructor(readonly code: string, readonly isDark: boolean) { super() }
+  toDOM() {
+    const container = document.createElement('div')
+    container.className = 'cm-mermaid-widget'
+
+    // 渲染容器
+    const renderArea = document.createElement('div')
+    renderArea.className = 'cm-mermaid-render'
+    container.appendChild(renderArea)
+
+    // 异步渲染 Mermaid 图表
+    this.renderDiagram(renderArea)
+
+    return container
+  }
+
+  async renderDiagram(el: HTMLElement) {
+    try {
+      const mermaid = await import('mermaid')
+      const id = `mermaid-${Math.random().toString(36).slice(2, 10)}`
+      const theme = this.isDark ? 'dark' : 'default'
+      mermaid.default.initialize({
+        startOnLoad: false,
+        theme,
+        securityLevel: 'loose',
+        fontFamily: 'inherit',
+      })
+      const { svg } = await mermaid.default.render(id, this.code)
+      el.innerHTML = svg
+      // 让 SVG 自适应容器宽度
+      const svgEl = el.querySelector('svg')
+      if (svgEl) {
+        svgEl.style.maxWidth = '100%'
+        svgEl.style.height = 'auto'
+      }
+    } catch (err) {
+      el.innerHTML = `<div class="cm-mermaid-error">⚠️ Mermaid 渲染失败: ${(err as Error).message}</div>`
+    }
+  }
+
+  eq(other: MermaidWidget) { return this.code === other.code && this.isDark === other.isDark }
+  ignoreEvent() { return false }
+}
+
 // ============ 工具函数 ============
 
 /** 从 DOM 元素向上查找最近的 EditorView */
