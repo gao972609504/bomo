@@ -233,7 +233,7 @@ function createLineDiffPlugin(originalContent: string) {
 
 // ============ ViewPlugin ============
 
-function createWysiwygPlugin() {
+function createDecorationPlugin() {
   return ViewPlugin.fromClass(
     class {
       deco
@@ -555,7 +555,7 @@ export function Editor({ tab }: EditorProps) {
         createParagraphGapPlugin(),
         createSpellCheckPlugin(),
         createLineDiffPlugin(tab.originalContent),
-        createWysiwygPlugin(),
+        createDecorationPlugin(),
         createTypewriterPlugin(),
         createSlashCommandExtension(),
       ]

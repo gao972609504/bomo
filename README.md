@@ -8,7 +8,7 @@
 
 **Redefine Your Markdown Writing Experience**
 
-*A lightweight, distraction-free WYSIWYG Markdown editor — crafted for those who value clarity.*
+*A lightweight, distraction-free Markdown editor with live preview — crafted for those who value clarity.*
 
 <br/>
 
@@ -355,7 +355,7 @@ Made with ♥ by [MarkFlow Contributors](https://github.com/gao972609504/markflo
 
 **Redefine Your Markdown Writing Experience**
 
-*A lightweight, distraction-free WYSIWYG Markdown editor — crafted for clarity.*
+*A lightweight, distraction-free Markdown editor with live preview — crafted for clarity.*
 
 <br/>
 
