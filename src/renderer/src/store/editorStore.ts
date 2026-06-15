@@ -53,6 +53,7 @@ interface EditorState {
   wordFreqVisible: boolean
   showGraphView: boolean
   showDailyNotes: boolean
+  bookmarksVisible: boolean
   closedTabsHistory: { filePath: string | null; title: string; content: string }[]
   recentFiles: { filePath: string; title: string; lastOpened: number }[]
   zenMode: boolean
@@ -103,6 +104,7 @@ interface EditorState {
   setShowWordFreq: (show: boolean) => void
   setShowGraphView: (show: boolean) => void
   setShowDailyNotes: (show: boolean) => void
+  setShowBookmarks: (show: boolean) => void
   reopenClosedTab: () => void
   toggleZenMode: () => void
   setFontSize: (size: number) => void
@@ -203,6 +205,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   wordFreqVisible: false,
   showGraphView: false,
   showDailyNotes: false,
+  bookmarksVisible: false,
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -317,6 +320,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowWordFreq: (show: boolean) => set({ wordFreqVisible: show }),
   setShowGraphView: (show: boolean) => set({ showGraphView: show }),
   setShowDailyNotes: (show: boolean) => set({ showDailyNotes: show }),
+  setShowBookmarks: (show: boolean) => set({ bookmarksVisible: show }),
   reopenClosedTab: () => {
     set(state => {
       if (state.closedTabsHistory.length === 0) return state

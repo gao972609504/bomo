@@ -17,6 +17,7 @@
 | 11 | 词频分析面板 | WordFrequency.tsx，中英文分词+停用词过滤+高频词检测，点击触发查找 | ✅ |
 | 12 | 关系图谱 | GraphView.tsx，Canvas 力导向网络图可视化 WikiLink 连接，拖拽/缩放/点击跳转 | ✅ |
 | 13 | 每日笔记日历 | DailyNotes.tsx，月历视图，点击日期创建/打开 YYYY-MM-DD.md，标记已有笔记 | ✅ |
+| 14 | 书签面板 | BookmarksPanel.tsx，跨文档列出书签，点击跳转+居中滚动，分组管理+删除 | ✅ |
 
 ---
 
@@ -484,5 +485,49 @@ Obsidian/Notion/Logseq 核心笔记管理功能。月历模态视图，点击任
 - 项目已有文件树、最近文件、标签管理，但均无**日历驱动的每日笔记**功能
 - 项目已有标签页创建/文件读写能力，本迭代是首次将这些能力组合为「日期 → 笔记」的笔记管理工作流
 - 是知识管理（配合迭代 8 双链、迭代 12 图谱）的日记维度补充
+
+---
+
+## 迭代 14 — 书签面板 (Bookmarks Panel)
+
+**日期**: 2026-06-15
+
+### 特性描述
+跨所有打开文档的书签管理面板。项目此前已有书签数据（`toggleBookmark` / `nextBookmark` / `prevBookmark`）但缺少统一的查看/跳转界面。本迭代新增浮层面板，按文档分组列出全部书签，点击即可跳转到对应标签页并居中滚动到目标行，支持删除单个书签和清空某文档书签。
+
+### 核心改动
+- **新增** `src/renderer/src/components/BookmarksPanel.tsx`
+  - 复用 editorStore 中已有的 `bookmarks: Record<tabId, {line, label}[]>` 数据
+  - 按标签分组渲染，活跃文档高亮（accent 色 + 圆点指示）
+  - 每条书签：行号徽章 + 标签文本（书签所在行前 40 字符）
+  - 点击跳转：`setActiveTab` + `EditorView.scrollIntoView(from, { y: 'center' })` 居中定位
+  - 跨标签跳转延迟 60ms 等待编辑器重建后再滚动
+  - 悬停显示删除按钮，单条删除 + 清空整组
+  - 空状态引导（提示书签快捷键）
+  - 头部计数徽章
+- **修改** `src/renderer/src/store/editorStore.ts`
+  - 新增 `bookmarksVisible` 状态和 `setShowBookmarks` action
+- **修改** `src/renderer/src/App.tsx`
+  - 导入 BookmarksPanel 组件并加入渲染树
+  - 新增 `Ctrl+Shift+M` 快捷键
+- **修改** `src/renderer/src/components/CommandPalette.tsx`
+  - 注册 `view.bookmarks` 命令
+- **修改** `src/renderer/src/styles/global.css`
+  - 新增 `.bookmarks-*` 全套样式（右侧浮动面板、分组头、书签项、删除按钮）
+
+### 技术点
+- 数据驱动复用：直接消费已有 store.bookmarks，无需新增数据模型
+- 跨标签跳转：`setActiveTab` 后编辑器会重建，用 `setTimeout(60ms)` 延迟 dispatch 滚动
+- `EditorView.scrollIntoView(pos, { y: 'center' })` 让目标行居中显示
+- 行号 clamp：`Math.min(line, view.state.doc.lines)` 防止文档变短后越界
+
+### 验证结果
+- `npm run build` 通过，零 TypeScript 错误，零警告
+- 构建耗时 1 分 23 秒
+
+### 非重复性说明
+- 项目已有书签的增删和上/下一个导航逻辑（Editor.tsx），但**无面板列表查看/跨文档跳转 UI**
+- 与迭代 4 链接悬浮预览、迭代 8 反向链接面板不同：本迭代专门管理用户手动标记的"收藏行"
+- 是文档内导航（配合大纲、书签跳转、行号跳转）的补全
 
 

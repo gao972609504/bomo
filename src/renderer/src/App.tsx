@@ -21,6 +21,7 @@ import { BacklinksPanel } from './components/BacklinksPanel'
 import { WordFrequency } from './components/WordFrequency'
 import { GraphView } from './components/GraphView'
 import { DailyNotes } from './components/DailyNotes'
+import { BookmarksPanel } from './components/BookmarksPanel'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -469,6 +470,12 @@ export default function App() {
         const s = useEditorStore.getState()
         s.setShowDailyNotes(!s.showDailyNotes)
       }
+      // Ctrl+Shift+M 书签面板
+      if (e.ctrlKey && e.shiftKey && e.key === 'M') {
+        e.preventDefault()
+        const s = useEditorStore.getState()
+        s.setShowBookmarks(!s.bookmarksVisible)
+      }
       // F11 禅模式
       if (e.key === 'F11') {
         e.preventDefault()
@@ -666,6 +673,7 @@ export default function App() {
       <WordFrequency />
       <GraphView />
       <DailyNotes />
+      <BookmarksPanel />
     </div>
   )
 }

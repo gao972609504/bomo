@@ -42,6 +42,7 @@ function getCommands(): Command[] {
     { id: 'view.word-freq', label: '词频分析面板', category: '视图', shortcut: 'Ctrl+Shift+K', action: () => { const s = useEditorStore.getState(); s.setShowWordFreq(!s.wordFreqVisible) } },
     { id: 'view.graph', label: '关系图谱', category: '视图', shortcut: 'Ctrl+Shift+G', action: () => { const s = useEditorStore.getState(); s.setShowGraphView(!s.showGraphView) } },
     { id: 'view.daily-notes', label: '每日笔记日历', category: '视图', shortcut: 'Ctrl+Shift+D', action: () => { const s = useEditorStore.getState(); s.setShowDailyNotes(!s.showDailyNotes) } },
+    { id: 'view.bookmarks', label: '书签面板', category: '视图', shortcut: 'Ctrl+Shift+M', action: () => { const s = useEditorStore.getState(); s.setShowBookmarks(!s.bookmarksVisible) } },
   ]
 }
 
