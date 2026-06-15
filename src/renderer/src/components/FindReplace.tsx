@@ -42,6 +42,21 @@ export function FindReplace() {
 
   useEffect(() => { countMatches() }, [countMatches])
 
+  // 监听词频分析面板的预填事件
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const word = (e as CustomEvent<string>).detail
+      if (word) {
+        setFindText(word)
+        setCaseSensitive(false)
+        setUseRegex(false)
+        findInputRef.current?.focus()
+      }
+    }
+    window.addEventListener('markflow:find-prefill', handler as EventListener)
+    return () => window.removeEventListener('markflow:find-prefill', handler as EventListener)
+  }, [])
+
   const findNext = () => {
     if (!findText || !activeTab) return
     const editorEl = document.querySelector('.cm-editor')

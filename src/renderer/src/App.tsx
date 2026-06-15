@@ -18,6 +18,7 @@ import { PresentationView } from './components/PresentationView'
 import { WritingStats } from './components/WritingStats'
 import { SnippetManager } from './components/SnippetManager'
 import { BacklinksPanel } from './components/BacklinksPanel'
+import { WordFrequency } from './components/WordFrequency'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -448,6 +449,12 @@ export default function App() {
         const s = useEditorStore.getState()
         s.setShowWritingStats(!s.showWritingStats)
       }
+      // Ctrl+Shift+K 词频分析
+      if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+        e.preventDefault()
+        const s = useEditorStore.getState()
+        s.setShowWordFreq(!s.wordFreqVisible)
+      }
       // F11 禅模式
       if (e.key === 'F11') {
         e.preventDefault()
@@ -642,6 +649,7 @@ export default function App() {
       <PresentationView />
       <WritingStats />
       <SnippetManager />
+      <WordFrequency />
     </div>
   )
 }

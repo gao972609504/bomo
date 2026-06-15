@@ -14,6 +14,7 @@
 | 8 | WikiLink 双向链接系统 | wikiLinkCompletion.ts + BacklinksPanel.tsx，支持 [[触发补全和反向链接面板 | ✅ |
 | 9 | 智能表格粘贴 | Editor.tsx pasteHandler 增加表格数据自动转 Markdown 表格 | ✅ |
 | 10 | 打字机音效 | Web Audio API 实时生成机械键盘音效，独立开关控制 | ✅ |
+| 11 | 词频分析面板 | WordFrequency.tsx，中英文分词+停用词过滤+高频词检测，点击触发查找 | ✅ |
 
 ---
 
@@ -328,5 +329,53 @@
 - 迭代 1-9 均未涉及音频/音效功能
 - 项目已有「打字机模式」（迭代前就存在的打字机滚动功能），但仅控制光标居中滚动，无声音反馈
 - 本迭代首次实现「实时按键音效」，是全新的感官反馈能力，与现有打字机滚动模式互补而非重复
+
+---
+
+## 迭代 11 — 词频分析面板 (Word Frequency Analysis)
+
+**日期**: 2026-06-15
+
+### 特性描述
+类似 Hemingway Editor / ProWritingAid 的词汇重复检测面板。实时统计当前文档（或全部打开文档）中出现 ≥ 2 次的词汇并按频率排序，帮助写作者发现过度使用的词汇。支持中英文混合分词、停用词过滤、范围切换、点击词项直接跳转查找。
+
+### 核心改动
+- **新增** `src/renderer/src/components/WordFrequency.tsx`
+  - 中英文混合分词：英文按单词（长度 ≥ 3）+ 中文逐字统计（字频）
+  - 双语停用词过滤：~90 个英文虚词 + ~95 个中文虚词/语气词/代词
+  - 可切换"包含停用词"开关，查看 the/的/了 等高频虚词
+  - "当前文档 / 全部打开" 范围切换
+  - 频率条可视化（≥5 次红色 hot、≥3 次橙色 warm、其余 accent 色）
+  - 400ms 防抖，打字时不卡顿
+  - 点击任意词项 → 打开查找替换面板并预填该词（CustomEvent `markflow:find-prefill`）
+  - "显示更多"分页加载（每次 +25）
+  - 汇总统计：总词数 + 不重复词数
+- **修改** `src/renderer/src/store/editorStore.ts`
+  - 新增 `wordFreqVisible` 状态和 `setShowWordFreq` action
+- **修改** `src/renderer/src/components/FindReplace.tsx`
+  - 新增 `markflow:find-prefill` 事件监听，接收词项并预填查找框
+- **修改** `src/renderer/src/App.tsx`
+  - 导入 WordFrequency 组件并加入渲染树
+  - 新增 `Ctrl+Shift+K` 快捷键切换面板
+- **修改** `src/renderer/src/components/CommandPalette.tsx`
+  - 注册 `view.word-freq` 命令
+- **修改** `src/renderer/src/styles/global.css`
+  - 新增 `.wordfreq-*` 全套样式（右侧浮动面板、频率条、切换组、汇总栏）
+
+### 技术点
+- 中英文混合分词策略：英文 `[a-zA-Z][a-zA-Z'-]*` 正则 + 中文 `[一-鿿]` 单字正则
+- 停用词集合用 `Set` 实现 O(1) 查找
+- 跨组件通信用 `window.dispatchEvent(new CustomEvent(...))` + `addEventListener`，松耦合
+- 频率条宽度按 `count / maxCount * 100%` 归一化，热力分级配色
+- 防抖分析：`setTimeout` + cleanup，避免每个按键触发重算
+
+### 验证结果
+- `npm run build` 通过，零 TypeScript 错误，零警告
+- 构建耗时 1 分 30 秒
+
+### 非重复性说明
+- 项目已有 WritingStats（迭代 3，追踪 WPM/字数/会话时长）和 DocStats，但均不涉及**词汇重复频率分析**
+- 项目已有 TagPanel（#tag 标签管理），但处理的是显式标签而非自然语言词频
+- 本迭代首次实现"自然语言词频统计 + 停用词过滤 + 点击查找跳转"组合能力，是全新的写作辅助维度
 
 

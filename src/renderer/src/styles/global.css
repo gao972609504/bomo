@@ -1466,3 +1466,229 @@ kbd {
   color: var(--text-muted);
   text-align: center;
 }
+
+/* ═══════════ 词频分析面板 Word Frequency ═══════════ */
+
+.wordfreq-panel {
+  position: fixed;
+  right: 16px;
+  top: 96px;
+  bottom: 52px;
+  width: 320px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 120;
+  overflow: hidden;
+  animation: wordfreq-in 0.18s ease-out;
+}
+
+@keyframes wordfreq-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.wordfreq-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--accent-softer);
+}
+
+.wordfreq-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.wordfreq-icon {
+  font-size: 16px;
+}
+
+.wordfreq-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wordfreq-toggle-group {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.wordfreq-toggle {
+  border: none;
+  background: transparent;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.wordfreq-toggle.active {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.wordfreq-toggle:not(.active):hover {
+  background: var(--accent-softer);
+  color: var(--accent-color);
+}
+
+.wordfreq-check {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.wordfreq-check.active {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: var(--accent-softer);
+}
+
+.wordfreq-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wordfreq-summary strong {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.wordfreq-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+}
+
+.wordfreq-empty {
+  padding: 32px 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.wordfreq-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.wordfreq-item:hover {
+  background: var(--accent-softer);
+}
+
+.wordfreq-rank {
+  width: 22px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.wordfreq-word {
+  min-width: 70px;
+  max-width: 90px;
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.wordfreq-item-cjk .wordfreq-word {
+  min-width: 32px;
+  max-width: 48px;
+}
+
+.wordfreq-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wordfreq-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent-color);
+  border-radius: 4px;
+  opacity: 0.75;
+  transition: width 0.2s ease;
+}
+
+.wordfreq-bar-fill.warm {
+  background: #e8a64a;
+  opacity: 0.85;
+}
+
+.wordfreq-bar-fill.hot {
+  background: #e0564f;
+  opacity: 0.9;
+}
+
+.wordfreq-count {
+  width: 28px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.wordfreq-footer {
+  padding: 8px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.wordfreq-more-btn {
+  border: none;
+  background: var(--accent-softer);
+  color: var(--accent-color);
+  padding: 6px 16px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.wordfreq-more-btn:hover {
+  background: var(--accent-soft);
+}
