@@ -443,6 +443,8 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Enter', run: insertLineBelow },
           { key: 'Mod-Shift-Enter', run: insertLineAbove },
           { key: 'Mod-Shift-f', run: formatMarkdownTable },
+          { key: 'Mod-Alt-s', run: v => sortTable(v, false), shift: v => sortTable(v, true) },
+          { key: 'Mod-Alt-r', run: transposeTable },
           { key: 'Mod-Alt-ArrowUp', run: addCursorAbove },
           { key: 'Mod-Alt-ArrowDown', run: addCursorBelow },
           { key: 'Mod-Shift-BracketLeft', run: promoteHeading },
@@ -869,7 +871,145 @@ export function formatMarkdownTable(view: EditorView): boolean {
   return true
 }
 
-// ============ 多光标编辑 ============
+// ============ 表格排序与转置 ============
+
+/** 解析光标所在的 Markdown 表格 */
+function parseTableAt(view: EditorView): { startLine: number; endLine: number; rows: string[][]; isSep: boolean[]; sepIndex: number } | null {
+  const { head } = view.state.selection.main
+  const doc = view.state.doc
+  const lineNum = doc.lineAt(head).number
+  let startLine = lineNum
+  while (startLine > 1 && /^\|/.test(doc.line(startLine - 1).text.trim())) startLine--
+  let endLine = lineNum
+  while (endLine < doc.lines && /^\|/.test(doc.line(endLine + 1).text.trim())) endLine++
+  if (startLine === endLine) return null
+  const rows: string[][] = []
+  const isSep: boolean[] = []
+  let sepIndex = -1
+  for (let i = startLine; i <= endLine; i++) {
+    const text = doc.line(i).text.trim()
+    const sep = /^\|[\s\-:|]+\|$/.test(text)
+    isSep.push(sep)
+    if (sep && sepIndex < 0) sepIndex = i - startLine
+    rows.push(text.split('|').map(c => c.trim()).filter((_, idx, arr) => idx > 0 && idx < arr.length))
+  }
+  return { startLine, endLine, rows, isSep, sepIndex }
+}
+
+/** 将行二维数组重建为对齐的 Markdown 表格文本行 */
+function rebuildTableLines(rows: string[][], isSep: boolean[]): string[] {
+  const colCount = Math.max(...rows.map(r => r.length))
+  const maxWidths: number[] = []
+  for (let c = 0; c < colCount; c++) maxWidths[c] = Math.max(3, ...rows.map(r => (r[c] || '').length))
+  return rows.map((cells, i) => {
+    if (isSep[i]) {
+      return '|' + cells.map((c, ci) => {
+        const w = maxWidths[ci] || 3
+        if (c.includes(':') && c.endsWith(':')) return ' ' + ':'.padEnd(w - 1, '-') + ':'
+        if (c.endsWith(':')) return ' '.padEnd(w - 1, '-') + ':'
+        if (c.startsWith(':')) return ':' + '-'.padEnd(w - 1, '-')
+        return ' ' + '-'.repeat(w - 2) + ' '
+      }).join('|') + '|'
+    }
+    const padded: string[] = []
+    for (let ci = 0; ci < colCount; ci++) padded.push((cells[ci] || '').padEnd(maxWidths[ci] || 3))
+    return '| ' + padded.join(' | ') + ' |'
+  })
+}
+
+/** 按光标所在列排序表格（Mod-Alt-S 升序 / Shift-Mod-Alt-S 降序） */
+export function sortTable(view: EditorView, desc = false): boolean {
+  const t = parseTableAt(view)
+  if (!t || t.sepIndex < 1) return false
+  const doc = view.state.doc
+  const header = t.rows[0]
+  const dataRows = t.rows.slice(t.sepIndex + 1)
+  if (dataRows.length === 0) return false
+
+  // 光标所在列
+  const curLine = doc.lineAt(view.state.selection.main.head)
+  let col = 0
+  if (/^\|/.test(curLine.text.trim())) {
+    const before = curLine.text.slice(0, view.state.selection.main.head - curLine.from)
+    col = Math.min(Math.max(0, (before.match(/\|/g) || []).length - 1), header.length - 1)
+  }
+
+  // 数值列检测（兼容千分位逗号）
+  const isNumeric = dataRows.every(r => {
+    const v = (r[col] || '').trim().replace(/[,，]/g, '')
+    return v === '' || !isNaN(Number(v))
+  })
+
+  dataRows.sort((a, b) => {
+    const av = (a[col] || '').trim().replace(/[,，]/g, '')
+    const bv = (b[col] || '').trim().replace(/[,，]/g, '')
+    const cmp = isNumeric ? (Number(av) || 0) - (Number(bv) || 0) : av.localeCompare(bv, 'zh-Hans-CN')
+    return desc ? -cmp : cmp
+  })
+
+  const newRows = [...t.rows.slice(0, t.sepIndex + 1), ...dataRows]
+  const newIsSep = [...t.isSep.slice(0, t.sepIndex + 1), ...dataRows.map(() => false)]
+  const lines = rebuildTableLines(newRows, newIsSep)
+
+  const changes: { from: number; to: number; insert: string }[] = []
+  for (let i = 0; i < lines.length; i++) {
+    const line = doc.line(t.startLine + i)
+    if (line.text !== lines[i]) changes.push({ from: line.from, to: line.to, insert: lines[i] })
+  }
+  if (changes.length === 0) return false
+  view.dispatch({ changes })
+  return true
+}
+
+/** 转置表格（行列互换）Mod-Alt-R */
+export function transposeTable(view: EditorView): boolean {
+  const t = parseTableAt(view)
+  if (!t || t.sepIndex < 1) return false
+  const doc = view.state.doc
+  const matrix = [t.rows[0], ...t.rows.slice(t.sepIndex + 1)] // 表头 + 数据行
+  if (matrix.length === 0) return false
+  const cols = Math.max(...matrix.map(r => r.length))
+  const rows = matrix.length
+
+  const transposed: string[][] = []
+  for (let c = 0; c < cols; c++) {
+    const newRow: string[] = []
+    for (let r = 0; r < rows; r++) newRow.push(matrix[r][c] ?? '')
+    transposed.push(newRow)
+  }
+  if (transposed.length <= 1) return false
+
+  // 第一行作表头，第二行分隔符，其余数据
+  const newIsSep = transposed.map((_, i) => i === 1)
+  // 重建分隔符行（全是 ---）
+  const sepCells = transposed[0].map(() => '---')
+  const newRows = [transposed[0], sepCells, ...transposed.slice(1)]
+  const finalIsSep = [false, true, ...transposed.slice(1).map(() => false)]
+  const lines = rebuildTableLines(newRows, finalIsSep)
+
+  const origCount = t.endLine - t.startLine + 1
+  const newCount = newRows.length
+  const changes: { from: number; to: number; insert: string }[] = []
+  // 替换重叠部分（仅限原表格范围内的行，避免越界到表外内容）
+  const overlap = Math.min(origCount, newCount)
+  for (let i = 0; i < overlap; i++) {
+    const line = doc.line(t.startLine + i)
+    if (line.text !== lines[i]) changes.push({ from: line.from, to: line.to, insert: lines[i] })
+  }
+  if (newCount > origCount) {
+    // 行数变多：在表格末尾追加新行
+    const lastLine = doc.line(t.endLine)
+    changes.push({ from: lastLine.to, to: lastLine.to, insert: '\n' + lines.slice(origCount).join('\n') })
+  } else if (newCount < origCount) {
+    // 行数变少：删除多余旧行
+    const delFrom = doc.line(t.startLine + newCount).from
+    const delTo = doc.line(t.endLine).to
+    changes.push({ from: delFrom, to: delTo, insert: '' })
+  }
+  if (changes.length === 0) return false
+  view.dispatch({ changes })
+  return true
+}
 
 function addCursorAbove(view: EditorView): boolean {
   const sel = view.state.selection

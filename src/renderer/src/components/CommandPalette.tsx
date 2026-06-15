@@ -36,6 +36,18 @@ function getCommands(): Command[] {
       const cmContent = document.querySelector('.cm-content')
       if (cmContent) cmContent.dispatchEvent(new KeyboardEvent('keydown', { key: 'F', ctrlKey: true, shiftKey: true, bubbles: true }))
     }},
+    { id: 'editor.sort-table', label: '表格按当前列升序排序', category: '格式', shortcut: 'Ctrl+Alt+S', action: () => {
+      const cmContent = document.querySelector('.cm-content')
+      if (cmContent) cmContent.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
+    { id: 'editor.sort-table-desc', label: '表格按当前列降序排序', category: '格式', shortcut: 'Ctrl+Shift+Alt+S', action: () => {
+      const cmContent = document.querySelector('.cm-content')
+      if (cmContent) cmContent.dispatchEvent(new KeyboardEvent('keydown', { key: 'S', ctrlKey: true, altKey: true, shiftKey: true, bubbles: true }))
+    }},
+    { id: 'editor.transpose-table', label: '转置表格（行列互换）', category: '格式', shortcut: 'Ctrl+Alt+R', action: () => {
+      const cmContent = document.querySelector('.cm-content')
+      if (cmContent) cmContent.dispatchEvent(new KeyboardEvent('keydown', { key: 'r', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
     { id: 'view.writing-stats', label: '写作统计', category: '视图', shortcut: 'Ctrl+Shift+W', action: () => { const s = useEditorStore.getState(); s.setShowWritingStats(!s.showWritingStats) } },
     { id: 'view.snippet-manager', label: '代码片段管理', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowSnippetManager(!s.showSnippetManager) } },
     { id: 'view.backlinks', label: '反向链接面板', category: '视图', shortcut: 'Ctrl+Shift+B', action: () => { const s = useEditorStore.getState(); s.setShowBacklinks(!s.backlinksVisible) } },
