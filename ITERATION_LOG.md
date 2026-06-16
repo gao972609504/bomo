@@ -1919,3 +1919,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - 项目有缩进参考线(迭代内)，本迭代是「列宽」垂直线，互补的书写辅助
+
+---
+
+## 迭代 65 — 表格列删除 (Table Column Delete)
+
+**日期**: 2026-06-16
+
+### 特性描述
+Ctrl+Alt+C 删除光标所在表格列（从表头到末行移除该列单元）。复用迭代16的 parseTableAt/rebuildTableLines，保持列对齐。
+
+### 核心改动
+- **新增** `Editor.tsx` `deleteTableColumn(view)` — parseTableAt 解析、按光标前 | 数算列、splice 列、rebuildTableLines 重建
+- keymap `Mod-Alt-c`、CommandPalette `editor.table-del-col`
+
+### 技术点
+- 列索引 = 光标前 `|` 计数 - 1，clamp 到合法范围
+- 全行删该列后整体 rebuild，分隔行同步收缩
+- 仅剩 1 列时拒绝删除(return false)
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，44.52s
+
+### 非重复性说明
+- 迭代63是行增删，本迭代是列删除，补齐表格行列编辑

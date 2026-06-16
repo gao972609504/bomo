@@ -101,6 +101,10 @@ function getCommands(): Command[] {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'n', ctrlKey: true, altKey: true, bubbles: true }))
     }},
+    { id: 'editor.table-del-col', label: '删除表格当前列', category: '格式', shortcut: 'Ctrl+Alt+C', action: () => {
+      const cm = document.querySelector('.cm-content')
+      if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
     { id: 'editor.inline-to-ref', label: '行内链接转引用式 ([text](url) → [text][n])', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')
       const view = el ? getEditorView(el as HTMLElement) : null
