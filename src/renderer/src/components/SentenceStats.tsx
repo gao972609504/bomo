@@ -3,15 +3,9 @@
  * — 统计句子数、段落数、平均句长、最长句、阅读/朗读时长
  * — 与 Flesch 公式正交，关注文档结构而非难度
  */
+import { countWords } from '../utils/text'
 import { useMemo } from 'react'
 import { useEditorStore } from '../store/editorStore'
-
-function countWords(text: string): number {
-  const c = text.trim()
-  const cn = (c.match(/[一-龥]/g) || []).length
-  const en = (c.replace(/[一-龥]/g, ' ').trim().split(/\s+/).filter(Boolean)).length
-  return cn + en
-}
 
 function fmtDuration(min: number): string {
   if (min < 1) return `${Math.round(min * 60)} 秒`

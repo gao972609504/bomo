@@ -7,7 +7,7 @@
 import { useMemo, useState } from 'react'
 import { EditorView } from '@codemirror/view'
 import { useEditorStore } from '../store/editorStore'
-import { getEditorView } from '../plugins/widgets'
+import { getActiveEditorView } from '../plugins/widgets'
 
 type Kind = 'image' | 'link' | 'wiki' | 'footnote'
 interface RefItem { kind: Kind; label: string; target: string; line: number }
@@ -50,8 +50,7 @@ export function AssetPanel() {
   const filtered = filter === 'all' ? items : items.filter(it => it.kind === filter)
 
   const jumpTo = (line: number) => {
-    const el = document.querySelector('.cm-editor')
-    const view = el ? getEditorView(el as HTMLElement) : null
+    const view = getActiveEditorView()
     if (!view) return
     const info = view.state.doc.line(line + 1)
     view.dispatch({ selection: { anchor: info.from }, effects: EditorView.scrollIntoView(info.from) })

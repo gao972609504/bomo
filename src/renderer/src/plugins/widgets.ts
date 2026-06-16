@@ -301,3 +301,9 @@ export function getEditorView(el: HTMLElement): EditorView | undefined {
   if (!editorEl) return undefined
   return (editorEl as any).cmView?.view as EditorView | undefined
 }
+
+/** 便捷：获取当前活动编辑器的 EditorView */
+export function getActiveEditorView(): EditorView | undefined {
+  const el = document.querySelector('.cm-editor')
+  return el ? getEditorView(el as HTMLElement) : undefined
+}

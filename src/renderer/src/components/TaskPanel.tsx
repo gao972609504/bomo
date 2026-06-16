@@ -6,7 +6,7 @@
 import { useMemo } from 'react'
 import { EditorView } from '@codemirror/view'
 import { useEditorStore } from '../store/editorStore'
-import { getEditorView } from '../plugins/widgets'
+import { getActiveEditorView } from '../plugins/widgets'
 
 interface TaskItem {
   line: number
@@ -49,8 +49,7 @@ export function TaskPanel() {
   }
 
   const jumpTo = (line: number) => {
-    const el = document.querySelector('.cm-editor')
-    const view = el ? getEditorView(el as HTMLElement) : null
+    const view = getActiveEditorView()
     if (!view) return
     const lineInfo = view.state.doc.line(line + 1)
     view.dispatch({ selection: { anchor: lineInfo.from }, effects: EditorView.scrollIntoView(lineInfo.from) })

@@ -3,15 +3,9 @@
  * — 聚合工作区全貌：标签、字数、任务、标签、双链、今日字数、连续天数
  * — 灵感来自 Notion / Obsidian 的概览页
  */
+import { countWords } from '../utils/text'
 import { useMemo } from 'react'
 import { useEditorStore, FileTreeNode } from '../store/editorStore'
-
-function countWords(text: string): number {
-  const c = text.trim()
-  const cn = (c.match(/[一-龥]/g) || []).length
-  const en = (c.replace(/[一-龥]/g, ' ').trim().split(/\s+/).filter(Boolean)).length
-  return cn + en
-}
 
 function countFiles(nodes: FileTreeNode[]): number {
   let n = 0

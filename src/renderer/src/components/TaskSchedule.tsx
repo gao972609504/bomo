@@ -5,7 +5,7 @@
 import { useMemo } from 'react'
 import { EditorView } from '@codemirror/view'
 import { useEditorStore } from '../store/editorStore'
-import { getEditorView } from '../plugins/widgets'
+import { getActiveEditorView } from '../plugins/widgets'
 
 interface SchedTask { tabId: string; tabTitle: string; line: number; text: string; checked: boolean; date: string | null; ts: number }
 
@@ -39,8 +39,7 @@ export function TaskSchedule() {
   const jumpTo = (tabId: string, line: number) => {
     setActiveTab(tabId)
     setTimeout(() => {
-      const el = document.querySelector('.cm-editor')
-      const view = el ? getEditorView(el as HTMLElement) : null
+      const view = getActiveEditorView()
       if (view) {
         const info = view.state.doc.line(line + 1)
         view.dispatch({ selection: { anchor: info.from }, effects: EditorView.scrollIntoView(info.from) })

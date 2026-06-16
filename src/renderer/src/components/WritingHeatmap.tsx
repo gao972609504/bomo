@@ -5,6 +5,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useEditorStore } from '../store/editorStore'
+import { countWords } from '../utils/text'
 
 const HEATMAP_KEY = 'markflow-writing-heatmap'
 
@@ -44,13 +45,7 @@ export function WritingHeatmap() {
 
   // 监听所有标签总字数变化，增量累加到今日
   useEffect(() => {
-    const total = tabs.reduce((s, t) => {
-      const c = t.content.trim()
-      // 中英文混合粗略计字：中文按字符，英文按词
-      const cn = (c.match(/[一-龥]/g) || []).length
-      const en = (c.replace(/[一-龥]/g, ' ').trim().split(/\s+/).filter(Boolean)).length
-      return s + cn + en
-    }, 0)
+    const total = tabs.reduce((s, t) => s + countWords(t.content), 0)
     const prev = lastTotalRef.current
     if (prev !== null && total > prev) {
       const inc = total - prev

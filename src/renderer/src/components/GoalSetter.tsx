@@ -2,6 +2,7 @@
  * 写作目标设置 (Word Goal Setter)
  * — 预设目标 + 自定义输入，实时进度环，状态栏进度条的数据来源
  */
+import { countWords } from '../utils/text'
 import { useState } from 'react'
 import { useEditorStore } from '../store/editorStore'
 
@@ -14,13 +15,6 @@ const PRESETS = [
   { label: '冲刺', value: 3000 },
   { label: '挑战', value: 5000 },
 ]
-
-function countWords(text: string): number {
-  const c = text.trim()
-  const cn = (c.match(/[一-龥]/g) || []).length
-  const en = (c.replace(/[一-龥]/g, ' ').trim().split(/\s+/).filter(Boolean)).length
-  return cn + en
-}
 
 export function GoalSetter() {
   const { showGoalSetter, setShowGoalSetter, wordGoal, setWordGoal, tabs, activeTabId } = useEditorStore()

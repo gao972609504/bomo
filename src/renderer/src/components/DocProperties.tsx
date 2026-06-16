@@ -4,6 +4,7 @@
  */
 import { useEffect, useState, useMemo } from 'react'
 import { useEditorStore } from '../store/editorStore'
+import { countWords } from '../utils/text'
 
 export function DocProperties() {
   const { tabs, activeTabId, showDocProperties, setShowDocProperties } = useEditorStore()
@@ -23,7 +24,7 @@ export function DocProperties() {
     const c = activeTab?.content || ''
     const chars = c.length
     const charsNoSpace = c.replace(/\s/g, '').length
-    const words = (c.trim().match(/[一-龥]/g) || []).length + (c.replace(/[一-龥]/g, ' ').trim().split(/\s+/).filter(Boolean)).length
+    const words = countWords(c)
     const lines = c ? c.split('\n').length : 0
     const headings = (c.match(/^#{1,6}\s/gm) || []).length
     const bytes = new Blob([c]).size
