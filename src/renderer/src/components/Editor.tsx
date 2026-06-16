@@ -12,6 +12,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInp
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search'
 import { colorSwatches } from '../plugins/colorSwatch'
 import { createFocusModePlugin } from '../plugins/focusMode'
+import { htmlToMarkdown } from '../utils/htmlToMarkdown'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
 import { buildDecorations } from '../plugins/decorations'
@@ -369,6 +370,17 @@ export function Editor({ tab }: EditorProps) {
         }
         // 智能表格粘贴：检测制表符分隔的多行文本
         const text = event.clipboardData?.getData('text/plain')
+        const htmlData = event.clipboardData?.getData('text/html')
+        // 优先：富文本 HTML → Markdown（网页/Word/Notion 复制）
+        if (htmlData && htmlData.length > 20) {
+          const md = htmlToMarkdown(htmlData)
+          if (md && md.trim().length > 2) {
+            event.preventDefault()
+            const pos = view.state.selection.main.head
+            view.dispatch({ changes: { from: pos, insert: md }, selection: { anchor: pos + md.length } })
+            return true
+          }
+        }
         if (text) {
           const tableRows = parseClipboardTable(text)
           if (tableRows) {
