@@ -422,6 +422,14 @@ export function FileTree() {
               <div className="context-menu-item" onClick={() => { navigator.clipboard?.writeText(ctxMenu.node!.path); closeCtxMenu() }}>
                 <span>📋</span> 复制路径
               </div>
+              {folderPath && (
+                <div className="context-menu-item" onClick={() => {
+                  const rel = ctxMenu.node!.path.replace(folderPath, '').replace(/^[/\\]/, '')
+                  navigator.clipboard?.writeText(rel); closeCtxMenu()
+                }}>
+                  <span>📋</span> 复制相对路径
+                </div>
+              )}
               <div className="context-menu-item" onClick={() => handleDelete(ctxMenu.node!)}>
                 <span>🗑️</span> 删除
               </div>
