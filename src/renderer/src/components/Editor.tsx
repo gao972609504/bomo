@@ -463,6 +463,7 @@ export function Editor({ tab }: EditorProps) {
         ...(wordWrap ? [EditorView.lineWrapping] : []),
         ...(selectionHighlight ? [highlightSelectionMatches({ minSelectionLength: 2, wholeWords: false, highlightWordAroundCursor: true })] : []),
         colorSwatches(),
+        EditorView.rulers([{ column: 80, class: 'cm-ruler' }]),
         createEditorTheme(isDark, fontSize, fontFamily),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
