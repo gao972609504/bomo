@@ -1118,3 +1118,7 @@
 .cm-date-overdue { color: #fff; background: var(--danger); padding: 1px 5px; border-radius: 8px; font-weight: 600; }
 .cm-date-today { color: #fff; background: var(--accent-color); padding: 1px 5px; border-radius: 8px; font-weight: 600; }
 .cm-date-future { color: var(--success); background: var(--accent-soft); padding: 1px 5px; border-radius: 8px; font-weight: 500; }
+
+/* ==高亮== 语法 */
+.cm-highlight-mark { background: rgba(255, 213, 79, 0.55); border-radius: 2px; padding: 1px 0; }
+[data-theme="dark"] .cm-highlight-mark { background: rgba(255, 196, 0, 0.28); }
