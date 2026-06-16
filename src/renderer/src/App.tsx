@@ -32,6 +32,7 @@ import { AssetPanel } from './components/AssetPanel'
 import { WritingHeatmap } from './components/WritingHeatmap'
 import { FootnotePanel } from './components/FootnotePanel'
 import { Dashboard } from './components/Dashboard'
+import { GoalSetter } from './components/GoalSetter'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -712,6 +713,7 @@ export default function App() {
       <Pomodoro />
       <WritingHeatmap />
       <Dashboard />
+      <GoalSetter />
       <CustomCSSDialog />
       <TextToSpeech />
     </div>

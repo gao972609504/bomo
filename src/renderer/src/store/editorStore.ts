@@ -68,9 +68,11 @@ interface EditorState {
   eyeCare: boolean
   relativeLineNumbers: boolean
   showDashboard: boolean
+  showGoalSetter: boolean
   toggleEyeCare: () => void
   toggleRelativeLineNumbers: () => void
   setShowDashboard: (show: boolean) => void
+  setShowGoalSetter: (show: boolean) => void
   setShowReadability: (show: boolean) => void
   setAccentPreset: (preset: string) => void
   setShowPrompts: (show: boolean) => void
@@ -248,6 +250,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   eyeCare: (() => { try { return localStorage.getItem('markflow-eyecare') === '1' } catch { return false } })(),
   relativeLineNumbers: (() => { try { return localStorage.getItem('markflow-relative-numbers') === '1' } catch { return false } })(),
   showDashboard: false,
+  showGoalSetter: false,
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -385,6 +388,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     return { relativeLineNumbers: next }
   }),
   setShowDashboard: (show: boolean) => set({ showDashboard: show }),
+  setShowGoalSetter: (show: boolean) => set({ showGoalSetter: show }),
   reopenClosedTab: () => {
     set(state => {
       if (state.closedTabsHistory.length === 0) return state
