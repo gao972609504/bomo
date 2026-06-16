@@ -296,10 +296,10 @@ async function copyAsHtml() {
   const body = renderMarkdown(tab.content)
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`
   try {
-    if (navigator.clipboard && (window as any).ClipboardItem) {
+    if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
       const blob = new Blob([html], { type: 'text/html' })
       const textBlob = new Blob([tab.content], { type: 'text/plain' })
-      await (navigator.clipboard as any).write([new (window as any).ClipboardItem({
+      await navigator.clipboard.write([new ClipboardItem({
         'text/html': blob,
         'text/plain': textBlob,
       })])

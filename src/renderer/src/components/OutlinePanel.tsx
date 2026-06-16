@@ -6,6 +6,7 @@ import React, { useMemo, useCallback, useState } from 'react'
 import { useEditorStore } from '../store/editorStore'
 import { getEditorView } from '../plugins/widgets'
 import { foldEffect, unfoldEffect, foldedRanges } from '@codemirror/language'
+import { StateEffect } from '@codemirror/state'
 
 interface HeadingItem {
   level: number
@@ -99,12 +100,12 @@ export function OutlinePanel() {
 
     if (isCurrentlyCollapsed) {
       // 展开
-      const effects: unknown[] = []
+      const effects: StateEffect<unknown>[] = []
       const folded = foldedRanges(view.state)
       folded.between(startLine.to, endLine.to, (from: number, to: number) => {
         effects.push(unfoldEffect.of({ from, to }))
       })
-      if (effects.length > 0) view.dispatch({ effects: effects as any })
+      if (effects.length > 0) view.dispatch({ effects })
       setCollapsed(prev => {
         const next = new Set(prev)
         next.delete(idx)
@@ -128,7 +129,7 @@ export function OutlinePanel() {
     const editorEl = document.querySelector('.cm-editor')
     const view = editorEl ? getEditorView(editorEl as HTMLElement) : null
     if (!view) return
-    const effects: unknown[] = []
+    const effects: StateEffect<unknown>[] = []
     const doc = view.state.doc
     headings.forEach((heading, idx) => {
       const next = headings[idx + 1]
@@ -141,7 +142,7 @@ export function OutlinePanel() {
       const endLine = doc.line(endLineNum)
       effects.push(foldEffect.of({ from: startLine.to, to: endLine.to }))
     })
-    if (effects.length) view.dispatch({ effects: effects as any })
+    if (effects.length) view.dispatch({ effects })
     setCollapsed(new Set(headings.map((_, i) => i)))
   }, [headings])
 
@@ -150,12 +151,12 @@ export function OutlinePanel() {
     const editorEl = document.querySelector('.cm-editor')
     const view = editorEl ? getEditorView(editorEl as HTMLElement) : null
     if (!view) return
-    const effects: unknown[] = []
+    const effects: StateEffect<unknown>[] = []
     const folded = foldedRanges(view.state)
     folded.between(0, view.state.doc.length, (from: number, to: number) => {
       effects.push(unfoldEffect.of({ from, to }))
     })
-    if (effects.length) view.dispatch({ effects: effects as any })
+    if (effects.length) view.dispatch({ effects })
     setCollapsed(new Set())
   }, [])
 

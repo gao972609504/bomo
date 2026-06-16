@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js/lib/core'
+import type { LanguageFn } from 'highlight.js'
 import katex from 'katex'
 
 // ── 按需注册 highlight.js 语言（避免全量导入 ~400KB） ──
@@ -24,7 +25,7 @@ import plaintext from 'highlight.js/lib/languages/plaintext'
 
 const registeredLangs = new Set<string>()
 
-function registerLang(name: string, lang: any) {
+function registerLang(name: string, lang: LanguageFn) {
   hljs.registerLanguage(name, lang)
   registeredLangs.add(name)
 }

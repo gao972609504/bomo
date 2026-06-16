@@ -5,7 +5,7 @@
  * 输入 "/" 后弹出快速插入菜单，支持模糊搜索、键盘导航。
  */
 import { EditorView, keymap, ViewPlugin, ViewUpdate, Decoration, DecorationSet, WidgetType } from '@codemirror/view'
-import { EditorState, StateField, StateEffect, Facet } from '@codemirror/state'
+import { EditorState, StateField, StateEffect, Facet, Annotation } from '@codemirror/state'
 import { syntaxTree } from '@codemirror/language'
 
 // ============ 命令定义 ============
@@ -245,7 +245,7 @@ const slashPlugin = ViewPlugin.fromClass(
       if (!tr) return
 
       // 检查是否由输入触发（非粘贴/程序修改）
-      const inputType = tr.annotation((EditorView as any).inputAnnotation)
+      const inputType = tr.annotation((EditorView as unknown as { inputAnnotation: Annotation<boolean> }).inputAnnotation)
       const isUserInput = tr.isUserEvent('input.type') || tr.changes.some(c => c.insert.length > 0)
 
       const state = this.view.state.field(slashState, false)

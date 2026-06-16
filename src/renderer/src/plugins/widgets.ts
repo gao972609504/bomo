@@ -299,7 +299,7 @@ export class MermaidWidget extends WidgetType {
 export function getEditorView(el: HTMLElement): EditorView | undefined {
   const editorEl = el.closest('.cm-editor')
   if (!editorEl) return undefined
-  return (editorEl as any).cmView?.view as EditorView | undefined
+  return (editorEl as unknown as { cmView?: { view: EditorView } }).cmView?.view
 }
 
 /** 便捷：获取当前活动编辑器的 EditorView */
