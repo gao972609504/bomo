@@ -1939,18 +1939,30 @@ function toggleBlockquote(view: EditorView): boolean {
   return true
 }
 
-function toggleTaskCheckbox(view: EditorView): boolean {  const { from, to } = view.state.selection.main
+function toggleTaskCheckbox(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
   const doc = view.state.doc
   const startLine = doc.lineAt(from).number
   const endLine = doc.lineAt(to).number
   const changes: { from: number; to: number; insert: string }[] = []
+  const d = new Date()
+  const dateStr = ` ✅ ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
   for (let i = startLine; i <= endLine; i++) {
     const line = doc.line(i)
     const m = line.text.match(/^(\s*)([-*+]|\d+\.)\s\[([ xX])\]/)
     if (m) {
-      const charOff = line.from + m[1].length + m[2].length + 1 + 1 // indent + marker + space + '['
-      const next = m[3].toLowerCase() === 'x' ? ' ' : 'x'
-      changes.push({ from: charOff, to: charOff + 1, insert: next })
+      const charOff = line.from + m[1].length + m[2].length + 1 + 1
+      const isChecked = m[3].toLowerCase() === 'x'
+      changes.push({ from: charOff, to: charOff + 1, insert: isChecked ? ' ' : 'x' })
+      // 完成日期处理：勾选时追加，取消时移除
+      const dateMatch = line.text.match(/\s*✅\s*\d{4}-\d{2}-\d{2}/)
+      if (isChecked && dateMatch) {
+        changes.push({ from: line.from + dateMatch.index!, to: line.from + dateMatch.index! + dateMatch[0].length, insert: '' })
+      } else if (!isChecked) {
+        if (dateMatch) changes.push({ from: line.from + dateMatch.index!, to: line.from + dateMatch.index! + dateMatch[0].length, insert: '' })
+        changes.push({ from: line.to, to: line.to, insert: dateStr })
+      }
     }
   }
   if (changes.length === 0) return false
