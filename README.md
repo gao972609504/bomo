@@ -147,12 +147,12 @@ Electron 主进程
 
 ## 🌏 English
 
-**Bomo** — *Moored in ink, write in tranquility.* A lightweight, polished, WYSIWYG Markdown writing app.
+**Bomo** — *Moored in ink, write in tranquility.* A lightweight, polished Markdown writing app.
 
 Bomo ditches the traditional split-pane approach. Powered by CodeMirror 6's Decoration system, it renders Markdown **directly inside the editor** — the active line reveals raw syntax while everything else displays polished rich text. Writing, distilled to its essence.
 
 ### Highlights
-- **Live WYSIWYG** editing with cursor-aware rendering
+- **Live rendering** editing with cursor-aware display
 - **WikiLinks**, backlinks & **graph view** for connected notes
 - **Daily notes**, **task aggregation**, **bookmarks**, **tag panel**
 - **Mermaid** diagrams, **KaTeX** math, **callouts**, **color swatches**
