@@ -35,6 +35,7 @@ import { Dashboard } from './components/Dashboard'
 import { GoalSetter } from './components/GoalSetter'
 import { SentenceStats } from './components/SentenceStats'
 import { FrontMatterEditor } from './components/FrontMatterEditor'
+import { WordBadge } from './components/WordBadge'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -699,6 +700,7 @@ export default function App() {
         {!zenMode && <BacklinksPanel />}
       </div>
       {eyeCare && <div className="eye-care-overlay" aria-hidden="true" />}
+      <WordBadge />
       <QuickOpen />
       <CommandPalette />
       <DocStats />

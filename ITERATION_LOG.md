@@ -1508,3 +1508,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - 项目有标题折叠(迭代22 大纲面板/内置)，但围栏代码块此前不可折叠；本迭代补齐代码块折叠维度
+
+---
+
+## 迭代 48 — 浮动字数徽标 (Floating Word Badge)
+
+**日期**: 2026-06-16
+
+### 特性描述
+右下角常驻浮动徽标：实时显示当前字数，设置目标后显示「/ 目标 (进度%)」，达标变绿。禅模式下更低透明度不打扰。状态栏在禅/全屏隐藏时的字数监控补充。
+
+### 核心改动
+- **新增** `src/renderer/src/components/WordBadge.tsx` — 字数(中英混合) + 目标百分比 + 达标高亮
+- store showWordBadge、App 挂载(eyeCare 层旁)、CommandPalette `view.word-badge` 开关、CSS `.word-badge`
+
+### 技术点
+- backdrop-filter 毛玻璃、opacity 悬停恢复、pointer-events:none 不挡编辑
+- 复用 store wordGoal，与 GoalSetter/StatusBar 数据同源
+- zen 模式额外降透明度
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，41.84s
+
+### 非重复性说明
+- StatusBar 在禅模式隐藏，本迭代提供「禅/全屏下可见」的浮动字数监控，补齐专注写作场景
