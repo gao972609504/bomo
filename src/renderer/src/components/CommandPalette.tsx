@@ -12,6 +12,7 @@ import { selectParagraph } from './Editor'
 import { cycleColumnAlign } from './Editor'
 import { toggleUnorderedList } from './Editor'
 import { toggleOrderedList } from './Editor'
+import { wrapCallout } from './Editor'
 import { getEditorView } from '../plugins/widgets'
 
 interface Command {
@@ -137,6 +138,16 @@ function getCommands(): Command[] {
     { id: 'editor.wrap-code', label: '选区包裹代码围栏 (```)', category: '格式', shortcut: 'Ctrl+Alt+F', action: () => {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'f', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
+    { id: 'editor.wrap-callout', label: '选区包裹提示框 (:::tip)', category: '格式', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) wrapCallout(view, 'tip')
+    }},
+    { id: 'editor.wrap-callout-warn', label: '选区包裹警告框 (:::warning)', category: '格式', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) wrapCallout(view, 'warning')
     }},
     { id: 'editor.toggle-list', label: '切换无序列表 (- )', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')

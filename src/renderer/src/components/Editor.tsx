@@ -1729,6 +1729,18 @@ function wrapCodeFence(view: EditorView): boolean {
   return true
 }
 
+export function wrapCallout(view: EditorView, type = 'tip'): boolean {
+  const { from, to } = view.state.selection.main
+  const sel = view.state.sliceDoc(from, to)
+  const body = sel.endsWith('\n') ? sel : sel ? sel + '\n' : ''
+  const insert = `:::${type}\n${body}:::\n`
+  view.dispatch({
+    changes: { from, to, insert },
+    selection: sel ? { anchor: from, head: from + insert.length } : { anchor: from + type.length + 4 },
+  })
+  return true
+}
+
 export function toggleUnorderedList(view: EditorView): boolean {
   const { from, to } = view.state.selection.main
   const doc = view.state.doc
