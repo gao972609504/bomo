@@ -24,7 +24,7 @@
 
 泊墨摒弃传统的「源码 / 预览」分栏模式，基于 CodeMirror 6 的 Decoration 系统**直接在编辑器内渲染 Markdown**：光标所在行显示原始语法，其余区域无缝呈现富文本。写作，回归纯粹。
 
-> 💡 从 [GitHub Releases](https://github.com/gao972609504/markflow/releases) 获取最新版本，或 [从源码构建](#-快速开始)。
+> 💡 从 [GitHub Releases](https://github.com/gao972609504/bomo/releases) 获取最新版本，或 [从源码构建](#-快速开始)。
 
 ## ✨ 核心特性
 
@@ -101,8 +101,8 @@
 ### 从源码构建
 
 ```bash
-git clone https://github.com/gao972609504/markflow.git
-cd markflow
+git clone https://github.com/gao972609504/bomo.git
+cd bomo
 npm install
 npm run dev      # 开发模式
 npm run build    # 生产构建
@@ -165,8 +165,8 @@ Bomo ditches the traditional split-pane approach. Powered by CodeMirror 6's Deco
 
 ### Quick Start
 ```bash
-git clone https://github.com/gao972609504/markflow.git
-cd markflow
+git clone https://github.com/gao972609504/bomo.git
+cd bomo
 npm install
 npm run dev
 ```
@@ -177,7 +177,7 @@ npm run dev
 
 **泊墨** — 让 Markdown 写作回归宁静 ✦
 
-Made with ♥ by [Bomo Contributors](https://github.com/gao972609504/markflow/graphs/contributors)
+Made with ♥ by [Bomo Contributors](https://github.com/gao972609504/bomo/graphs/contributors)
 
 [⬆ 回到顶部](#泊墨--bomo)
 

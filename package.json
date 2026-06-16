@@ -22,11 +22,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gao972609504/markflow.git"
+    "url": "https://github.com/gao972609504/bomo.git"
   },
-  "homepage": "https://github.com/gao972609504/markflow#readme",
+  "homepage": "https://github.com/gao972609504/bomo#readme",
   "bugs": {
-    "url": "https://github.com/gao972609504/markflow/issues"
+    "url": "https://github.com/gao972609504/bomo/issues"
   },
   "scripts": {
     "dev": "npx electron-vite dev",

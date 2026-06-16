@@ -10,8 +10,8 @@ Thank you for your interest in 泊墨! Issues and Pull Requests are welcome.
 
 ```bash
 # 克隆仓库 | Clone the repository
-git clone https://github.com/gao972609504/markflow.git
-cd markflow
+git clone https://github.com/gao972609504/bomo.git
+cd bomo
 
 # 安装依赖 | Install dependencies
 npm install
