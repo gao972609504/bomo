@@ -1717,6 +1717,30 @@ function insertHr(view: EditorView): boolean {
   return true
 }
 
+export function toggleUnorderedList(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  const doc = view.state.doc
+  const startLine = doc.lineAt(from).number
+  const endLine = doc.lineAt(to).number
+  const changes: { from: number; to: number; insert: string }[] = []
+  let allList = true
+  for (let i = startLine; i <= endLine; i++) {
+    if (!/^(\s*)([-*+])\s/.test(doc.line(i).text)) { allList = false; break }
+  }
+  for (let i = startLine; i <= endLine; i++) {
+    const line = doc.line(i)
+    const m = line.text.match(/^(\s*)([-*+])\s/)
+    if (allList) {
+      if (m) changes.push({ from: line.from, to: line.from + m[0].length, insert: m[1] })
+    } else {
+      changes.push({ from: line.from, to: line.from, insert: '- ' })
+    }
+  }
+  if (!changes.length) return false
+  view.dispatch({ changes })
+  return true
+}
+
 export function fullWidthToHalf(view: EditorView): boolean {
   const { from, to } = view.state.selection.main
   const doc = view.state.doc
