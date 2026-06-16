@@ -2014,3 +2014,26 @@ Ctrl+Alt+K 删除光标所在的整个段落（以空行为界的连续非空行
 
 ### 非重复性说明
 - 项目有 deleteLine，本迭代是段落级删除，全新粒度
+
+---
+
+## 迭代 69 — 选中当前段落 (Select Paragraph)
+
+**日期**: 2026-06-16
+
+### 特性描述
+命令面板「选中当前段落」一键选中光标所在的整个段落（空行分隔的连续非空行块），便于整段复制/移动/格式化。
+
+### 核心改动
+- **新增** `Editor.tsx` 导出 `selectParagraph(view)` — 向上/下扫描段落边界，dispatch 选区 anchor/head
+- **修改** CommandPalette 导入并注册 `editor.select-paragraph`(经 getEditorView)
+
+### 技术点
+- 选区 = 段落首行 from 到末行 to
+- 与 deleteParagraph(迭代68)共用边界算法
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，44.76s
+
+### 非重复性说明
+- 项目有 selectLine(行级)、selectAll，本迭代补齐段落级选区

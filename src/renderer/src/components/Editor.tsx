@@ -1670,6 +1670,18 @@ function deleteParagraph(view: EditorView): boolean {
   return true
 }
 
+export function selectParagraph(view: EditorView): boolean {
+  const { head } = view.state.selection.main
+  const doc = view.state.doc
+  const cur = doc.lineAt(head).number
+  let start = cur
+  while (start > 1 && doc.line(start - 1).text.trim() !== '') start--
+  let end = cur
+  while (end < doc.lines && doc.line(end + 1).text.trim() !== '') end++
+  view.dispatch({ selection: { anchor: doc.line(start).from, head: doc.line(end).to } })
+  return true
+}
+
 export function fullWidthToHalf(view: EditorView): boolean {
   const { from, to } = view.state.selection.main
   const doc = view.state.doc

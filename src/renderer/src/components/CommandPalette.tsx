@@ -8,6 +8,7 @@ import { renderMarkdown } from '../utils/markdown'
 import { stripMarkdown } from '../utils/stripMarkdown'
 import { inlineToRefLinks } from './Editor'
 import { fullWidthToHalf } from './Editor'
+import { selectParagraph } from './Editor'
 import { getEditorView } from '../plugins/widgets'
 
 interface Command {
@@ -112,6 +113,11 @@ function getCommands(): Command[] {
     { id: 'editor.delete-paragraph', label: '删除当前段落', category: '编辑', shortcut: 'Ctrl+Alt+K', action: () => {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
+    { id: 'editor.select-paragraph', label: '选中当前段落', category: '编辑', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) selectParagraph(view)
     }},
     { id: 'editor.inline-to-ref', label: '行内链接转引用式 ([text](url) → [text][n])', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')
