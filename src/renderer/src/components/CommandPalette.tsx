@@ -77,6 +77,7 @@ function getCommands(): Command[] {
     { id: 'view.pomodoro', label: '番茄钟', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowPomodoro(!s.showPomodoro) } },
     { id: 'view.tts', label: '朗读模式', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowTTS(!s.showTTS) } },
     { id: 'view.task-panel', label: '任务清单面板', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowTaskPanel(!s.showTaskPanel) } },
+    { id: 'view.custom-css', label: '自定义 CSS', category: '设置', action: () => { const s = useEditorStore.getState(); s.setShowCustomCSS(!s.showCustomCSS) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }

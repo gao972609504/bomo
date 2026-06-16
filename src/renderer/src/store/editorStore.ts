@@ -61,12 +61,14 @@ interface EditorState {
   showPomodoro: boolean
   showTTS: boolean
   showTaskPanel: boolean
+  showCustomCSS: boolean
   setShowReadability: (show: boolean) => void
   setAccentPreset: (preset: string) => void
   setShowPrompts: (show: boolean) => void
   setShowPomodoro: (show: boolean) => void
   setShowTTS: (show: boolean) => void
   setShowTaskPanel: (show: boolean) => void
+  setShowCustomCSS: (show: boolean) => void
   closedTabsHistory: { filePath: string | null; title: string; content: string }[]
   recentFiles: { filePath: string; title: string; lastOpened: number }[]
   zenMode: boolean
@@ -227,6 +229,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showPomodoro: false,
   showTTS: false,
   showTaskPanel: false,
+  showCustomCSS: false,
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -349,6 +352,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowPomodoro: (show: boolean) => set({ showPomodoro: show }),
   setShowTTS: (show: boolean) => set({ showTTS: show }),
   setShowTaskPanel: (show: boolean) => set({ showTaskPanel: show }),
+  setShowCustomCSS: (show: boolean) => set({ showCustomCSS: show }),
   reopenClosedTab: () => {
     set(state => {
       if (state.closedTabsHistory.length === 0) return state

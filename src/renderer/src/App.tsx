@@ -27,6 +27,7 @@ import { WritingPrompts } from './components/WritingPrompts'
 import { Pomodoro } from './components/Pomodoro'
 import { TextToSpeech } from './components/TextToSpeech'
 import { TaskPanel } from './components/TaskPanel'
+import { CustomCSSDialog, loadCustomCSS, applyCustomCSS } from './components/CustomCSS'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -141,6 +142,9 @@ export default function App() {
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
   const dragCounterRef = useRef(0)
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // ── 启动时应用自定义 CSS ──
+  useEffect(() => { applyCustomCSS(loadCustomCSS()) }, [])
 
   // ── 更新窗口标题 ──
   useEffect(() => {
@@ -699,6 +703,7 @@ export default function App() {
       <Readability />
       <WritingPrompts />
       <Pomodoro />
+      <CustomCSSDialog />
       <TextToSpeech />
     </div>
   )
