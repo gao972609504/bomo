@@ -186,8 +186,34 @@ ipcMain.handle('file:read', async (_event, filePath: string) => {
 })
 
 ipcMain.handle('file:write', async (_event, filePath: string, content: string) => {
-  await writeFile(filePath, content, 'utf-8')
-  return true
+  try {
+    // 自动备份：文件已存在且内容变化时，将旧版本写入 .bomo-backup/
+    try {
+      const oldStat = await stat(filePath)
+      if (oldStat.isFile()) {
+        const oldContent = await readFile(filePath, 'utf-8')
+        if (oldContent && oldContent !== content) {
+          const dir = dirname(filePath)
+          const base = filePath.split(/[/\\]/).pop() || 'doc'
+          const backupDir = join(dir, '.bomo-backup')
+          await mkdir(backupDir, { recursive: true })
+          const ts = new Date().toISOString().replace(/[:.]/g, '-')
+          await writeFile(join(backupDir, `${base}.${ts}.bak`), oldContent, 'utf-8')
+          // 轮换：仅保留该文件最近 20 份备份
+          try {
+            const files = await readdir(backupDir)
+            const baks = files.filter(f => f.startsWith(base + '.') && f.endsWith('.bak')).sort().reverse()
+            for (const f of baks.slice(20)) { try { await unlink(join(backupDir, f)) } catch { /* noop */ } }
+          } catch { /* cleanup noop */ }
+        }
+      }
+    } catch { /* 文件尚不存在，跳过备份 */ }
+    await writeFile(filePath, content, 'utf-8')
+    return true
+  } catch (e) {
+    console.error('file:write error', e)
+    return false
+  }
 })
 
 ipcMain.handle('file:save-as', async (_event, content: string) => {
