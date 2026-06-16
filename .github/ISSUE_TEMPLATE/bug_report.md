@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug to help us improve MarkFlow
+about: Report a bug to help us improve 泊墨
 title: '[Bug] '
 labels: bug
 ---
@@ -11,7 +11,7 @@ labels: bug
 
 ## 复现步骤 | Steps to Reproduce
 
-1. 打开 MarkFlow / Open MarkFlow
+1. 打开 泊墨 / Open 泊墨
 2. ...
 3. ...
 
@@ -26,7 +26,7 @@ labels: bug
 ## 环境信息 | Environment
 
 - **OS**: (e.g., Windows 11, macOS 14, Ubuntu 22.04)
-- **MarkFlow Version**: (e.g., 1.0.0)
+- **泊墨 Version**: (e.g., 1.0.0)
 - **Node.js Version**: (e.g., 18.17.0)
 
 ## 截图 | Screenshots

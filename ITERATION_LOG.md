@@ -1,4 +1,4 @@
-# MarkFlow 迭代日志
+# 泊墨 迭代日志
 
 > 记录每次迭代的特性、核心改动和技术点，防止重复开发。
 
@@ -276,7 +276,7 @@
 **日期**: 2026-06-12
 
 ### 特性描述
-从 Excel / Google Sheets / Numbers 等工具复制制表符分隔的数据后，在 MarkFlow 中粘贴时自动识别并转换为标准 Markdown 表格格式。支持 CSV（逗号分隔）数据作为降级方案。
+从 Excel / Google Sheets / Numbers 等工具复制制表符分隔的数据后，在 泊墨 中粘贴时自动识别并转换为标准 Markdown 表格格式。支持 CSV（逗号分隔）数据作为降级方案。
 
 ### 核心改动
 - **修改** `src/renderer/src/components/Editor.tsx`

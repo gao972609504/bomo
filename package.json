@@ -1,13 +1,14 @@
 {
-  "name": "markflow",
+  "name": "bomo",
   "version": "2.1.0",
-  "description": "A lightweight, beautiful Typora-like Markdown editor built with Electron + React + CodeMirror 6",
-  "author": "MarkFlow Contributors <markflow@example.com>",
+  "description": "泊墨 (Bomo) — 轻量精致的所见即所得 Markdown 写作器，基于 Electron + React + CodeMirror 6",
+  "author": "Bomo Contributors <bomo@example.com>",
   "license": "MIT",
   "main": "./out/main/index.js",
-  "displayName": "MarkFlow",
+  "displayName": "泊墨",
   "keywords": [
     "markdown",
+    "bomo",
     "editor",
     "live-preview",
     "typora",
@@ -39,8 +40,8 @@
     "build:linux": "electron-builder --linux"
   },
   "build": {
-    "appId": "com.markflow.app",
-    "productName": "MarkFlow",
+    "appId": "com.bomo.app",
+    "productName": "泊墨",
     "directories": {
       "output": "dist"
     },

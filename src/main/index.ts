@@ -36,7 +36,7 @@ function createWindow(): void {
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    title: 'MarkFlow',
+    title: '泊墨',
     titleBarStyle: 'default',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -106,11 +106,11 @@ function createMenu(): void {
     {
       label: '帮助',
       submenu: [
-        { label: '关于 MarkFlow', click: () => {
+        { label: '关于 泊墨', click: () => {
           dialog.showMessageBox(mainWindow!, {
             type: 'info',
-            title: '关于 MarkFlow',
-            message: 'MarkFlow v2.0.0',
+            title: '关于 泊墨',
+            message: '泊墨 v2.1.0',
             detail: '功能丰富的 Markdown 编辑器 | 100+ 特性迭代 | 实时渲染\n基于 Electron + React 构建'
           })
         }}
@@ -215,7 +215,7 @@ ipcMain.handle('export:html', async (_event, html: string) => {
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>MarkFlow Export</title>
+  <title>泊墨 导出</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 860px; margin: 0 auto; padding: 30px; color: #333; line-height: 1.6; }
     pre { background: #f6f8fa; padding: 16px; border-radius: 6px; overflow-x: auto; }

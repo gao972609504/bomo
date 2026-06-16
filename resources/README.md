@@ -1,6 +1,6 @@
 # Resources
 
-This directory contains application icons and assets for MarkFlow.
+This directory contains application icons and assets for 泊墨 (Bomo).
 
 ## Required Icons
 

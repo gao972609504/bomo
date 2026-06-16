@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **欢迎页重设计 (Inkstone 2.0)**
   - 大标题 48→56px，weight 300→200，letter-spacing -0.04em
-  - 新增品牌帽（welcome-mark · 圆点 + MarkFlow 字样）
+  - 新增品牌帽（welcome-mark · 圆点 + 泊墨 字样）
   - 副标题改用 serif italic 衬线，营造杂志感
   - 模板卡片四段式：32px 线性 icon 块 + 标题 + serif 描述 + 右上箭头
     - 悬停：上浮 -2px、双层阴影、icon 微旋 3°、箭头平移

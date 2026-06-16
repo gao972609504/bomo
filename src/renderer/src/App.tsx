@@ -152,9 +152,9 @@ export default function App() {
     const activeTab = tabs.find((t) => t.id === activeTabId)
     if (activeTab) {
       const modified = activeTab.isModified ? '● ' : ''
-      document.title = `${modified}${activeTab.title} - MarkFlow`
+      document.title = `${modified}${activeTab.title} - 泊墨`
     } else {
-      document.title = 'MarkFlow'
+      document.title = '泊墨'
     }
   }, [activeTabId, tabs])
 
@@ -559,10 +559,10 @@ export default function App() {
               <div className="welcome-content">
                 <div className="welcome-mark">
                   <span className="welcome-mark-dot" aria-hidden="true" />
-                  MarkFlow
+                  泊墨 · Bomo
                 </div>
-                <h1>MarkFlow</h1>
-                <p>轻量美观的 Markdown 编辑器 · 专为写作者打造</p>
+                <h1>泊墨</h1>
+                <p>泊于墨香，宁静书写 · 轻量美观的 Markdown 写作器</p>
                 <div className="welcome-actions">
                   <button onClick={() => useEditorStore.getState().createTab()}>
                     <svg viewBox="0 0 16 16" aria-hidden="true">

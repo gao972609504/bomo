@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a feature for MarkFlow
+about: Suggest a feature for 泊墨
 title: '[Feature] '
 labels: enhancement
 ---

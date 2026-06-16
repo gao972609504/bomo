@@ -1,8 +1,8 @@
-# Contributing to MarkFlow
+# Contributing to 泊墨
 
-感谢你对 MarkFlow 的关注！欢迎提交 Issue 和 Pull Request。
+感谢你对 泊墨 的关注！欢迎提交 Issue 和 Pull Request。
 
-Thank you for your interest in MarkFlow! Issues and Pull Requests are welcome.
+Thank you for your interest in 泊墨! Issues and Pull Requests are welcome.
 
 ---
 
@@ -105,7 +105,7 @@ docs: update English README
 提交 Issue 时请包含：
 
 - 操作系统和版本（Windows/macOS/Linux）
-- MarkFlow 版本
+- 泊墨 版本
 - 重现步骤
 - 期望行为和实际行为
 - 如有可能，附上截图
