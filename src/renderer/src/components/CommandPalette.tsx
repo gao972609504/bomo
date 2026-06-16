@@ -4,6 +4,7 @@
  */
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { useEditorStore } from '../store/editorStore'
+import { renderMarkdown } from '../utils/markdown'
 
 interface Command {
   id: string
@@ -20,6 +21,7 @@ function getCommands(): Command[] {
     { id: 'file.save', label: '保存文件', category: '文件', shortcut: 'Ctrl+S', action: () => window.api && handleSave() },
     { id: 'file.open-folder', label: '打开文件夹', category: '文件', shortcut: 'Ctrl+Shift+O', action: () => handleOpenFolder() },
     { id: 'file.export-html', label: '导出为 HTML', category: '文件', action: () => window.api?.exportHTML('') },
+    { id: 'file.copy-html', label: '复制为富文本 HTML', category: '文件', action: () => copyAsHtml() },
     { id: 'view.toggle-sidebar', label: '切换侧边栏', category: '视图', shortcut: 'Ctrl+B', action: () => store.toggleSidebar() },
     { id: 'view.toggle-outline', label: '切换大纲面板', category: '视图', shortcut: 'Ctrl+Shift+O', action: () => store.toggleOutline() },
     { id: 'view.toggle-theme', label: '切换深色/浅色主题', category: '视图', action: () => store.toggleTheme() },
@@ -84,6 +86,28 @@ async function handleSave() {
   if (tab?.filePath && window.api) {
     const success = await window.api.writeFile(tab.filePath, tab.content)
     if (success) store.markTabSaved(tab.id)
+  }
+}
+
+async function copyAsHtml() {
+  const tab = useEditorStore.getState().getActiveTab()
+  if (!tab?.content?.trim()) return
+  const body = renderMarkdown(tab.content)
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`
+  try {
+    if (navigator.clipboard && (window as any).ClipboardItem) {
+      const blob = new Blob([html], { type: 'text/html' })
+      const textBlob = new Blob([tab.content], { type: 'text/plain' })
+      await (navigator.clipboard as any).write([new (window as any).ClipboardItem({
+        'text/html': blob,
+        'text/plain': textBlob,
+      })])
+    } else {
+      // 回退：仅复制纯文本 HTML
+      await navigator.clipboard.writeText(html)
+    }
+  } catch (e) {
+    console.error('复制 HTML 失败:', e)
   }
 }
 
