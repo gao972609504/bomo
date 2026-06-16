@@ -2991,3 +2991,18 @@ kbd {
 .word-badge-goal { color: var(--text-secondary); }
 .word-badge-pct { margin-left: 6px; padding: 1px 6px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-color); font-weight: 600; }
 .word-badge-pct.done { background: var(--success); color: #fff; }
+
+/* ===== 重复段落检测 ===== */
+.dupe-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.dupe-modal { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 24px; width: 480px; max-width: 92vw; max-height: 70vh; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.dupe-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
+.dupe-header small { color: var(--warning); margin-left: 6px; font-family: var(--font-mono); }
+.dupe-close { font-size: 22px; color: var(--text-muted); line-height: 1; }
+.dupe-close:hover { color: var(--text-primary); }
+.dupe-list { flex: 1; overflow-y: auto; }
+.dupe-empty { padding: 32px 16px; text-align: center; color: var(--success); }
+.dupe-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin: 2px 0; border-radius: var(--radius-sm); cursor: pointer; border-left: 3px solid var(--warning); }
+.dupe-row:hover { background: var(--hover-bg); }
+.dupe-count { font-size: 12px; font-weight: 700; color: var(--warning); background: rgba(184,134,11,0.12); padding: 2px 7px; border-radius: 8px; flex-shrink: 0; font-family: var(--font-mono); }
+.dupe-text { flex: 1; font-size: 13px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dupe-line { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0; }

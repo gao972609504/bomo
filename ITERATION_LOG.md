@@ -1532,3 +1532,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - StatusBar 在禅模式隐藏，本迭代提供「禅/全屏下可见」的浮动字数监控，补齐专注写作场景
+
+---
+
+## 迭代 49 — 重复段落检测 (Duplicate Detection)
+
+**日期**: 2026-06-16
+
+### 特性描述
+扫描全文段落(空行分隔)，按归一化(去空白+小写)比对，找出出现 ≥2 次的重复段落，按次数排序展示，点击跳转首次出现行。长文去冗、避免重复表述。
+
+### 核心改动
+- **新增** `src/renderer/src/components/DuplicatePanel.tsx` — 分段+归一化+Map 计数+过滤 count>1
+- store showDuplicatePanel、App 挂载、CommandPalette `view.duplicates`(分析类)、CSS `.dupe-*`
+
+### 技术点
+- normalize: trim+lowercase+折叠空白，容忍排版差异
+- 仅统计归一化后 ≥8 字符的实质段落，排除短句噪声
+- 模态列表，左 warning 边框警示
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，42.95s
+
+### 非重复性说明
+- 项目此前无重复检测；与词频(迭代11)、可读性(迭代17)同属分析类但本迭代是「段落级重复」全新维度

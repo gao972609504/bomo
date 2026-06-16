@@ -113,6 +113,7 @@ function getCommands(): Command[] {
     { id: 'view.sentence-stats', label: '句子与段落结构分析', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowSentenceStats(!s.showSentenceStats) } },
     { id: 'view.front-matter', label: '编辑 Front Matter 元信息', category: '编辑', action: () => { const s = useEditorStore.getState(); s.setShowFrontMatter(!s.showFrontMatter) } },
     { id: 'view.word-badge', label: `浮动字数徽标 (${store.showWordBadge ? '开' : '关'})`, category: '视图', action: () => store.setShowWordBadge(!store.showWordBadge) },
+    { id: 'view.duplicates', label: '重复段落检测', category: '分析', action: () => { const s = useEditorStore.getState(); s.setShowDuplicatePanel(!s.showDuplicatePanel) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }
