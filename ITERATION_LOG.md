@@ -1824,3 +1824,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - 项目此前无剪贴板管理；本迭代是跨应用复制内容的「中转站」全新维度
+
+---
+
+## 迭代 61 — 文档属性 (Document Properties)
+
+**日期**: 2026-06-16
+
+### 特性描述
+文档属性面板：文件路径(可复制)、修改时间(getFileModifiedTime)、字节大小、字符/字符不含空白/词/行/标题统计。一目了然掌握当前文档元信息。
+
+### 核心改动
+- **新增** `src/renderer/src/components/DocProperties.tsx` — 异步读 mtime、Blob 算字节、复制路径+反馈
+- store showDocProperties、App 挂载、CommandPalette `view.doc-properties`、CSS `.docprop-*`
+
+### 技术点
+- new Blob([c]).size 近似 UTF-8 字节
+- 中英混合词数，标题 `^#{1,6}\s` 计数
+- 路径复制 clipboard.writeText + 1.5s 反馈
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，43.30s
+
+### 非重复性说明
+- StatusBar 单行展示部分统计，本迭代是完整属性面板(含路径/mtime/大小)，信息聚合维度

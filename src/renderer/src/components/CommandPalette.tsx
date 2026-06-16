@@ -152,6 +152,7 @@ function getCommands(): Command[] {
     { id: 'view.backups', label: '备份历史与恢复', category: '文件', action: () => { const s = useEditorStore.getState(); s.setShowBackupBrowser(!s.showBackupBrowser) } },
     { id: 'view.settings', label: '设置', category: '设置', action: () => { const s = useEditorStore.getState(); s.setShowSettings(!s.showSettings) } },
     { id: 'view.clipboard', label: '剪贴板历史', category: '编辑', action: () => { const s = useEditorStore.getState(); s.setShowClipboardHistory(!s.showClipboardHistory) } },
+    { id: 'view.doc-properties', label: '文档属性', category: '文件', action: () => { const s = useEditorStore.getState(); s.setShowDocProperties(!s.showDocProperties) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }

@@ -42,6 +42,7 @@ import { BackupBrowser } from './components/BackupBrowser'
 import { SettingsDialog } from './components/SettingsDialog'
 import { HeadingBreadcrumb } from './components/HeadingBreadcrumb'
 import { ClipboardHistory } from './components/ClipboardHistory'
+import { DocProperties } from './components/DocProperties'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -734,6 +735,7 @@ export default function App() {
       <BackupBrowser />
       <SettingsDialog />
       <ClipboardHistory />
+      <DocProperties />
       <CustomCSSDialog />
       <TextToSpeech />
     </div>

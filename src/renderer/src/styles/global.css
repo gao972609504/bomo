@@ -3074,3 +3074,18 @@ kbd {
 .clip-act { font-size: 11px; padding: 4px 8px; border-radius: var(--radius-sm); background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-subtle); opacity: 0; }
 .clip-row:hover .clip-act { opacity: 1; }
 .clip-act:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+/* ===== 文档属性 ===== */
+.docprop-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.docprop-modal { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 24px; width: 420px; max-width: 92vw; box-shadow: var(--shadow); }
+.docprop-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 15px; }
+.docprop-close { font-size: 22px; color: var(--text-muted); line-height: 1; }
+.docprop-close:hover { color: var(--text-primary); }
+.docprop-path { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin-bottom: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); }
+.docprop-path-text { flex: 1; font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.docprop-copy { font-size: 11px; padding: 3px 8px; border-radius: var(--radius-sm); background: var(--accent-color); color: #fff; border: none; flex-shrink: 0; }
+.docprop-table { width: 100%; border-collapse: collapse; }
+.docprop-table tr { border-bottom: 1px solid var(--border-subtle); }
+.docprop-table tr:last-child { border-bottom: none; }
+.docprop-k { padding: 7px 2px; font-size: 13px; color: var(--text-secondary); }
+.docprop-v { padding: 7px 2px; text-align: right; font-size: 13px; color: var(--accent-color); font-weight: 600; font-family: var(--font-mono); }
