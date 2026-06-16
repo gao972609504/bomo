@@ -77,6 +77,7 @@ interface EditorState {
   showSettings: boolean
   showClipboardHistory: boolean
   showDocProperties: boolean
+  showTaskSchedule: boolean
   toggleEyeCare: () => void
   toggleRelativeLineNumbers: () => void
   setShowDashboard: (show: boolean) => void
@@ -89,6 +90,7 @@ interface EditorState {
   setShowSettings: (show: boolean) => void
   setShowClipboardHistory: (show: boolean) => void
   setShowDocProperties: (show: boolean) => void
+  setShowTaskSchedule: (show: boolean) => void
   setShowReadability: (show: boolean) => void
   setAccentPreset: (preset: string) => void
   setShowPrompts: (show: boolean) => void
@@ -275,6 +277,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showSettings: false,
   showClipboardHistory: false,
   showDocProperties: false,
+  showTaskSchedule: false,
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -421,6 +424,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowSettings: (show: boolean) => set({ showSettings: show }),
   setShowClipboardHistory: (show: boolean) => set({ showClipboardHistory: show }),
   setShowDocProperties: (show: boolean) => set({ showDocProperties: show }),
+  setShowTaskSchedule: (show: boolean) => set({ showTaskSchedule: show }),
   reopenClosedTab: () => {
     set(state => {
       if (state.closedTabsHistory.length === 0) return state

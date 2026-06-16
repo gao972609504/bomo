@@ -43,6 +43,7 @@ import { SettingsDialog } from './components/SettingsDialog'
 import { HeadingBreadcrumb } from './components/HeadingBreadcrumb'
 import { ClipboardHistory } from './components/ClipboardHistory'
 import { DocProperties } from './components/DocProperties'
+import { TaskSchedule } from './components/TaskSchedule'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -736,6 +737,7 @@ export default function App() {
       <SettingsDialog />
       <ClipboardHistory />
       <DocProperties />
+      <TaskSchedule />
       <CustomCSSDialog />
       <TextToSpeech />
     </div>

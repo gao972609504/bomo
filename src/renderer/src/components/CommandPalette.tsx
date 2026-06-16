@@ -175,6 +175,7 @@ function getCommands(): Command[] {
     { id: 'view.settings', label: '设置', category: '设置', action: () => { const s = useEditorStore.getState(); s.setShowSettings(!s.showSettings) } },
     { id: 'view.clipboard', label: '剪贴板历史', category: '编辑', action: () => { const s = useEditorStore.getState(); s.setShowClipboardHistory(!s.showClipboardHistory) } },
     { id: 'view.doc-properties', label: '文档属性', category: '文件', action: () => { const s = useEditorStore.getState(); s.setShowDocProperties(!s.showDocProperties) } },
+    { id: 'view.task-schedule', label: '任务日程（按截止日期）', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowTaskSchedule(!s.showTaskSchedule) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }

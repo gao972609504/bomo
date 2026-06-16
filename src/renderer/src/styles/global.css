@@ -3089,3 +3089,24 @@ kbd {
 .docprop-table tr:last-child { border-bottom: none; }
 .docprop-k { padding: 7px 2px; font-size: 13px; color: var(--text-secondary); }
 .docprop-v { padding: 7px 2px; text-align: right; font-size: 13px; color: var(--accent-color); font-weight: 600; font-family: var(--font-mono); }
+
+/* ===== 任务日程 ===== */
+.sched-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.sched-modal { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 24px; width: 560px; max-width: 94vw; max-height: 76vh; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+.sched-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
+.sched-header small { color: var(--accent-color); font-family: var(--font-mono); margin-left: 6px; }
+.sched-close { font-size: 22px; color: var(--text-muted); line-height: 1; }
+.sched-close:hover { color: var(--text-primary); }
+.sched-list { flex: 1; overflow-y: auto; }
+.sched-empty { padding: 28px 16px; text-align: center; color: var(--text-muted); }
+.sched-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--radius-sm); cursor: pointer; margin: 1px 0; }
+.sched-row:hover { background: var(--hover-bg); }
+.sched-row.overdue { border-left: 3px solid var(--danger); padding-left: 7px; }
+.sched-row.done .sched-text { text-decoration: line-through; opacity: 0.5; }
+.sched-date { font-size: 11px; font-family: var(--font-mono); padding: 2px 7px; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-color); flex-shrink: 0; min-width: 78px; text-align: center; }
+.sched-date.none { background: var(--bg-tertiary); color: var(--text-muted); }
+.sched-date.overdue { background: rgba(203,67,53,0.15); color: var(--danger); }
+.sched-check { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+.sched-check.on { color: var(--success); }
+.sched-text { flex: 1; font-size: 13px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sched-file { font-size: 10px; color: var(--text-muted); flex-shrink: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
