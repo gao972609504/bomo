@@ -13,6 +13,7 @@ import { searchKeymap, highlightSelectionMatches } from '@codemirror/search'
 import { colorSwatches } from '../plugins/colorSwatch'
 import { createFocusModePlugin } from '../plugins/focusMode'
 import { htmlToMarkdown } from '../utils/htmlToMarkdown'
+import { normalizeDocument } from '../utils/normalize'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
 import { buildDecorations } from '../plugins/decorations'
@@ -459,7 +460,8 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-Enter', run: insertLineAbove },
           { key: 'Mod-Shift-f', run: formatMarkdownTable },
           { key: 'Mod-Alt-s', run: v => sortTable(v, false), shift: v => sortTable(v, true) },
-          { key: 'Mod-Alt-r', run: transposeTable },
+          { key: 'Mod-Alt-T', run: transposeTable },
+          { key: 'Mod-Shift-Alt-F', run: normalizeDoc },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1509,6 +1511,20 @@ function insertToc(view: EditorView): boolean {
   const tocText = '## 目录\n\n' + tocLines.join('\n') + '\n\n'
   const pos = view.state.selection.main.head
   view.dispatch({ changes: { from: pos, insert: tocText }, selection: { anchor: pos + tocText.length } })
+  return true
+}
+
+// ============ 文档格式整理 ============
+
+function normalizeDoc(view: EditorView): boolean {
+  const cur = view.state.doc.toString()
+  const normalized = normalizeDocument(cur)
+  if (normalized === cur) return false
+  const head = view.state.selection.main.head
+  view.dispatch({ changes: { from: 0, to: cur.length, insert: normalized } })
+  // 尽量保持光标位置不越界
+  const newHead = Math.min(head, normalized.length)
+  view.dispatch({ selection: { anchor: newHead } })
   return true
 }
 

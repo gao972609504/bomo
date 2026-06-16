@@ -52,6 +52,10 @@ function getCommands(): Command[] {
       const cmContent = document.querySelector('.cm-content')
       if (cmContent) cmContent.dispatchEvent(new KeyboardEvent('keydown', { key: 'r', ctrlKey: true, altKey: true, bubbles: true }))
     }},
+    { id: 'editor.normalize', label: '整理文档格式（去行尾空格/统一空行）', category: '格式', shortcut: 'Ctrl+Shift+Alt+F', action: () => {
+      const cm = document.querySelector('.cm-content')
+      if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'F', ctrlKey: true, shiftKey: true, altKey: true, bubbles: true }))
+    }},
     { id: 'insert.date', label: '插入当前日期 (YYYY-MM-DD)', category: '插入', shortcut: 'Alt+D', action: () => {
       const cm = document.querySelector('.cm-content'); if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'd', altKey: true, bubbles: true }))
     }},
