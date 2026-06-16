@@ -2841,3 +2841,23 @@ kbd {
 .asset-row:hover .asset-row-copy { opacity: 1; }
 .asset-row-copy:hover { color: var(--accent-color); }
 .asset-row-line { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0; }
+
+/* ===== 写作热力图 ===== */
+.heatmap-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.heatmap-modal { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 24px; width: 760px; max-width: 94vw; box-shadow: var(--shadow); }
+.heatmap-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-weight: 600; font-size: 15px; }
+.heatmap-close { font-size: 22px; color: var(--text-muted); line-height: 1; }
+.heatmap-close:hover { color: var(--text-primary); }
+.heatmap-stats { display: flex; gap: 28px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
+.heatmap-stats > div { display: flex; flex-direction: column; }
+.heatmap-stats strong { font-size: 22px; color: var(--accent-color); font-family: var(--font-mono); }
+.heatmap-stats small { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.heatmap-grid-wrap { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.heatmap-weekdays { display: flex; flex-direction: column; gap: 2px; padding-top: 0; }
+.heatmap-wd { height: 12px; font-size: 9px; color: var(--text-muted); line-height: 12px; width: 12px; }
+.heatmap-grid { display: flex; gap: 3px; }
+.heatmap-col { display: flex; flex-direction: column; gap: 3px; }
+.heatmap-cell { width: 12px; height: 12px; border-radius: 2px; cursor: pointer; transition: transform var(--transition-fast); }
+.heatmap-cell:hover { transform: scale(1.4); }
+.heatmap-legend { display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 12px; font-size: 11px; color: var(--text-muted); }
+.heatmap-tooltip { position: fixed; z-index: 10001; background: var(--bg-tertiary); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; pointer-events: none; box-shadow: var(--shadow); font-family: var(--font-mono); }

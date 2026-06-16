@@ -29,6 +29,7 @@ import { TextToSpeech } from './components/TextToSpeech'
 import { TaskPanel } from './components/TaskPanel'
 import { CustomCSSDialog, loadCustomCSS, applyCustomCSS } from './components/CustomCSS'
 import { AssetPanel } from './components/AssetPanel'
+import { WritingHeatmap } from './components/WritingHeatmap'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -705,6 +706,7 @@ export default function App() {
       <Readability />
       <WritingPrompts />
       <Pomodoro />
+      <WritingHeatmap />
       <CustomCSSDialog />
       <TextToSpeech />
     </div>
