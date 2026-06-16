@@ -12,6 +12,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInp
 import { searchKeymap, highlightSelectionMatches, selectSelectionMatches } from '@codemirror/search'
 import { colorSwatches } from '../plugins/colorSwatch'
 import { createFocusModePlugin } from '../plugins/focusMode'
+import { relativeLineNumbers } from '../plugins/relativeLineNumbers'
 import { htmlToMarkdown } from '../utils/htmlToMarkdown'
 import { normalizeDocument } from '../utils/normalize'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
@@ -323,7 +324,7 @@ function playTypewriterSound() {
 export function Editor({ tab }: EditorProps) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
-  const { updateTabContent, updateTabCursor, setScrollProgress, theme, focusMode, typewriterMode, fontSize, wordWrap, showLineNumbers, fontFamily, tabSize, typewriterSound, selectionHighlight } = useEditorStore()
+  const { updateTabContent, updateTabCursor, setScrollProgress, theme, focusMode, typewriterMode, fontSize, wordWrap, showLineNumbers, fontFamily, tabSize, typewriterSound, selectionHighlight, relativeLineNumbers: useRelative } = useEditorStore()
   const isDark = theme === 'dark'
 
   useEffect(() => {
@@ -433,7 +434,7 @@ export function Editor({ tab }: EditorProps) {
       extensions: [
         EditorState.tabSize.of(tabSize),
         EditorState.allowMultipleSelections.of(true),
-        ...(showLineNumbers ? [lineNumbers(), highlightActiveLineGutter()] : []),
+        ...(showLineNumbers ? [(useRelative ? relativeLineNumbers() : lineNumbers()), highlightActiveLineGutter()] : []),
         history(),
         indentOnInput(),
         bracketMatching(),
@@ -657,7 +658,7 @@ export function Editor({ tab }: EditorProps) {
     const view = new EditorView({ state, parent: editorRef.current })
     viewRef.current = view
     return () => { view.destroy(); viewRef.current = null }
-  }, [tab.id, isDark, fontSize, fontFamily, tabSize, wordWrap, showLineNumbers, typewriterSound, selectionHighlight])
+  }, [tab.id, isDark, fontSize, fontFamily, tabSize, wordWrap, showLineNumbers, typewriterSound, selectionHighlight, useRelative])
 
   // focusMode / typewriterMode 变化时触发装饰重建
   useEffect(() => {

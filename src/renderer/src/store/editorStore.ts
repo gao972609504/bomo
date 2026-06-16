@@ -66,7 +66,9 @@ interface EditorState {
   showHeatmap: boolean
   showFootnotePanel: boolean
   eyeCare: boolean
+  relativeLineNumbers: boolean
   toggleEyeCare: () => void
+  toggleRelativeLineNumbers: () => void
   setShowReadability: (show: boolean) => void
   setAccentPreset: (preset: string) => void
   setShowPrompts: (show: boolean) => void
@@ -242,6 +244,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showHeatmap: false,
   showFootnotePanel: false,
   eyeCare: (() => { try { return localStorage.getItem('markflow-eyecare') === '1' } catch { return false } })(),
+  relativeLineNumbers: (() => { try { return localStorage.getItem('markflow-relative-numbers') === '1' } catch { return false } })(),
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -372,6 +375,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = !state.eyeCare
     try { localStorage.setItem('markflow-eyecare', next ? '1' : '0') } catch { /* noop */ }
     return { eyeCare: next }
+  }),
+  toggleRelativeLineNumbers: () => set(state => {
+    const next = !state.relativeLineNumbers
+    try { localStorage.setItem('markflow-relative-numbers', next ? '1' : '0') } catch { /* noop */ }
+    return { relativeLineNumbers: next }
   }),
   reopenClosedTab: () => {
     set(state => {
