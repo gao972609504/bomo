@@ -1848,3 +1848,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - StatusBar 单行展示部分统计，本迭代是完整属性面板(含路径/mtime/大小)，信息聚合维度
+
+---
+
+## 迭代 62 — 全角标点转半角 (Fullwidth → Halfwidth Punctuation)
+
+**日期**: 2026-06-16
+
+### 特性描述
+将选区(或全文)的全角标点转换为半角 ASCII：，。；：！？（）［］｛｝""''～、 → ,.;:!?\(\)\[\]\{\}"\"''~,. 对中英混排、代码相邻文档规范化实用。与盘古加空格(迭代58)配套。
+
+### 核心改动
+- **新增** `Editor.tsx` 导出 `fullWidthToHalf(view)` — 字符映射表逐字符替换，选区或全文
+- **修改** `CommandPalette.tsx` 导入并注册 `editor.fwhalf` 命令(经 getEditorView 调用)
+
+### 技术点
+- Record<string,string> 映射表，逐字符 for..of 正确处理 Unicode
+- 无变化 return false，可撤销单次 dispatch
+- 与 pangu 正交：一个管空格、一个管标点形态
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，47.37s
+
+### 非重复性说明
+- 迭代58是加空格，本迭代是标点形态转换，互补的中文排版工具

@@ -1572,6 +1572,26 @@ export function inlineToRefLinks(view: EditorView): boolean {
 
 // ============ 中英文加空格 (盘古之白) ============
 
+export function fullWidthToHalf(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  const doc = view.state.doc
+  const target = from === to ? { from: 0, to: doc.length } : { from, to }
+  const text = doc.sliceString(target.from, target.to)
+  const map: Record<string, string> = {
+    '，': ',', '。': '.', '；': ';', '：': ':', '！': '!', '？': '?',
+    '（': '(', '）': ')', '［': '[', '］': ']', '｛': '{', '｝': '}',
+    '“': '"', '”': '"', '‘': "'", '’': "'", '～': '~', '、': ',',
+  }
+  let changed = false
+  let out = ''
+  for (const ch of text) {
+    if (map[ch]) { out += map[ch]; changed = true } else { out += ch }
+  }
+  if (!changed) return false
+  view.dispatch({ changes: { from: target.from, to: target.to, insert: out } })
+  return true
+}
+
 function panguSpacing(view: EditorView): boolean {
   const { from, to } = view.state.selection.main
   const doc = view.state.doc

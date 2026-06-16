@@ -7,6 +7,7 @@ import { useEditorStore } from '../store/editorStore'
 import { renderMarkdown } from '../utils/markdown'
 import { stripMarkdown } from '../utils/stripMarkdown'
 import { inlineToRefLinks } from './Editor'
+import { fullWidthToHalf } from './Editor'
 import { getEditorView } from '../plugins/widgets'
 
 interface Command {
@@ -86,6 +87,11 @@ function getCommands(): Command[] {
     { id: 'editor.pangu', label: '中英文之间加空格（盘古之白）', category: '格式', shortcut: 'Ctrl+Alt+P', action: () => {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
+    { id: 'editor.fwhalf', label: '全角标点转半角', category: '格式', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) fullWidthToHalf(view)
     }},
     { id: 'editor.inline-to-ref', label: '行内链接转引用式 ([text](url) → [text][n])', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')
