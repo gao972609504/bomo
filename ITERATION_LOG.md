@@ -2037,3 +2037,26 @@ Ctrl+Alt+K 删除光标所在的整个段落（以空行为界的连续非空行
 
 ### 非重复性说明
 - 项目有 selectLine(行级)、selectAll，本迭代补齐段落级选区
+
+---
+
+## 迭代 70 — HTML 注释包裹 (Wrap HTML Comment)
+
+**日期**: 2026-06-16
+
+### 特性描述
+Ctrl+Alt+/ 将选区包裹为 HTML 注释 `<!-- 选区 -->`，无选区时插入空注释并将光标置中。Markdown 注释内容（不渲染但保留源码）的标准手法。
+
+### 核心改动
+- **新增** `Editor.tsx` `wrapHtmlComment(view)` — 插入 <!-- --> 包裹，选区保持选中内部
+- keymap `Mod-Alt-/`、CommandPalette `editor.html-comment`
+
+### 技术点
+- 有选区：包裹后 anchor/head 锁定原内容；无选区：光标在注释内
+- 与 toggleBlockquote(迭代43)互补：本迭代是注释(不渲染)维度
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，43.22s
+
+### 非重复性说明
+- 项目此前无注释包裹；与 quote(渲染)正交的隐藏内容维度

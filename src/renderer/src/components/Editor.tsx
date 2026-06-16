@@ -492,6 +492,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-c', run: deleteTableColumn },
           { key: 'Mod-Alt-v', run: insertTableColumn },
           { key: 'Mod-Alt-k', run: deleteParagraph },
+          { key: 'Mod-Alt-/', run: wrapHtmlComment },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1679,6 +1680,17 @@ export function selectParagraph(view: EditorView): boolean {
   let end = cur
   while (end < doc.lines && doc.line(end + 1).text.trim() !== '') end++
   view.dispatch({ selection: { anchor: doc.line(start).from, head: doc.line(end).to } })
+  return true
+}
+
+function wrapHtmlComment(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  const sel = view.state.sliceDoc(from, to)
+  const open = '<!-- ', close = ' -->'
+  view.dispatch({
+    changes: { from, to, insert: open + sel + close },
+    selection: sel ? { anchor: from + open.length, head: from + open.length + sel.length } : { anchor: from + open.length },
+  })
   return true
 }
 
