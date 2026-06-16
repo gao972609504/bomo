@@ -91,6 +91,7 @@ function getCommands(): Command[] {
     { id: 'view.asset-panel', label: '资源与引用管理', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowAssetPanel(!s.showAssetPanel) } },
     { id: 'view.heatmap', label: '写作热力图', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowHeatmap(!s.showHeatmap) } },
     { id: 'view.footnote', label: '脚注管理', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowFootnotePanel(!s.showFootnotePanel) } },
+    { id: 'view.eye-care', label: `护眼模式 (${store.eyeCare ? '开' : '关'})`, category: '视图', action: () => store.toggleEyeCare() },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }

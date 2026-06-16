@@ -65,6 +65,8 @@ interface EditorState {
   showAssetPanel: boolean
   showHeatmap: boolean
   showFootnotePanel: boolean
+  eyeCare: boolean
+  toggleEyeCare: () => void
   setShowReadability: (show: boolean) => void
   setAccentPreset: (preset: string) => void
   setShowPrompts: (show: boolean) => void
@@ -239,6 +241,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   showAssetPanel: false,
   showHeatmap: false,
   showFootnotePanel: false,
+  eyeCare: (() => { try { return localStorage.getItem('markflow-eyecare') === '1' } catch { return false } })(),
   closedTabsHistory: [],
   recentFiles: loadRecentFiles(),
   zenMode: false,
@@ -365,6 +368,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setShowAssetPanel: (show: boolean) => set({ showAssetPanel: show }),
   setShowHeatmap: (show: boolean) => set({ showHeatmap: show }),
   setShowFootnotePanel: (show: boolean) => set({ showFootnotePanel: show }),
+  toggleEyeCare: () => set(state => {
+    const next = !state.eyeCare
+    try { localStorage.setItem('markflow-eyecare', next ? '1' : '0') } catch { /* noop */ }
+    return { eyeCare: next }
+  }),
   reopenClosedTab: () => {
     set(state => {
       if (state.closedTabsHistory.length === 0) return state

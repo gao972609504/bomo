@@ -2880,3 +2880,15 @@ kbd {
 .footnote-tag { font-size: 9px; padding: 1px 5px; border-radius: 8px; flex-shrink: 0; }
 .footnote-tag.warn { background: rgba(184,134,11,0.15); color: var(--warning); }
 .footnote-tag.err { background: rgba(203,67,53,0.15); color: var(--danger); }
+
+/* ===== 护眼模式覆盖层 ===== */
+.eye-care-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(255, 196, 120, 0.10), rgba(255, 160, 80, 0.18));
+  mix-blend-mode: multiply;
+}
+[data-theme="dark"] .eye-care-overlay {
+  background: radial-gradient(ellipse at center, rgba(255, 170, 90, 0.06), rgba(220, 130, 60, 0.12));
+  mix-blend-mode: screen;
+}

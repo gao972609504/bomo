@@ -139,7 +139,7 @@ export default function App() {
       content: `# 《书名》读书笔记\n\n**作者：** \n**出版日期：** \n**阅读日期：** ${new Date().toLocaleDateString('zh-CN')}\n\n---\n\n## 一句话总结\n\n\n\n## 核心观点\n\n1. \n2. \n3. \n\n## 精彩摘录\n\n> \n\n## 个人感悟\n\n\n\n## 推荐指数\n\n⭐⭐⭐⭐⭐\n`,
     },
   ]
-  const { theme, accentPreset, sidebarVisible, showFindReplace, activeTabId, tabs, scrollProgress, zenMode, recentFiles, favoriteFiles } = useEditorStore()
+  const { theme, accentPreset, sidebarVisible, showFindReplace, activeTabId, tabs, scrollProgress, zenMode, recentFiles, favoriteFiles, eyeCare } = useEditorStore()
   const activeTab = tabs.find((t) => t.id === activeTabId)
   const [isDragging, setIsDragging] = useState(false)
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
@@ -693,6 +693,7 @@ export default function App() {
         {!zenMode && <FootnotePanel />}
         {!zenMode && <BacklinksPanel />}
       </div>
+      {eyeCare && <div className="eye-care-overlay" aria-hidden="true" />}
       <QuickOpen />
       <CommandPalette />
       <DocStats />
