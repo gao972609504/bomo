@@ -247,7 +247,7 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
     <div className="status-bar">
       {/* ═══════════ 左侧 — 文档信息 ═══════════ */}
       <div className="status-left">
-        <span className="status-item" title={`光标位置：第 ${tab.cursorLine} 行，第 ${tab.cursorCol} 列`}>
+        <span className="status-item" title={`光标位置：第 ${tab.cursorLine} 行，第 ${tab.cursorCol} 列（点击跳转到行）`} onClick={() => useEditorStore.getState().setShowGoToLine(true)}>
           <Icon.Cursor />
           <span className="status-item-num">{tab.cursorLine}</span>
           <span className="status-item-label">:</span>

@@ -2552,3 +2552,22 @@ Alt+X 勾选任务（`[ ]` → `[x]`）时自动在行尾追加 `✅ YYYY-MM-DD`
 
 ### 验证结果
 - `npm run build` 通过，零错误零警告，1m22s
+
+---
+
+## 迭代 94 — 状态栏行列号点击跳转 (Click Line:Col to GoToLine)
+
+**日期**: 2026-06-16
+
+### 特性描述
+状态栏行列号区域（cursorLine:cursorCol）点击后打开「跳转到行」(GoToLine) 对话框，替代记忆快捷键。title 提示加「点击跳转到行」。
+
+### 核心改动
+- **修改** `StatusBar.tsx` 行列号 span — 添加 `onClick` 调 `useEditorStore.getState().setShowGoToLine(true)`
+
+### 技术点
+- getState 直接调用避免在 StatusBar 解构 setShowGoToLine（避免无用重渲染）
+- title 更新提示用户可点击
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，1m12s
