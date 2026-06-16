@@ -1,5 +1,5 @@
 /**
- * MarkFlow 编辑器 v3
+ * 泊墨 编辑器 v3
  * 模块化架构：widgets / decorations / theme 拆分为独立插件
  */
 import React, { useEffect, useRef } from 'react'
@@ -9,7 +9,7 @@ import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirro
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter, foldEffect, unfoldEffect, foldedRanges } from '@codemirror/language'
-import { searchKeymap, highlightSelectionMatches } from '@codemirror/search'
+import { searchKeymap, highlightSelectionMatches, selectSelectionMatches } from '@codemirror/search'
 import { colorSwatches } from '../plugins/colorSwatch'
 import { createFocusModePlugin } from '../plugins/focusMode'
 import { htmlToMarkdown } from '../utils/htmlToMarkdown'
@@ -472,6 +472,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-U', run: v => transformCase(v, 'upper') },
           { key: 'Mod-Shift-L', run: v => transformCase(v, 'lower') },
           { key: 'Mod-Alt-T', run: v => transformCase(v, 'title') },
+          { key: 'Mod-Shift-L', run: selectSelectionMatches },
           { key: 'F5', run: sortSelectedLines },
           { key: 'F6', run: reverseSelectedLines },
           { key: 'F7', run: uniqueSelectedLines },
