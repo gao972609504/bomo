@@ -485,6 +485,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-Alt-F', run: normalizeDoc },
           { key: 'Alt-x', run: toggleTaskCheckbox },
           { key: 'Mod-Shift-q', run: toggleBlockquote },
+          { key: 'Mod-Alt-p', run: panguSpacing },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1566,6 +1567,22 @@ export function inlineToRefLinks(view: EditorView): boolean {
   const defs = [...urlToRef.entries()].sort((a, b) => a[1] - b[1]).map(([url, n]) => `[${n}]: ${url}`).join('\n')
   changes.push({ from: doc.length, to: doc.length, insert: `\n\n${defs}\n` })
   view.dispatch({ changes })
+  return true
+}
+
+// ============ 中英文加空格 (盘古之白) ============
+
+function panguSpacing(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  const doc = view.state.doc
+  const target = from === to ? { from: 0, to: doc.length } : { from, to }
+  const text = doc.sliceString(target.from, target.to)
+  const spaced = text
+    .replace(/([一-龥])([a-zA-Z0-9])/g, '$1 $2')
+    .replace(/([a-zA-Z0-9])([一-龥])/g, '$1 $2')
+    .replace(/([一-龥])\s+\1/g, m => m) // 保护已有空格
+  if (spaced === text) return false
+  view.dispatch({ changes: { from: target.from, to: target.to, insert: spaced } })
   return true
 }
 
