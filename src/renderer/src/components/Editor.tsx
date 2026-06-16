@@ -494,6 +494,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-k', run: deleteParagraph },
           { key: 'Mod-Alt-/', run: wrapHtmlComment },
           { key: 'Mod-Alt-0', run: appendTodayDue },
+          { key: 'Mod-Alt-h', run: insertHr },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1705,6 +1706,14 @@ function appendTodayDue(view: EditorView): boolean {
     changes: { from: line.from, to: line.to, insert: `${cleaned} 📅 ${date}` },
     selection: { anchor: line.from + cleaned.length + 1 },
   })
+  return true
+}
+
+function insertHr(view: EditorView): boolean {
+  const pos = view.state.selection.main.head
+  const before = view.state.doc.sliceString(Math.max(0, pos - 1), pos)
+  const insert = (before === '\n' || pos === 0 ? '' : '\n') + '\n---\n\n'
+  view.dispatch({ changes: { from: pos, insert }, selection: { anchor: pos + insert.length } })
   return true
 }
 
