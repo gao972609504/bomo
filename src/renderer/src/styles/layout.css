@@ -1493,3 +1493,6 @@
 .outline-line { font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); margin-left: auto; padding: 1px 5px; border-radius: 3px; opacity: 0; transition: all var(--transition-fast); flex-shrink: 0; }
 .outline-item:hover .outline-line { opacity: 1; }
 .outline-line:hover { background: var(--accent-soft); color: var(--accent-color); }
+
+/* 文件树按钮激活态 */
+.file-tree-btn-active { background: var(--accent-soft); color: var(--accent-color); }

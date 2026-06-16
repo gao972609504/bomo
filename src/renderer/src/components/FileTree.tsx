@@ -13,6 +13,7 @@ export function FileTree() {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
   const [sortMode, setSortMode] = useState<'name' | 'type'>('name')
+  const [mdOnly, setMdOnly] = useState(false)
   const [ctxMenu, setCtxMenu] = useState<ContextMenuState | null>(null)
   const [renaming, setRenaming] = useState<{ path: string; name: string } | null>(null)
   const [creating, setCreating] = useState<{ parentPath: string; type: 'file' | 'folder'; name: string } | null>(null)
@@ -173,7 +174,23 @@ export function FileTree() {
     }, [])
   }
 
-  const filteredTree = useMemo(() => filterTree(fileTree, searchQuery), [fileTree, searchQuery])
+  const filteredTree = useMemo(() => {
+    let tree = filterTree(fileTree, searchQuery)
+    if (mdOnly) {
+      const filterMd = (nodes: FileTreeNode[]): FileTreeNode[] =>
+        nodes.reduce<FileTreeNode[]>((acc, n) => {
+          if (n.isDirectory) {
+            const c = filterMd(n.children || [])
+            if (c.length > 0) acc.push({ ...n, children: c })
+          } else if (/\.(md|markdown|txt)$/i.test(n.name)) {
+            acc.push(n)
+          }
+          return acc
+        }, [])
+      tree = filterMd(tree)
+    }
+    return tree
+  }, [fileTree, searchQuery, mdOnly])
 
   // 排序
   const sortedTree = useMemo(() => {
@@ -292,6 +309,13 @@ export function FileTree() {
           onClick={() => setSortMode(m => m === 'name' ? 'type' : 'name')}
         >
           {sortMode === 'name' ? '🔤' : '📁'}
+        </button>
+        <button
+          className={`file-tree-btn${mdOnly ? ' file-tree-btn-active' : ''}`}
+          title={mdOnly ? '显示全部文件（当前仅 Markdown）' : '仅显示 Markdown 文件'}
+          onClick={() => setMdOnly(v => !v)}
+        >
+          📝
         </button>
         <button
           className="file-tree-btn"

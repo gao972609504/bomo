@@ -2512,3 +2512,23 @@ Alt+X 勾选任务（`[ ]` → `[x]`）时自动在行尾追加 `✅ YYYY-MM-DD`
 
 ### 验证结果
 - `npm run build` 通过，零错误零警告，1m14s
+
+---
+
+## 迭代 92 — 文件树仅显示 Markdown (Markdown-Only Filter)
+
+**日期**: 2026-06-16
+
+### 特性描述
+文件树 header 新增 📝 按钮，点击切换仅显示 .md/.markdown/.txt 文件（含目录若有 Markdown 子文件）。大型混合工作区快速聚焦 Markdown 内容。再点击恢复全部显示。激活态图标高亮。
+
+### 核心改动
+- **修改** `FileTree.tsx` — `mdOnly` 状态、`filterMdOnly` 递归过滤（仅保留 .md/.markdown/.txt + 含这些文件的目录）、header 按钮
+- **修改** `layout.css` `.file-tree-btn-active` 激活态高亮
+
+### 技术点
+- 递归 filterMd 保留有 Markdown 子节点的目录（忽略非 MD 叶子）
+- 与 searchQuery 过滤串联，非互斥
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，1m60s
