@@ -5,6 +5,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { useEditorStore } from '../store/editorStore'
 import { renderMarkdown } from '../utils/markdown'
+import { stripMarkdown } from '../utils/stripMarkdown'
 
 interface Command {
   id: string
@@ -22,6 +23,7 @@ function getCommands(): Command[] {
     { id: 'file.open-folder', label: '打开文件夹', category: '文件', shortcut: 'Ctrl+Shift+O', action: () => handleOpenFolder() },
     { id: 'file.export-html', label: '导出为 HTML', category: '文件', action: () => window.api?.exportHTML('') },
     { id: 'file.copy-html', label: '复制为富文本 HTML', category: '文件', action: () => copyAsHtml() },
+    { id: 'file.copy-plain', label: '复制为纯文本（去除 Markdown）', category: '文件', action: () => copyAsPlainText() },
     { id: 'view.toggle-sidebar', label: '切换侧边栏', category: '视图', shortcut: 'Ctrl+B', action: () => store.toggleSidebar() },
     { id: 'view.toggle-outline', label: '切换大纲面板', category: '视图', shortcut: 'Ctrl+Shift+O', action: () => store.toggleOutline() },
     { id: 'view.toggle-theme', label: '切换深色/浅色主题', category: '视图', action: () => store.toggleTheme() },
@@ -112,6 +114,13 @@ async function copyAsHtml() {
   } catch (e) {
     console.error('复制 HTML 失败:', e)
   }
+}
+
+async function copyAsPlainText() {
+  const tab = useEditorStore.getState().getActiveTab()
+  if (!tab?.content?.trim()) return
+  const plain = stripMarkdown(tab.content)
+  try { await navigator.clipboard.writeText(plain) } catch (e) { console.error('复制纯文本失败:', e) }
 }
 
 async function handleOpenFolder() {
