@@ -2590,3 +2590,22 @@ Alt+X 勾选任务（`[ ]` → `[x]`）时自动在行尾追加 `✅ YYYY-MM-DD`
 
 ### 验证结果
 - `npm run build` 通过，零错误零警告，1m36s
+
+---
+
+## 迭代 96 — 状态栏文件大小显示 (File Size in Status Bar)
+
+**日期**: 2026-06-16
+
+### 特性描述
+状态栏在段落数旁新增 UTF-8 字节大小显示（智能格式化：B/KB/MB），监控文档体积。TextEncoder 准确计算 UTF-8 字节（中文 3 字节）。
+
+### 核心改动
+- **修改** `StatusBar.tsx` — `fileSize = new TextEncoder().encode(content).length` + 格式化显示
+
+### 技术点
+- TextEncoder UTF-8 字节精确计算，中文 3 字节/字符
+- 三档智能格式化 B/KB/MB
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，1m12s

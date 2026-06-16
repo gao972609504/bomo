@@ -212,6 +212,7 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
   const charCount = tab.content.length
   const wordCount = tab.content.trim() ? tab.content.trim().split(/\s+/).length : 0
   const paragraphCount = tab.content.trim() ? tab.content.split(/\n\s*\n/).filter(p => p.trim()).length : 0
+  const fileSize = new TextEncoder().encode(tab.content).length
 
   // 选区统计
   const [selInfo, setSelInfo] = useState<{ chars: number; words: number; lines: number } | null>(null)
@@ -271,6 +272,10 @@ export function StatusBar({ tab, autoSaveStatus = 'idle' }: StatusBarProps) {
         <span className="status-item" title="段落数">
           <Icon.Paragraph />
           <span className="status-item-num">{paragraphCount.toLocaleString()}</span>
+        </span>
+        <span className="status-item" title="文件大小（UTF-8）">
+          <Icon.Hash />
+          <span className="status-item-num">{fileSize < 1024 ? `${fileSize} B` : fileSize < 1048576 ? `${(fileSize / 1024).toFixed(1)} KB` : `${(fileSize / 1048576).toFixed(2)} MB`}</span>
         </span>
 
         {taskAll > 0 && (
