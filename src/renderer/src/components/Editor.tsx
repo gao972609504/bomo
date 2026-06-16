@@ -11,6 +11,7 @@ import { languages } from '@codemirror/language-data'
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldService, foldGutter, foldEffect, unfoldEffect, foldedRanges } from '@codemirror/language'
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search'
 import { colorSwatches } from '../plugins/colorSwatch'
+import { createFocusModePlugin } from '../plugins/focusMode'
 import { createTableExtension, tableLightTheme, tableDarkTheme } from '@markwhen/codemirror-tables'
 import { Tab, useEditorStore } from '../store/editorStore'
 import { buildDecorations } from '../plugins/decorations'
@@ -625,6 +626,7 @@ export function Editor({ tab }: EditorProps) {
         createSelectionHighlightPlugin(),
         createIndentGuidesPlugin(),
         createParagraphGapPlugin(),
+        createFocusModePlugin(),
         createSpellCheckPlugin(),
         createLineDiffPlugin(tab.originalContent),
         createDecorationPlugin(),
