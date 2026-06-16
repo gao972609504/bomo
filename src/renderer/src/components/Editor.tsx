@@ -355,6 +355,7 @@ export function Editor({ tab }: EditorProps) {
         const head = update.state.selection.main.head
         const line = update.state.doc.lineAt(head)
         updateTabCursor(tab.id, line.number, head - line.from + 1)
+        pushCursor(head)
       }
       if (update.geometryChanged || update.viewportChanged) {
         const el = update.view.scrollDOM
@@ -507,6 +508,8 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Shift-L', run: v => transformCase(v, 'lower') },
           { key: 'Mod-Alt-T', run: v => transformCase(v, 'title') },
           { key: 'Mod-Alt-j', run: v => transformCase(v, 'sentence') },
+          { key: 'Alt-ArrowLeft', run: cursorHistoryBack },
+          { key: 'Alt-ArrowRight', run: cursorHistoryForward },
           { key: 'Mod-Shift-L', run: selectSelectionMatches },
           { key: 'F5', run: sortSelectedLines },
           { key: 'F6', run: reverseSelectedLines },
@@ -1673,6 +1676,42 @@ function deleteParagraph(view: EditorView): boolean {
   const toLine = doc.line(end)
   const to = toLine.to < doc.length ? toLine.to + 1 : toLine.to
   view.dispatch({ changes: { from, to: Math.min(to, doc.length), insert: '' } })
+  return true
+}
+
+// ============ 光标历史导航 ============
+
+let cursorHist: number[] = []   // 光标位置历史
+let cursorHistIdx = -1         // 当前位置指针
+let cursorHistSuppressed = false
+
+function pushCursor(pos: number) {
+  if (cursorHistSuppressed) return
+  const top = cursorHist[cursorHistIdx]
+  if (top === pos) return
+  cursorHist = cursorHist.slice(0, cursorHistIdx + 1)
+  cursorHist.push(pos)
+  if (cursorHist.length > 200) cursorHist = cursorHist.slice(-200)
+  cursorHistIdx = cursorHist.length - 1
+}
+
+function cursorHistoryBack(view: EditorView): boolean {
+  if (cursorHistIdx <= 0) return false
+  cursorHistIdx--
+  const pos = cursorHist[cursorHistIdx]
+  cursorHistSuppressed = true
+  view.dispatch({ selection: { anchor: pos, head: pos }, effects: EditorView.scrollIntoView(pos) })
+  cursorHistSuppressed = false
+  return true
+}
+
+function cursorHistoryForward(view: EditorView): boolean {
+  if (cursorHistIdx >= cursorHist.length - 1) return false
+  cursorHistIdx++
+  const pos = cursorHist[cursorHistIdx]
+  cursorHistSuppressed = true
+  view.dispatch({ selection: { anchor: pos, head: pos }, effects: EditorView.scrollIntoView(pos) })
+  cursorHistSuppressed = false
   return true
 }
 
