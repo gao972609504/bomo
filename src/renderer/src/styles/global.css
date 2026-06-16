@@ -3058,3 +3058,19 @@ kbd {
 .breadcrumb-crumb { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 6px; border-radius: var(--radius-sm); font-size: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
 .breadcrumb-crumb:hover { background: var(--hover-bg); color: var(--accent-color); }
 .breadcrumb-crumb.lvl-1 { font-weight: 600; color: var(--text-primary); }
+
+/* ===== 剪贴板历史 ===== */
+.clip-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.clip-modal { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 24px; width: 480px; max-width: 92vw; max-height: 70vh; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+.clip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-weight: 600; font-size: 15px; }
+.clip-header small { color: var(--accent-color); font-family: var(--font-mono); margin-left: 6px; }
+.clip-close { font-size: 22px; color: var(--text-muted); line-height: 1; }
+.clip-close:hover { color: var(--text-primary); }
+.clip-list { flex: 1; overflow-y: auto; }
+.clip-empty { padding: 28px 16px; text-align: center; color: var(--text-muted); }
+.clip-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--radius-sm); margin: 2px 0; }
+.clip-row:hover { background: var(--hover-bg); }
+.clip-text { flex: 1; font-size: 13px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); }
+.clip-act { font-size: 11px; padding: 4px 8px; border-radius: var(--radius-sm); background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-subtle); opacity: 0; }
+.clip-row:hover .clip-act { opacity: 1; }
+.clip-act:hover { color: var(--accent-color); border-color: var(--accent-color); }

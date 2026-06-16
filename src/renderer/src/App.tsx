@@ -41,6 +41,7 @@ import { GoalToast } from './components/GoalToast'
 import { BackupBrowser } from './components/BackupBrowser'
 import { SettingsDialog } from './components/SettingsDialog'
 import { HeadingBreadcrumb } from './components/HeadingBreadcrumb'
+import { ClipboardHistory } from './components/ClipboardHistory'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -732,6 +733,7 @@ export default function App() {
       <GoalToast />
       <BackupBrowser />
       <SettingsDialog />
+      <ClipboardHistory />
       <CustomCSSDialog />
       <TextToSpeech />
     </div>

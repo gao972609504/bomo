@@ -1800,3 +1800,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - 迭代22是单标题折叠，本迭代是「全量」操作，补齐大纲面板的批量控制
+
+---
+
+## 迭代 60 — 剪贴板历史 (Clipboard Ring)
+
+**日期**: 2026-06-16
+
+### 特性描述
+监听复制操作，自动收集最近 12 条文本到 localStorage 环形缓冲。面板列出历史，每条可「插入到光标」或「重新复制」，连续重复去重。VS Code Clipboard Ring / Alfred 剪贴板同款。
+
+### 核心改动
+- **新增** `src/renderer/src/components/ClipboardHistory.tsx` — document copy 监听(capture)、ring 去重+截断+持久化、insert/recopy
+- store showClipboardHistory、App 挂载、CommandPalette `view.clipboard`、CSS `.clip-*`
+
+### 技术点
+- copy 事件 capture 阶段监听，window.getSelection 取文本，>5000 字符忽略
+- 环形缓冲 slice(0,12)，首项去重
+- insert 经 getEditorView dispatch 插入光标并聚焦
+
+### 验证结果
+- `npm run build` 通过(修复一处函数闭合括号)，零错误零警告，44.51s
+
+### 非重复性说明
+- 项目此前无剪贴板管理；本迭代是跨应用复制内容的「中转站」全新维度
