@@ -813,6 +813,35 @@
   text-overflow: ellipsis;
 }
 
+/* 大纲折叠图标 */
+.outline-fold-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 3px;
+  flex-shrink: 0;
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  user-select: none;
+}
+
+.outline-fold-icon:hover {
+  background: var(--accent-soft);
+  color: var(--accent-color);
+}
+
+.outline-fold-icon.folded {
+  transform: rotate(0deg);
+}
+
+.outline-content[data-has-fold="true"] .outline-item {
+  position: relative;
+}
+
 /* 自动保存状态 — 旧类（兼容保留，新结构用 .status-save-*） */
 .status-auto-saving {
   animation: pulse 1s infinite;

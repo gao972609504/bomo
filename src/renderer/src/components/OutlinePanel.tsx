@@ -2,9 +2,10 @@
  * 文档大纲面板
  * — 实时解析当前文档的标题层级，生成可点击导航
  */
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback, useState } from 'react'
 import { useEditorStore } from '../store/editorStore'
 import { getEditorView } from '../plugins/widgets'
+import { foldEffect, unfoldEffect, foldedRanges } from '@codemirror/language'
 
 interface HeadingItem {
   level: number
@@ -18,6 +19,7 @@ export function OutlinePanel() {
 
   const activeTab = tabs.find((t) => t.id === activeTabId)
   const cursorLine = activeTab?.cursorLine ?? 1
+  const [collapsed, setCollapsed] = useState<Set<number>>(new Set())
 
   const headings = useMemo<HeadingItem[]>(() => {
     if (!activeTab) return []
@@ -52,18 +54,74 @@ export function OutlinePanel() {
   if (!outlineVisible) return null
 
   const scrollToLine = (line: number) => {
-    // 通过 DOM 查找 CodeMirror 编辑器并滚动到指定行
     const editorEl = document.querySelector('.cm-editor')
     if (!editorEl) return
     const view = getEditorView(editorEl as HTMLElement)
     if (!view) return
-    const lineInfo = view.state.doc.line(line + 1) // line is 0-indexed, doc.line is 1-indexed
+    const lineInfo = view.state.doc.line(line + 1)
     view.dispatch({
       selection: { anchor: lineInfo.from },
       scrollIntoView: true
     })
     view.focus()
   }
+
+  // 计算标题是否有子内容可折叠
+  const headingHasChildren = useCallback((idx: number) => {
+    if (idx >= headings.length - 1) return false
+    return headings[idx + 1].level > headings[idx].level
+  }, [headings])
+
+  // 折叠/展开指定标题下的内容
+  const toggleFold = useCallback((e: React.MouseEvent, idx: number) => {
+    e.stopPropagation()
+    const editorEl = document.querySelector('.cm-editor')
+    if (!editorEl) return
+    const view = getEditorView(editorEl as HTMLElement)
+    if (!view) return
+
+    const heading = headings[idx]
+    const nextHeading = headings[idx + 1]
+    if (!nextHeading || nextHeading.level <= heading.level) return
+
+    const startLine = view.state.doc.line(heading.line + 1)
+    // 找到折叠结束位置（下一个同级或更高级标题前一行）
+    let endLineNum = view.state.doc.lines
+    for (let i = idx + 1; i < headings.length; i++) {
+      if (headings[i].level <= heading.level) {
+        endLineNum = headings[i].line
+        break
+      }
+    }
+    const endLine = view.state.doc.line(endLineNum)
+
+    const isCurrentlyCollapsed = collapsed.has(idx)
+
+    if (isCurrentlyCollapsed) {
+      // 展开
+      const effects: unknown[] = []
+      const folded = foldedRanges(view.state)
+      folded.between(startLine.to, endLine.to, (from: number, to: number) => {
+        effects.push(unfoldEffect.of({ from, to }))
+      })
+      if (effects.length > 0) view.dispatch({ effects: effects as any })
+      setCollapsed(prev => {
+        const next = new Set(prev)
+        next.delete(idx)
+        return next
+      })
+    } else {
+      // 折叠
+      view.dispatch({
+        effects: foldEffect.of({ from: startLine.to, to: endLine.to })
+      })
+      setCollapsed(prev => {
+        const next = new Set(prev)
+        next.add(idx)
+        return next
+      })
+    }
+  }, [headings, collapsed])
 
   return (
     <div className="outline-panel">
@@ -89,6 +147,14 @@ export function OutlinePanel() {
               onClick={() => scrollToLine(h.line)}
               title={h.text}
             >
+              {headingHasChildren(idx) && (
+                <span
+                  className={`outline-fold-icon${collapsed.has(idx) ? ' folded' : ''}`}
+                  onClick={(e) => toggleFold(e, idx)}
+                >
+                  {collapsed.has(idx) ? '▶' : '▼'}
+                </span>
+              )}
               <span className="outline-marker">{'#'.repeat(h.level)}</span>
               <span className="outline-text">{h.text}</span>
             </div>
