@@ -170,6 +170,23 @@ md.core.ruler.after('inline', 'task-lists', (state) => {
   }
 })
 
+// ── ==高亮== 语法 → <mark>（导出/复制 HTML 渲染，与编辑器装饰迭代51一致）──
+md.inline.ruler.before('emphasis', 'mark', (state, silent) => {
+  const start = state.pos
+  if (state.src.charCodeAt(start) !== 0x3d /* = */ || state.src.charCodeAt(start + 1) !== 0x3d) return false
+  const end = state.src.indexOf('==', start + 2)
+  if (end < 0) return false
+  const content = state.src.slice(start + 2, end)
+  if (!content || content.length > 200 || content.includes('\n')) return false
+  if (!silent) {
+    const open = state.push('mark_open', 'mark', 1); open.markup = '=='
+    const text = state.push('text', '', 0); text.content = content
+    state.push('mark_close', 'mark', -1)
+  }
+  state.pos = end + 2
+  return true
+})
+
 // ── 简易渲染缓存 ──
 
 const renderCache = new Map<string, string>()

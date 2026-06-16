@@ -2106,3 +2106,26 @@ Ctrl+Alt+0 在当前行尾追加 `📅 YYYY-MM-DD`（今日），若行内已有
 
 ### 非重复性说明
 - 迭代19插入光标处日期，本迭代是「行尾截止日期标记」语义化任务打标，与任务系统联动
+
+---
+
+## 迭代 73 — ==高亮== 导出渲染 (Mark Plugin for Export)
+
+**日期**: 2026-06-16
+
+### 特性描述
+为迭代51的编辑器 `==高亮==` 装饰补齐导出端：新增 markdown-it inline ruler，将 `==文本==` 渲染为 `<mark>文本</mark>`。导出 HTML、复制为富文本(迭代26)时高亮一并生效，编辑器与导出一致。
+
+### 核心改动
+- **修改** `src/renderer/src/utils/markdown.ts` — 在 emphasis 前注册 `mark` inline ruler，charCode 判定 `==`，生成 mark_open/text/mark_close token
+
+### 技术点
+- markdown-it inline ruler.before('emphasis', ...) 优先级，避免被强调规则吞掉
+- charCode 0x3d 判定 =，indexOf 找闭合 ==，长度/换行校验
+- 与编辑器装饰(迭代51)、task-list ruler 同层，渲染管线一致
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，53.38s
+
+### 非重复性说明
+- 迭代51是编辑器渲染，本迭代补齐导出/复制端，==高亮== 全场景闭环
