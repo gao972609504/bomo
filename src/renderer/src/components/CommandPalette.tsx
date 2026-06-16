@@ -124,6 +124,10 @@ function getCommands(): Command[] {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: '/', ctrlKey: true, altKey: true, bubbles: true }))
     }},
+    { id: 'editor.today-due', label: '追加今日截止日期 (📅)', category: '插入', shortcut: 'Ctrl+Alt+0', action: () => {
+      const cm = document.querySelector('.cm-content')
+      if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: '0', ctrlKey: true, altKey: true, bubbles: true }))
+    }},
     { id: 'editor.cycle-align', label: '循环表格列对齐 (左/中/右/默认)', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')
       const view = el ? getEditorView(el as HTMLElement) : null

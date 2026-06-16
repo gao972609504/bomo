@@ -493,6 +493,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-v', run: insertTableColumn },
           { key: 'Mod-Alt-k', run: deleteParagraph },
           { key: 'Mod-Alt-/', run: wrapHtmlComment },
+          { key: 'Mod-Alt-0', run: appendTodayDue },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1689,6 +1690,20 @@ function wrapHtmlComment(view: EditorView): boolean {
   view.dispatch({
     changes: { from, to, insert: open + sel + close },
     selection: sel ? { anchor: from + open.length, head: from + open.length + sel.length } : { anchor: from + open.length },
+  })
+  return true
+}
+
+function appendTodayDue(view: EditorView): boolean {
+  const { head } = view.state.selection.main
+  const line = view.state.doc.lineAt(head)
+  const d = new Date()
+  const p2 = (n: number) => String(n).padStart(2, '0')
+  const date = `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`
+  const cleaned = line.text.replace(/\s*(?:@|📅\s*)\d{4}-\d{1,2}-\d{1,2}/g, '').trimEnd()
+  view.dispatch({
+    changes: { from: line.from, to: line.to, insert: `${cleaned} 📅 ${date}` },
+    selection: { anchor: line.from + cleaned.length + 1 },
   })
   return true
 }
