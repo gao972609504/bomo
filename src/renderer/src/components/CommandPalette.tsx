@@ -14,6 +14,7 @@ import { toggleUnorderedList } from './Editor'
 import { toggleOrderedList } from './Editor'
 import { wrapCallout } from './Editor'
 import { toggleTaskItem } from './Editor'
+import { smartLinkify } from './Editor'
 import { getEditorView } from '../plugins/widgets'
 
 interface Command {
@@ -164,6 +165,11 @@ function getCommands(): Command[] {
       const el = document.querySelector('.cm-editor')
       const view = el ? getEditorView(el as HTMLElement) : null
       if (view) toggleTaskItem(view)
+    }},
+    { id: 'editor.smart-linkify', label: '智能包裹链接 (URL/邮箱)', category: '格式', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) smartLinkify(view)
     }},
     { id: 'editor.cycle-align', label: '循环表格列对齐 (左/中/右/默认)', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')

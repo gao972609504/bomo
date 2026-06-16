@@ -1743,6 +1743,26 @@ export function wrapCallout(view: EditorView, type = 'tip'): boolean {
   return true
 }
 
+export function smartLinkify(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  if (from === to) return false
+  const sel = view.state.sliceDoc(from, to).trim()
+  if (!sel) return false
+  const url = /^(https?:\/\/|www\.)/i.test(sel) ? (sel.startsWith('www.') ? 'http://' + sel : sel) : null
+  const email = /^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(sel) ? 'mailto:' + sel : null
+  if (url) {
+    const insert = `[${sel.replace(/^https?:\/\/(www\.)?/i, '')}](${url})`
+    view.dispatch({ changes: { from, to, insert }, selection: { anchor: from, head: from + insert.length } })
+    return true
+  }
+  if (email) {
+    const insert = `[${sel}](${email})`
+    view.dispatch({ changes: { from, to, insert }, selection: { anchor: from, head: from + insert.length } })
+    return true
+  }
+  return false
+}
+
 export function toggleTaskItem(view: EditorView): boolean {
   const { from, to } = view.state.selection.main
   const doc = view.state.doc
