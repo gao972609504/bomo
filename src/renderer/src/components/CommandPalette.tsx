@@ -30,6 +30,26 @@ function getCommands(): Command[] {
   const store = useEditorStore.getState()
   return [
     { id: 'file.new', label: '新建文件', category: '文件', shortcut: 'Ctrl+N', action: () => store.createTab() },
+    ...([
+      { name: '博客文章', content: `---\ntitle: \ndate: ${new Date().toLocaleDateString('zh-CN')}\ntags: []\n---\n\n# 标题\n\n## 引言\n\n## 正文\n\n## 总结\n` },
+      { name: '会议记录', content: `# 会议记录\n\n**日期：** ${new Date().toLocaleDateString('zh-CN')}\n**参会人：** \n**议题：** \n\n---\n\n## 讨论内容\n\n- \n\n## 决议\n\n- [ ] \n\n## 后续跟进\n\n| 任务 | 负责人 | 截止日期 |\n| --- | --- | --- |\n|  |  |  |\n` },
+      { name: '每日笔记', content: `# ${new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}\n\n## 今日计划\n\n- [ ] \n- [ ] \n- [ ] \n\n## 笔记\n\n\n\n## 灵感\n\n\n\n## 明日计划\n\n- \n` },
+      { name: '技术文档', content: `# 技术文档\n\n## 概述\n\n\n\n## 技术架构\n\n\n\n## API 接口\n\n### 接口名称\n\n**请求方式：** \`GET\`\n**路径：** \`/api/endpoint\`\n\n#### 参数\n\n| 参数 | 类型 | 必填 | 说明 |\n| --- | --- | --- | --- |\n|  |  |  |  |\n\n#### 返回值\n\n\`\`\`json\n{}\n\`\`\`\n\n## 注意事项\n\n> \n` },
+      { name: '读书笔记', content: `# 《书名》读书笔记\n\n**作者：** \n**阅读日期：** ${new Date().toLocaleDateString('zh-CN')}\n\n---\n\n## 一句话总结\n\n\n\n## 核心观点\n\n1. \n2. \n3. \n\n## 精彩摘录\n\n> \n\n## 个人感悟\n\n\n\n## 推荐指数\n\n⭐⭐⭐⭐⭐\n` },
+    ].map(t => ({
+      id: `template.insert-${t.name}`,
+      label: `插入模板：${t.name}`,
+      category: '插入' as const,
+      action: () => {
+        const el = document.querySelector('.cm-editor')
+        const view = el ? getEditorView(el as HTMLElement) : null
+        if (view) {
+          const pos = view.state.selection.main.head
+          view.dispatch({ changes: { from: pos, to: pos, insert: t.content }, selection: { anchor: pos + t.content.length } })
+          view.focus()
+        }
+      },
+    }))),
     { id: 'file.save', label: '保存文件', category: '文件', shortcut: 'Ctrl+S', action: () => window.api && handleSave() },
     { id: 'file.open-folder', label: '打开文件夹', category: '文件', shortcut: 'Ctrl+Shift+O', action: () => handleOpenFolder() },
     { id: 'file.export-html', label: '导出为 HTML', category: '文件', action: () => window.api?.exportHTML('') },
