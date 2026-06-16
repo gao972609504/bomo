@@ -392,6 +392,9 @@ export function FileTree() {
                 <span>{useEditorStore.getState().isFavorite(ctxMenu.node!.path) ? '⭐' : '☆'}</span>
                 {useEditorStore.getState().isFavorite(ctxMenu.node!.path) ? '取消收藏' : '收藏'}
               </div>
+              <div className="context-menu-item" onClick={() => { navigator.clipboard?.writeText(ctxMenu.node!.path); closeCtxMenu() }}>
+                <span>📋</span> 复制路径
+              </div>
               <div className="context-menu-item" onClick={() => handleDelete(ctxMenu.node!)}>
                 <span>🗑️</span> 删除
               </div>
