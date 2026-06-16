@@ -95,6 +95,7 @@ function getCommands(): Command[] {
     { id: 'view.relative-numbers', label: `相对行号 (${store.relativeLineNumbers ? '开' : '关'})`, category: '视图', action: () => store.toggleRelativeLineNumbers() },
     { id: 'view.dashboard', label: '写作仪表盘', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowDashboard(!s.showDashboard) } },
     { id: 'view.goal-setter', label: '设置写作目标', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowGoalSetter(!s.showGoalSetter) } },
+    { id: 'view.sentence-stats', label: '句子与段落结构分析', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowSentenceStats(!s.showSentenceStats) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }

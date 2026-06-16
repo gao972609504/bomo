@@ -33,6 +33,7 @@ import { WritingHeatmap } from './components/WritingHeatmap'
 import { FootnotePanel } from './components/FootnotePanel'
 import { Dashboard } from './components/Dashboard'
 import { GoalSetter } from './components/GoalSetter'
+import { SentenceStats } from './components/SentenceStats'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -693,6 +694,7 @@ export default function App() {
         {!zenMode && <TaskPanel />}
         {!zenMode && <AssetPanel />}
         {!zenMode && <FootnotePanel />}
+        {!zenMode && <SentenceStats />}
         {!zenMode && <BacklinksPanel />}
       </div>
       {eyeCare && <div className="eye-care-overlay" aria-hidden="true" />}
