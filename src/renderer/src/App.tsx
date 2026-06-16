@@ -30,6 +30,7 @@ import { TaskPanel } from './components/TaskPanel'
 import { CustomCSSDialog, loadCustomCSS, applyCustomCSS } from './components/CustomCSS'
 import { AssetPanel } from './components/AssetPanel'
 import { WritingHeatmap } from './components/WritingHeatmap'
+import { FootnotePanel } from './components/FootnotePanel'
 import { renderMarkdown } from './utils/markdown'
 
 declare global {
@@ -689,6 +690,7 @@ export default function App() {
         {!zenMode && <TagPanel />}
         {!zenMode && <TaskPanel />}
         {!zenMode && <AssetPanel />}
+        {!zenMode && <FootnotePanel />}
         {!zenMode && <BacklinksPanel />}
       </div>
       <QuickOpen />

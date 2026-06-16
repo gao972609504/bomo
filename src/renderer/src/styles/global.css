@@ -2861,3 +2861,22 @@ kbd {
 .heatmap-cell:hover { transform: scale(1.4); }
 .heatmap-legend { display: flex; align-items: center; gap: 4px; justify-content: flex-end; margin-top: 12px; font-size: 11px; color: var(--text-muted); }
 .heatmap-tooltip { position: fixed; z-index: 10001; background: var(--bg-tertiary); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; pointer-events: none; box-shadow: var(--shadow); font-family: var(--font-mono); }
+
+/* ===== 脚注管理面板 ===== */
+.footnote-panel { width: 232px; min-width: 200px; background: var(--bg-primary); border-left: 1px solid var(--border-subtle); display: flex; flex-direction: column; overflow: hidden; }
+.footnote-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; font-size: var(--font-size-xs); font-weight: 600; color: var(--text-muted); letter-spacing: 0.3px; border-bottom: 1px solid var(--border-subtle); }
+.footnote-header small { color: var(--accent-color); font-family: var(--font-mono); margin-left: 4px; }
+.footnote-close { font-size: 18px; color: var(--text-muted); padding: 0 6px; border-radius: var(--radius-sm); line-height: 1; }
+.footnote-close:hover { background: var(--hover-bg); color: var(--text-primary); }
+.footnote-list { flex: 1; overflow-y: auto; padding: 4px 6px 10px; }
+.footnote-empty { padding: 24px 16px; text-align: center; color: var(--text-muted); font-size: var(--font-size-base); }
+.footnote-row { display: flex; align-items: center; gap: 6px; padding: 5px 8px; margin: 1px 0; border-radius: var(--radius-sm); font-size: var(--font-size-sm); color: var(--text-secondary); cursor: pointer; border-left: 2px solid transparent; }
+.footnote-row:hover { background: var(--hover-bg); }
+.footnote-row.warn { border-left-color: var(--warning); }
+.footnote-row.err { border-left-color: var(--danger); }
+.footnote-id { font-family: var(--font-mono); color: var(--accent-color); flex-shrink: 0; font-size: 11px; }
+.footnote-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.footnote-refcount { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0; }
+.footnote-tag { font-size: 9px; padding: 1px 5px; border-radius: 8px; flex-shrink: 0; }
+.footnote-tag.warn { background: rgba(184,134,11,0.15); color: var(--warning); }
+.footnote-tag.err { background: rgba(203,67,53,0.15); color: var(--danger); }

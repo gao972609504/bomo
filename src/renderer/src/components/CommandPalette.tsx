@@ -90,6 +90,7 @@ function getCommands(): Command[] {
     { id: 'view.custom-css', label: '自定义 CSS', category: '设置', action: () => { const s = useEditorStore.getState(); s.setShowCustomCSS(!s.showCustomCSS) } },
     { id: 'view.asset-panel', label: '资源与引用管理', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowAssetPanel(!s.showAssetPanel) } },
     { id: 'view.heatmap', label: '写作热力图', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowHeatmap(!s.showHeatmap) } },
+    { id: 'view.footnote', label: '脚注管理', category: '视图', action: () => { const s = useEditorStore.getState(); s.setShowFootnotePanel(!s.showFootnotePanel) } },
     { id: 'edit.toggle-selection-highlight', label: `切换选中匹配高亮 (${store.selectionHighlight ? '开' : '关'})`, category: '编辑', action: () => store.toggleSelectionHighlight() },
   ]
 }
