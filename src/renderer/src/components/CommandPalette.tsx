@@ -75,6 +75,24 @@ function getCommands(): Command[] {
       const view = el ? getEditorView(el as HTMLElement) : null
       if (view) inlineToRefLinks(view)
     }},
+    { id: 'edit.linkify-clipboard', label: '用剪贴板链接包裹选区', category: '编辑', action: async () => {
+      const el = document.querySelector('.cm-editor'); const view = el ? getEditorView(el as HTMLElement) : null
+      if (!view) return
+      const { from, to } = view.state.selection.main
+      if (from === to) return
+      const text = view.state.sliceDoc(from, to)
+      let url = ''; try { url = (await navigator.clipboard.readText()).trim() } catch { /* noop */ }
+      if (!url) return
+      const ins = `[${text}](${url})`
+      view.dispatch({ changes: { from, to, insert: ins }, selection: { anchor: from, head: from + ins.length } })
+    }},
+    { id: 'edit.web-search', label: '用浏览器搜索选中内容', category: '编辑', action: () => {
+      const el = document.querySelector('.cm-editor'); const view = el ? getEditorView(el as HTMLElement) : null
+      if (!view) return
+      const { from, to } = view.state.selection.main
+      const text = view.state.sliceDoc(from, to).trim()
+      if (text) window.open('https://www.google.com/search?q=' + encodeURIComponent(text), '_blank')
+    }},
     { id: 'insert.date', label: '插入当前日期 (YYYY-MM-DD)', category: '插入', shortcut: 'Alt+D', action: () => {
       const cm = document.querySelector('.cm-content'); if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'd', altKey: true, bubbles: true }))
     }},

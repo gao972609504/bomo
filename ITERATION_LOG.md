@@ -1682,3 +1682,27 @@ Ctrl+Shift+Q 对选区内所有行(或当前行)切换块引用：全部已 `>` 
 
 ### 非重复性说明
 - 此前偏好散见于菜单/命令，本迭代是统一的设置中心，提升可发现性
+
+---
+
+## 迭代 55 — 写作研究辅助 (Research Helpers)
+
+**日期**: 2026-06-16
+
+### 特性描述
+两条写作研究命令：①「用剪贴板链接包裹选区」——选中文字 + 已复制 URL → 一键 `[text](url)`；②「浏览器搜索选中内容」——选中词 → Google 新标签搜索。写作中快速引用与查证，无需离开编辑器。
+
+### 核心改动
+- **修改** `CommandPalette.tsx`
+  - `edit.linkify-clipboard`：navigator.clipboard.readText 取 URL，dispatch 包裹选区
+  - `edit.web-search`：window.open Google 搜索选中词
+
+### 技术点
+- 复用 getEditorView 取选区，clipboard.readText 异步包裹 try/catch
+- 与既有 Ctrl+Click 打开链接(迭代内)正交：本迭代是「主动引用/查证」工作流
+
+### 验证结果
+- `npm run build` 通过，零错误零警告，44.20s
+
+### 非重复性说明
+- 项目有链接预览(迭代4)/WikiLink导航(迭代8)，本迭代是「写作时研究」外部检索维度，全新
