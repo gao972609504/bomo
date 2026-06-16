@@ -11,6 +11,7 @@ import { fullWidthToHalf } from './Editor'
 import { selectParagraph } from './Editor'
 import { cycleColumnAlign } from './Editor'
 import { toggleUnorderedList } from './Editor'
+import { toggleOrderedList } from './Editor'
 import { getEditorView } from '../plugins/widgets'
 
 interface Command {
@@ -137,6 +138,11 @@ function getCommands(): Command[] {
       const el = document.querySelector('.cm-editor')
       const view = el ? getEditorView(el as HTMLElement) : null
       if (view) toggleUnorderedList(view)
+    }},
+    { id: 'editor.toggle-ordered', label: '切换有序列表 (1. 2. 3.)', category: '格式', action: () => {
+      const el = document.querySelector('.cm-editor')
+      const view = el ? getEditorView(el as HTMLElement) : null
+      if (view) toggleOrderedList(view)
     }},
     { id: 'editor.cycle-align', label: '循环表格列对齐 (左/中/右/默认)', category: '格式', action: () => {
       const el = document.querySelector('.cm-editor')
