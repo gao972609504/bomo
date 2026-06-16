@@ -464,6 +464,7 @@ export function Editor({ tab }: EditorProps) {
           { key: 'Mod-Alt-T', run: transposeTable },
           { key: 'Mod-Shift-Alt-F', run: normalizeDoc },
           { key: 'Alt-x', run: toggleTaskCheckbox },
+          { key: 'Mod-Shift-q', run: toggleBlockquote },
           { key: 'Alt-d', run: insertDate, shift: insertDateTime },
           { key: 'Alt-t', run: insertTime, shift: insertTimestamp },
           { key: 'Alt-w', run: insertWeekday },
@@ -1518,6 +1519,29 @@ function insertToc(view: EditorView): boolean {
 }
 
 // ============ 任务复选框切换 ============
+
+function toggleBlockquote(view: EditorView): boolean {
+  const { from, to } = view.state.selection.main
+  const doc = view.state.doc
+  const startLine = doc.lineAt(from).number
+  const endLine = doc.lineAt(to).number
+  const changes: { from: number; to: number; insert: string }[] = []
+  let allQuoted = true
+  for (let i = startLine; i <= endLine; i++) {
+    if (!/^>\s?/.test(doc.line(i).text)) { allQuoted = false; break }
+  }
+  for (let i = startLine; i <= endLine; i++) {
+    const line = doc.line(i)
+    if (allQuoted) {
+      const m = line.text.match(/^>\s?/)
+      if (m) changes.push({ from: line.from, to: line.from + m[0].length, insert: '' })
+    } else {
+      changes.push({ from: line.from, to: line.from, insert: '> ' })
+    }
+  }
+  view.dispatch({ changes })
+  return true
+}
 
 function toggleTaskCheckbox(view: EditorView): boolean {
   const { from, to } = view.state.selection.main

@@ -64,6 +64,10 @@ function getCommands(): Command[] {
       const cm = document.querySelector('.cm-content')
       if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', altKey: true, bubbles: true }))
     }},
+    { id: 'editor.toggle-blockquote', label: '切换块引用 (>)', category: '格式', shortcut: 'Ctrl+Shift+Q', action: () => {
+      const cm = document.querySelector('.cm-content')
+      if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'q', ctrlKey: true, shiftKey: true, bubbles: true }))
+    }},
     { id: 'insert.date', label: '插入当前日期 (YYYY-MM-DD)', category: '插入', shortcut: 'Alt+D', action: () => {
       const cm = document.querySelector('.cm-content'); if (cm) cm.dispatchEvent(new KeyboardEvent('keydown', { key: 'd', altKey: true, bubbles: true }))
     }},
